@@ -1,17 +1,15 @@
 import {
   Code,
   Database,
-  Github,
-  Paintbrush,
   Server,
-  Smartphone,
   type LucideIcon,
   Wind,
   Briefcase,
   GitGraph,
   Cpu,
   Fingerprint,
-  FileCode
+  FileCode,
+  GraduationCap
 } from 'lucide-react';
 
 export const projects = [
@@ -77,21 +75,22 @@ export const education = [
     degree: 'Software Engineer',
     institution: 'Sosuv Consulting',
     duration: 'July 2024 - Present',
-    description: 'Debugged and refactored complex codebases in Unix-like environments, improving session proxy reliability for trading workflows.',
+    description: 'Debugged and refactored complex codebases in Unix-like environments, improving session proxy reliability for trading workflows for LiquidityBook. Designed automated scripts and command-line workflows to optimize session management, reducing swap loading time by 24%. Developed containerized workflows using Docker to ensure reproducibility across staging and production. Authored clear technical documentation for debugging steps, testing procedures, and version control practices.',
     icon: Briefcase,
   },
   {
     degree: 'Mitacs Globalink Intern',
     institution: 'York University',
     duration: 'May 2023 - Aug 2023',
-    description: 'Performed numerical modeling on climate data of different regions of Canada using Excel and Machine Learning.',
+    description: 'Performed numerical modeling on climate data of different regions of Canada using Excel and Machine Learning modeling for prediction and climate index calculation. Analyzed the data along with hypothesis testing over the Gamma and Pearson distributions.',
     icon: Briefcase,
   },
   {
-    degree: 'B.Tech, Computer Science (Minor)',
+    degree: 'B.Tech, Civil Engineering (Major)',
     institution: 'Indian Institute of Technology (ISM), Dhanbad',
     duration: '2020 - 2024',
-    description: 'Graduated with an OGPA of 8.84. Coursework included Data Structures, Algorithms, OS, DBMS, and Computer Networks.',
+    description: 'Graduated with a major in Civil Engineering and a minor in Computer Science. Coursework included Data Structures, Algorithms, OS, DBMS, and Computer Networks.',
+    icon: GraduationCap,
   },
   {
     degree: 'High School Diploma',
@@ -99,5 +98,6 @@ export const education = [
     duration: '2018 - 2020',
     description:
       'Completed my high school with a focus on Physics, Chemistry, and Mathematics, achieving 95.6% in board examinations.',
+    icon: GraduationCap,
   },
 ];

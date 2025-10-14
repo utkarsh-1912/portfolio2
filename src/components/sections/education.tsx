@@ -1,5 +1,4 @@
 import { education } from '@/lib/data';
-import { GraduationCap } from 'lucide-react';
 
 export function EducationSection() {
   return (
@@ -22,7 +21,7 @@ export function EducationSection() {
               </div>
 
               <div className="absolute left-1/2 -translate-x-1/2 z-10 flex items-center justify-center w-12 h-12 bg-background rounded-full border-2 border-primary">
-                {item.icon ? <item.icon className="h-6 w-6 text-primary" /> : <GraduationCap className="h-6 w-6 text-primary" />}
+                {item.icon && <item.icon className="h-6 w-6 text-primary" />}
               </div>
 
               <div className="w-[calc(50%_-_2rem)]"></div>
