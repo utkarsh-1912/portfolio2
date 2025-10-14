@@ -35,7 +35,7 @@ export function SiteFooter() {
             </Link>
           </Button>
           <Button asChild variant="ghost" size="icon">
-            <Link href="https://www.linkedin.com/in/utkarsh-singh-1912" target="_blank" rel="noreferrer">
+            <Link href="https://www.linkedin.com/in/utkarsh-gupta-3a374119a/" target="_blank" rel="noreferrer">
               <Linkedin className="h-5 w-5" />
               <span className="sr-only">LinkedIn</span>
             </Link>

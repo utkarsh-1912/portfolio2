@@ -1,56 +1,54 @@
 import {
   Code,
+  Database,
   Github,
-  LayoutTemplate,
   Paintbrush,
-  PenTool,
   Server,
   Smartphone,
   type LucideIcon,
-  GraduationCap,
+  Wind,
 } from 'lucide-react';
 
 export const projects = [
   {
-    title: 'Portfolio Website',
+    title: 'Intelli-Cart',
     description:
-      'My personal portfolio website built with Next.js, Tailwind CSS, and Shadcn UI. Fully responsive with a light/dark mode theme.',
-    tags: ['Next.js', 'React', 'Tailwind CSS', 'TypeScript', 'Shadcn UI'],
-    imageUrlId: 'project-portfolio',
-    liveUrl: '#',
-    githubUrl: 'https://github.com/utkarsh-1912/portfolio',
-  },
-  {
-    title: 'E-commerce Platform',
-    description:
-      'A full-stack e-commerce application with features like product catalog, shopping cart, and user authentication.',
-    tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Redux'],
+      'An intelligent e-commerce platform that personalizes the shopping experience using AI-powered recommendations.',
+    tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Redux', 'JWT'],
     imageUrlId: 'project-ecommerce',
     liveUrl: '#',
     githubUrl: 'https://github.com/utkarsh-1912/e-commerce',
   },
   {
-    title: 'Task Management App',
-    description:
-      'A Kanban-style task management app that helps users organize their tasks, set priorities, and track progress.',
-    tags: ['Vue.js', 'Firebase', 'Vuex', 'SCSS'],
-    imageUrlId: 'project-task-manager',
+    title: 'Full Stack Blog',
+    description: 'A feature-rich blogging platform with a modern UI, allowing users to create, edit, and share posts.',
+    tags: ['React', 'Appwrite', 'Tailwind CSS', 'TypeScript', 'Zod'],
+    imageUrlId: 'project-task-manager', // Reusing image for now
     liveUrl: '#',
-    githubUrl: 'https://github.com/utkarsh-1912/task-manager',
+    githubUrl: 'https://github.com/utkarsh-1912/full-stack-blog',
+  },
+  {
+    title: 'Dev-Detective',
+    description: 'A tool for developers to quickly search for GitHub user profiles and view their stats and repositories.',
+    tags: ['JavaScript', 'HTML', 'CSS', 'GitHub API'],
+    imageUrlId: 'project-portfolio', // Reusing image for now
+    liveUrl: '#',
+    githubUrl: 'https://github.com/utkarsh-1912/Dev-Detective',
   },
 ];
 
 export const skills: { name: string; icon: LucideIcon }[] = [
-  { name: 'HTML5', icon: Code },
-  { name: 'CSS3', icon: Code },
+  { name: 'C++', icon: Code },
   { name: 'JavaScript', icon: Code },
+  { name: 'TypeScript', icon: Code },
   { name: 'React', icon: Code },
   { name: 'Next.js', icon: Code },
   { name: 'Node.js', icon: Server },
+  { name: 'Tailwind CSS', icon: Wind },
+  { name: 'MongoDB', icon: Database },
   { name: 'UI/UX Design', icon: Paintbrush },
-  { name: 'Figma', icon: PenTool },
-  { name: 'Responsive Design', icon: Smartphone },
   { name: 'Git & GitHub', icon: Github },
+  { name: 'Responsive Design', icon: Smartphone },
 ];
 
 export const blogPosts = [
@@ -70,11 +68,17 @@ export const blogPosts = [
 
 export const education = [
   {
-    degree: 'Bachelor of Technology in Computer Science',
+    degree: 'B.Tech & M.Tech, Dual Degree',
     institution: 'Indian Institute of Technology, Kanpur',
-    duration: '2021 - 2025',
+    duration: '2021 - 2026',
     description:
-      'Focused on core computer science subjects including Data Structures, Algorithms, AI, and Web Development. Maintained a CGPA of 8.5/10.',
+      'Pursuing a dual degree in Computer Science and Engineering. Coursework includes Data Structures, Algorithms, AI, and Full-Stack Development.',
+  },
+  {
+    degree: 'Software Developer Intern',
+    institution: 'Celebal Technologies',
+    duration: 'June 2024 - July 2024',
+    description: 'Contributed to the development of web applications using modern technologies.',
   },
   {
     degree: 'High School Diploma',

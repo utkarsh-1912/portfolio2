@@ -9,16 +9,16 @@ export function AboutSection() {
           <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-4xl mb-6">About Me</h2>
           <div className="space-y-4 text-muted-foreground">
             <p>
-              I am a final year computer science undergraduate with a strong passion for web development and design. I love
-              building things that live on the internet, whether that be websites, applications, or anything in between.
+              I am a final year Computer Science and Engineering student at IIT Kanpur, with a passion for competitive
+              programming and full-stack development. I enjoy building scalable and efficient software solutions.
             </p>
             <p>
-              My goal is to always build products that provide pixel-perfect, performant experiences. I have a keen eye
+              My goal is to create high-quality products with pixel-perfect, performant experiences. I have a keen eye
               for detail and a dedication to crafting user-friendly interfaces.
             </p>
             <p>
-              When I&apos;m not coding, I enjoy exploring new technologies, contributing to open-source projects, and
-              reading about design trends.
+              When I&apos;m not coding, I enjoy solving problems on platforms like LeetCode and Codeforces, exploring
+              new technologies, and contributing to open-source projects.
             </p>
           </div>
         </div>
