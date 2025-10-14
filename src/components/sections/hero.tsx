@@ -13,8 +13,7 @@ export function HeroSection() {
             Hi, I&apos;m Utkarsh Gupta
           </h1>
           <p className="max-w-[600px] text-muted-foreground md:text-xl">
-            A passionate front-end developer and UI/UX enthusiast from India, dedicated to creating beautiful, intuitive,
-            and high-performance web experiences.
+            A software engineer with a passion for debugging complex codebases and developing containerized workflows with Docker. Experienced in both front-end and back-end technologies.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button asChild size="lg">

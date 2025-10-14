@@ -5,7 +5,7 @@ export function EducationSection() {
   return (
     <section id="education" className="w-full py-24 sm:py-32">
       <div className="container max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold font-headline tracking-tighter text-center sm:text-4xl mb-12">My Education</h2>
+        <h2 className="text-3xl font-bold font-headline tracking-tighter text-center sm:text-4xl mb-12">Experience & Education</h2>
         <div className="relative">
           <div className="absolute left-1/2 -translate-x-1/2 w-0.5 h-full bg-border"></div>
           {education.map((item, index) => (
@@ -22,7 +22,7 @@ export function EducationSection() {
               </div>
 
               <div className="absolute left-1/2 -translate-x-1/2 z-10 flex items-center justify-center w-12 h-12 bg-background rounded-full border-2 border-primary">
-                <GraduationCap className="h-6 w-6 text-primary" />
+                {item.icon ? <item.icon className="h-6 w-6 text-primary" /> : <GraduationCap className="h-6 w-6 text-primary" />}
               </div>
 
               <div className="w-[calc(50%_-_2rem)]"></div>

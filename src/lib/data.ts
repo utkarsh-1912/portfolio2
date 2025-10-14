@@ -7,31 +7,36 @@ import {
   Smartphone,
   type LucideIcon,
   Wind,
+  Briefcase,
+  GitGraph,
+  Cpu,
+  Fingerprint,
+  FileCode
 } from 'lucide-react';
 
 export const projects = [
   {
-    title: 'Intelli-Cart',
+    title: 'Kartavya Bookshop Manager',
     description:
-      'An intelligent e-commerce platform that personalizes the shopping experience using AI-powered recommendations.',
-    tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Redux', 'JWT'],
-    imageUrlId: 'project-ecommerce',
-    liveUrl: '#',
-    githubUrl: 'https://github.com/utkarsh-1912/e-commerce',
+      'Engineered a robust book management system for an NGO bookstore, streamlining inventory and operations using C++ and MySQL.',
+    tags: ['C++', 'MySQL', 'OOPs', 'Linux', 'GitHub'],
+    imageUrlId: 'project-book-manager',
+    liveUrl: 'https://bit.ly/kartavya-book-manager',
+    githubUrl: 'https://bit.ly/kartavya-book-manager',
   },
   {
-    title: 'Full Stack Blog',
-    description: 'A feature-rich blogging platform with a modern UI, allowing users to create, edit, and share posts.',
-    tags: ['React', 'Appwrite', 'Tailwind CSS', 'TypeScript', 'Zod'],
-    imageUrlId: 'project-task-manager', // Reusing image for now
-    liveUrl: '#',
-    githubUrl: 'https://github.com/utkarsh-1912/full-stack-blog',
+    title: 'Utkristi-Blogs',
+    description: 'A full-stack blogging application where multiple users can read and comment in real-time, with authentication and rich text editing.',
+    tags: ['NextJS', 'Tailwind CSS', 'Firebase', 'Strapi', 'Socket.IO'],
+    imageUrlId: 'project-blog',
+    liveUrl: 'https://utkristi-blog-ui.vercel.app/',
+    githubUrl: '#',
   },
   {
     title: 'Dev-Detective',
     description: 'A tool for developers to quickly search for GitHub user profiles and view their stats and repositories.',
     tags: ['JavaScript', 'HTML', 'CSS', 'GitHub API'],
-    imageUrlId: 'project-portfolio', // Reusing image for now
+    imageUrlId: 'project-dev-detective',
     liveUrl: '#',
     githubUrl: 'https://github.com/utkarsh-1912/Dev-Detective',
   },
@@ -39,16 +44,17 @@ export const projects = [
 
 export const skills: { name: string; icon: LucideIcon }[] = [
   { name: 'C++', icon: Code },
+  { name: 'Java', icon: Code },
   { name: 'JavaScript', icon: Code },
-  { name: 'TypeScript', icon: Code },
-  { name: 'React', icon: Code },
-  { name: 'Next.js', icon: Code },
-  { name: 'Node.js', icon: Server },
+  { name: 'React', icon: FileCode },
+  { name: 'Next.js', icon: FileCode },
+  { name: 'Spring Boot', icon: Server },
   { name: 'Tailwind CSS', icon: Wind },
+  { name: 'MySQL', icon: Database },
   { name: 'MongoDB', icon: Database },
-  { name: 'UI/UX Design', icon: Paintbrush },
-  { name: 'Git & GitHub', icon: Github },
-  { name: 'Responsive Design', icon: Smartphone },
+  { name: 'Docker', icon: GitGraph },
+  { name: 'Linux/Bash', icon: Cpu },
+  { name: 'APIs', icon: Fingerprint },
 ];
 
 export const blogPosts = [
@@ -68,23 +74,30 @@ export const blogPosts = [
 
 export const education = [
   {
-    degree: 'B.Tech & M.Tech, Dual Degree',
-    institution: 'Indian Institute of Technology, Kanpur',
-    duration: '2021 - 2026',
-    description:
-      'Pursuing a dual degree in Computer Science and Engineering. Coursework includes Data Structures, Algorithms, AI, and Full-Stack Development.',
+    degree: 'Software Engineer',
+    institution: 'Sosuv Consulting',
+    duration: 'July 2024 - Present',
+    description: 'Debugged and refactored complex codebases in Unix-like environments, improving session proxy reliability for trading workflows.',
+    icon: Briefcase,
   },
   {
-    degree: 'Software Developer Intern',
-    institution: 'Celebal Technologies',
-    duration: 'June 2024 - July 2024',
-    description: 'Contributed to the development of web applications using modern technologies.',
+    degree: 'Mitacs Globalink Intern',
+    institution: 'York University',
+    duration: 'May 2023 - Aug 2023',
+    description: 'Performed numerical modeling on climate data of different regions of Canada using Excel and Machine Learning.',
+    icon: Briefcase,
+  },
+  {
+    degree: 'B.Tech, Computer Science (Minor)',
+    institution: 'Indian Institute of Technology (ISM), Dhanbad',
+    duration: '2020 - 2024',
+    description: 'Graduated with an OGPA of 8.84. Coursework included Data Structures, Algorithms, OS, DBMS, and Computer Networks.',
   },
   {
     degree: 'High School Diploma',
-    institution: 'Delhi Public School, R.K. Puram',
-    duration: '2019 - 2021',
+    institution: 'St.Xavier’s High School, Fatehpur',
+    duration: '2018 - 2020',
     description:
-      'Completed my high school with a focus on Physics, Chemistry, and Mathematics, achieving 95% in board examinations.',
+      'Completed my high school with a focus on Physics, Chemistry, and Mathematics, achieving 95.6% in board examinations.',
   },
 ];

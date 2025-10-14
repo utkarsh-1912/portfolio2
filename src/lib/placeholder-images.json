@@ -7,22 +7,22 @@
       "imageHint": "developer portrait"
     },
     {
-      "id": "project-portfolio",
-      "description": "Screenshot of a portfolio website project",
-      "imageUrl": "https://picsum.photos/seed/p1/550/310",
-      "imageHint": "portfolio website"
+      "id": "project-book-manager",
+      "description": "Screenshot of a book management system",
+      "imageUrl": "https://picsum.photos/seed/p-book/550/310",
+      "imageHint": "library software"
     },
     {
-      "id": "project-ecommerce",
-      "description": "Screenshot of an e-commerce website project",
-      "imageUrl": "https://picsum.photos/seed/p2/550/310",
-      "imageHint": "ecommerce website"
+      "id": "project-blog",
+      "description": "Screenshot of a blog website",
+      "imageUrl": "https://picsum.photos/seed/p-blog/550/310",
+      "imageHint": "blog interface"
     },
     {
-      "id": "project-task-manager",
-      "description": "Screenshot of a task manager app project",
-      "imageUrl": "https://picsum.photos/seed/p3/550/310",
-      "imageHint": "task manager"
+      "id": "project-dev-detective",
+      "description": "Screenshot of a GitHub profile finder app",
+      "imageUrl": "https://picsum.photos/seed/p-dev/550/310",
+      "imageHint": "github profile"
     },
     {
       "id": "blog-react-hooks",
