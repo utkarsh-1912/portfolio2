@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "Portrait of a developer working",
+      "imageUrl": "https://picsum.photos/seed/hero/500/500",
+      "imageHint": "developer portrait"
+    },
+    {
+      "id": "project-portfolio",
+      "description": "Screenshot of a portfolio website project",
+      "imageUrl": "https://picsum.photos/seed/p1/550/310",
+      "imageHint": "portfolio website"
+    },
+    {
+      "id": "project-ecommerce",
+      "description": "Screenshot of an e-commerce website project",
+      "imageUrl": "https://picsum.photos/seed/p2/550/310",
+      "imageHint": "ecommerce website"
+    },
+    {
+      "id": "project-task-manager",
+      "description": "Screenshot of a task manager app project",
+      "imageUrl": "https://picsum.photos/seed/p3/550/310",
+      "imageHint": "task manager"
+    },
+    {
+      "id": "blog-react-hooks",
+      "description": "Abstract image representing React code for a blog post",
+      "imageUrl": "https://picsum.photos/seed/b1/550/310",
+      "imageHint": "react code"
+    },
+    {
+      "id": "blog-ui-ux",
+      "description": "Abstract image representing UI/UX design for a blog post",
+      "imageUrl": "https://picsum.photos/seed/b2/550/310",
+      "imageHint": "design process"
+    }
+  ]
 }
