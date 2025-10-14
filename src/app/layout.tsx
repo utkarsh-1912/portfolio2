@@ -8,7 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'Utkristi - Developer & Designer',
-  description: 'Portfolio of Utkarsh Singh, a passionate developer and designer.',
+  description: 'Portfolio of Utkarsh Gupta, a passionate developer and designer.',
 };
 
 export default function RootLayout({

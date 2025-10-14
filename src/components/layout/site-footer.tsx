@@ -14,7 +14,7 @@ export function SiteFooter() {
             rel="noreferrer"
             className="font-medium underline underline-offset-4"
           >
-            Utkarsh Singh
+            Utkarsh Gupta
           </a>
           . The source code is on{' '}
           <a

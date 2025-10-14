@@ -10,7 +10,7 @@ export function HeroSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="flex flex-col gap-6 items-start text-left">
           <h1 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-            Hi, I&apos;m Utkarsh Singh
+            Hi, I&apos;m Utkarsh Gupta
           </h1>
           <p className="max-w-[600px] text-muted-foreground md:text-xl">
             A passionate front-end developer and UI/UX enthusiast from India, dedicated to creating beautiful, intuitive,
@@ -25,7 +25,7 @@ export function HeroSection() {
             </Button>
           </div>
         </div>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center lg:justify-end">
           {heroImage && (
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-full blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>

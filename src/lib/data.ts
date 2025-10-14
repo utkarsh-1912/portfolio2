@@ -7,6 +7,7 @@ import {
   Server,
   Smartphone,
   type LucideIcon,
+  GraduationCap,
 } from 'lucide-react';
 
 export const projects = [
@@ -64,5 +65,22 @@ export const blogPosts = [
     description: 'Principles and best practices for creating intuitive and engaging user interfaces.',
     url: '#',
     imageUrlId: 'blog-ui-ux',
+  },
+];
+
+export const education = [
+  {
+    degree: 'Bachelor of Technology in Computer Science',
+    institution: 'Indian Institute of Technology, Kanpur',
+    duration: '2021 - 2025',
+    description:
+      'Focused on core computer science subjects including Data Structures, Algorithms, AI, and Web Development. Maintained a CGPA of 8.5/10.',
+  },
+  {
+    degree: 'High School Diploma',
+    institution: 'Delhi Public School, R.K. Puram',
+    duration: '2019 - 2021',
+    description:
+      'Completed my high school with a focus on Physics, Chemistry, and Mathematics, achieving 95% in board examinations.',
   },
 ];
