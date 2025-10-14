@@ -75,7 +75,7 @@ export const education = [
     degree: 'Software Engineer',
     institution: 'Sosuv Consulting',
     duration: 'July 2024 - Present',
-    description: 'Debugged and refactored complex codebases in Unix-like environments, improving session proxy reliability for trading workflows for LiquidityBook. Designed automated scripts and command-line workflows to optimize session management, reducing swap loading time by 24%. Developed containerized workflows using Docker to ensure reproducibility across staging and production. Authored clear technical documentation for debugging steps, testing procedures, and version control practices.',
+    description: 'Debugging and refactoring complex codebases in Unix-like environments, improving session proxy reliability for trading workflows. Designing automated scripts and containerized workflows with Docker to optimize efficiency and ensure reproducibility.',
     icon: Briefcase,
   },
   {

@@ -6,9 +6,9 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 export function HeroSection() {
   const heroImage = PlaceHolderImages.find((p) => p.id === 'hero');
   return (
-    <section id="hero" className="container py-24 sm:py-32">
+    <section id="hero" className="container py-20 sm:py-32">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="flex flex-col gap-6 items-start text-left">
+        <div className="flex flex-col gap-6 items-center lg:items-start text-center lg:text-left">
           <h1 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
             Hi, I&apos;m Utkarsh Gupta
           </h1>
@@ -26,14 +26,14 @@ export function HeroSection() {
         </div>
         <div className="flex justify-center items-center lg:justify-end">
           {heroImage && (
-            <div className="relative group">
+            <div className="relative group w-[300px] h-[300px] sm:w-[450px] sm:h-[450px]">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-full blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
               <Image
                 src={heroImage.imageUrl}
                 alt={heroImage.description}
                 width={450}
                 height={450}
-                className="rounded-full aspect-square object-cover border-4 border-background shadow-lg relative"
+                className="rounded-full aspect-square object-cover border-4 border-background shadow-lg relative w-full h-full"
                 data-ai-hint={heroImage.imageHint}
                 priority
               />

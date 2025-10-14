@@ -46,7 +46,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="w-full py-24 sm:py-32 bg-muted/40">
+    <section id="contact" className="w-full py-20 lg:py-24 bg-muted/40">
       <div className="container max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold font-headline tracking-tighter text-center sm:text-4xl mb-4">Get In Touch</h2>
         <p className="text-center text-muted-foreground mb-12">
@@ -63,7 +63,7 @@ export function ContactSection() {
                   <h3 className="font-semibold">Email</h3>
                   <a
                     href="mailto:utkarsh.19.12.01@gmail.com"
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm break-all"
                   >
                     utkarsh.19.12.01@gmail.com
                   </a>
@@ -75,7 +75,7 @@ export function ContactSection() {
                 <Phone className="h-8 w-8 text-primary" />
                 <div>
                   <h3 className="font-semibold">Phone</h3>
-                  <a href="tel:+916394948921" className="text-muted-foreground hover:text-primary transition-colors">
+                  <a href="tel:+916394948921" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                     (+91) 639-494-8921
                   </a>
                 </div>
