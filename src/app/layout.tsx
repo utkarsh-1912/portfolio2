@@ -26,7 +26,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={cn('min-h-screen bg-background font-body text-foreground antialiased')}>
+      <body
+        className={cn('min-h-screen bg-background font-body text-foreground antialiased')}
+        suppressHydrationWarning={true}
+      >
         <ThemeProvider storageKey="utkristi-portfolio-theme">
           <div className="relative flex min-h-dvh flex-col">
             <SiteHeader />
