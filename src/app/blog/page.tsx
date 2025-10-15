@@ -8,7 +8,7 @@ import { ExternalLink } from 'lucide-react';
 
 export default function BlogPage() {
   return (
-    <div className="container py-24 sm:py-32">
+    <div id="blog" className="container py-24 sm:py-32">
       <div className="text-center">
         <h1 className="text-4xl font-bold font-headline tracking-tighter sm:text-5xl">My Blog</h1>
         <p className="mt-4 max-w-2xl mx-auto text-muted-foreground md:text-xl">
