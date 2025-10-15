@@ -13,11 +13,11 @@ const navItems = [
   { name: 'About', href: '/#about' },
   { name: 'Experience', href: '/#education' },
   { name: 'Projects', href: '/#projects' },
-  { name: 'Blog', href: '/blog' },
+  { name: 'Blog', href: '/#blog-preview' },
   { name: 'Contact', href: '/#contact' },
 ];
 
-const sectionIds = ['hero', 'about', 'education', 'projects', 'contact'];
+const sectionIds = ['hero', 'about', 'education', 'projects', 'blog-preview', 'contact'];
 
 export function SiteHeader() {
   const activeId = useScrollSpy(sectionIds, { rootMargin: '0% 0% -50% 0%' });
@@ -32,9 +32,7 @@ export function SiteHeader() {
         </Link>
         <nav className="hidden flex-1 md:flex items-center gap-6 text-sm font-medium">
           {navItems.map((item) => {
-            const isActive =
-              (item.href.startsWith('/#') && item.href === `/#${activeId}`) ||
-              (item.href === '/blog' && activeId === 'blog');
+            const isActive = item.href === `/#${activeId}`;
 
             return (
               <Link
@@ -65,9 +63,7 @@ export function SiteHeader() {
               </SheetHeader>
               <div className="flex flex-col gap-6 pt-6">
                 {navItems.map((item) => {
-                  const isActive =
-                    (item.href.startsWith('/#') && item.href === `/#${activeId}`) ||
-                    (item.href === '/blog' && activeId === 'blog');
+                  const isActive = item.href === `/#${activeId}`;
 
                   return (
                     <Link
