@@ -8,7 +8,7 @@ import { AnimatedText } from '../ui/animated-text';
 
 const roles = [
   'Utkarsh Gupta',
-  'a Software Developer',
+  'a Developer',
   'a Problem Solver',
   'a Tech Enthusiast',
 ];
