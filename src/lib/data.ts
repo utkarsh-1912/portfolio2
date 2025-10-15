@@ -9,7 +9,12 @@ import {
   Cpu,
   Fingerprint,
   FileCode,
-  GraduationCap
+  GraduationCap,
+  Network,
+  Book,
+  Terminal,
+  Cloud,
+  BriefcaseBusiness,
 } from 'lucide-react';
 
 export const projects = [
@@ -40,19 +45,65 @@ export const projects = [
   },
 ];
 
-export const skills: { name: string; icon: LucideIcon }[] = [
-  { name: 'C++', icon: Code },
-  { name: 'Java', icon: Code },
-  { name: 'JavaScript', icon: Code },
-  { name: 'React', icon: FileCode },
-  { name: 'Next.js', icon: FileCode },
-  { name: 'Spring Boot', icon: Server },
-  { name: 'Tailwind CSS', icon: Wind },
-  { name: 'MySQL', icon: Database },
-  { name: 'MongoDB', icon: Database },
-  { name: 'Docker', icon: GitGraph },
-  { name: 'Linux/Bash', icon: Cpu },
-  { name: 'APIs', icon: Fingerprint },
+export const categorizedSkills = [
+  {
+    category: 'Programming',
+    icon: Code,
+    skills: [
+      { name: 'C++', icon: Code },
+      { name: 'Java', icon: Code },
+      { name: 'JavaScript', icon: Code },
+      { name: 'Python', icon: Code },
+    ],
+  },
+  {
+    category: 'CS Fundamentals',
+    icon: Book,
+    skills: [
+      { name: 'OOPs', icon: Code },
+      { name: 'DBMS', icon: Database },
+      { name: 'OS', icon: Cpu },
+      { name: 'Computer Networks', icon: Network },
+    ],
+  },
+  {
+    category: 'Web Development',
+    icon: FileCode,
+    skills: [
+      { name: 'ReactJS', icon: FileCode },
+      { name: 'NextJS', icon: FileCode },
+      { name: 'NodeJS', icon: Server },
+      { name: 'ExpressJS', icon: Server },
+      { name: 'Tailwind CSS', icon: Wind },
+      { name: 'Bootstrap', icon: Wind },
+      { name: 'Spring Boot', icon: Server },
+    ],
+  },
+  {
+    category: 'Database',
+    icon: Database,
+    skills: [
+      { name: 'MongoDB', icon: Database },
+      { name: 'MySQL', icon: Database },
+      { name: 'AWS S3', icon: Cloud },
+    ],
+  },
+  {
+    category: 'Other Tools & Technologies',
+    icon: BriefcaseBusiness,
+    skills: [
+      { name: 'APIs', icon: Fingerprint },
+      { name: 'Electronic Trading', icon: GitGraph },
+      { name: 'Kibana', icon: Terminal },
+      { name: 'Grafana', icon: Terminal },
+      { name: 'Finance', icon: GitGraph },
+      { name: 'Linux', icon: Cpu },
+      { name: 'Network & Sockets', icon: Network },
+      { name: 'Bash', icon: Terminal },
+      { name: 'Docker', icon: GitGraph },
+      { name: 'GitHub Actions', icon: GitGraph },
+    ],
+  },
 ];
 
 export const blogPosts = [
