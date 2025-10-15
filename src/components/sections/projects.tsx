@@ -9,7 +9,7 @@ import { ExternalLink, Github } from 'lucide-react';
 
 export function ProjectsSection() {
   return (
-    <section id="projects" className="container py-20 lg:py-24">
+    <section id="projects" className="container py-20 lg:py-24 bg-muted/40">
       <h2 className="text-3xl font-bold font-headline tracking-tighter text-center sm:text-4xl mb-12">My Projects</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project) => {
