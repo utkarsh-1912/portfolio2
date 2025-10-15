@@ -32,7 +32,7 @@ export function SiteFooter() {
             </Link>
           </Button>
           <Button asChild variant="ghost" size="icon">
-            <Link href="https://twitter.com/utkristi" target="_blank" rel="noreferrer">
+            <Link href="https://x.com/Utkarsh191201" target="_blank" rel="noreferrer">
               <Twitter className="h-5 w-5" />
               <span className="sr-only">Twitter</span>
             </Link>
