@@ -4,9 +4,10 @@ import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Code2, Menu } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { useScrollSpy } from '@/hooks/use-scroll-spy';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 const navItems = [
   { name: 'About', href: '/#about' },
@@ -20,6 +21,7 @@ const sectionIds = ['hero', 'about', 'education', 'projects', 'contact'];
 
 export function SiteHeader() {
   const activeId = useScrollSpy(sectionIds, { rootMargin: '0% 0% -50% 0%' });
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,7 +32,10 @@ export function SiteHeader() {
         </Link>
         <nav className="hidden flex-1 md:flex items-center gap-6 text-sm font-medium">
           {navItems.map((item) => {
-            const isActive = item.href === `/#${activeId}`;
+            const isActive =
+              (item.href.startsWith('/#') && item.href === `/#${activeId}`) ||
+              (item.href === '/blog' && activeId === 'blog');
+
             return (
               <Link
                 key={item.name}
@@ -47,7 +52,7 @@ export function SiteHeader() {
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <ThemeToggle />
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
                 <Menu />
@@ -55,13 +60,20 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle className="sr-only">Navigation</SheetTitle>
+              </SheetHeader>
               <div className="flex flex-col gap-6 pt-6">
                 {navItems.map((item) => {
-                  const isActive = item.href === `/#${activeId}`;
+                  const isActive =
+                    (item.href.startsWith('/#') && item.href === `/#${activeId}`) ||
+                    (item.href === '/blog' && activeId === 'blog');
+
                   return (
                     <Link
                       key={item.name}
                       href={item.href}
+                      onClick={() => setIsSheetOpen(false)}
                       className={cn(
                         'text-lg font-medium transition-colors hover:text-primary',
                         isActive && activeId !== 'hero' ? 'text-primary' : 'text-foreground'
