@@ -32,17 +32,18 @@ export function SiteHeader() {
           {navItems.map((item) => {
             const isActive = item.href === `/#${activeId}` || (item.href === '/blog' && activeId === 'blog');
             return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                'transition-colors hover:text-foreground/80',
-                isActive ? 'text-foreground' : 'text-foreground/60'
-              )}
-            >
-              {item.name}
-            </Link>
-          )})}
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  'transition-colors hover:text-primary',
+                  isActive ? 'text-primary' : 'text-foreground/60'
+                )}
+              >
+                {item.name}
+              </Link>
+            );
+          })}
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <ThemeToggle />
@@ -61,18 +62,19 @@ export function SiteHeader() {
                 </Link>
                 {navItems.map((item) => {
                   const isActive = item.href === `/#${activeId}`;
-                   return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                     className={cn(
-                      'text-lg font-medium transition-colors hover:text-primary',
-                      isActive ? 'text-primary' : 'text-foreground'
-                    )}
-                  >
-                    {item.name}
-                  </Link>
-                )})}
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={cn(
+                        'text-lg font-medium transition-colors hover:text-primary',
+                        isActive ? 'text-primary' : 'text-foreground'
+                      )}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                })}
               </div>
             </SheetContent>
           </Sheet>
