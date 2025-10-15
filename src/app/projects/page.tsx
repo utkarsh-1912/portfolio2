@@ -5,20 +5,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { projects } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ArrowRight, ExternalLink, Github } from 'lucide-react';
+import { ExternalLink, Github } from 'lucide-react';
 
-export function ProjectsSection() {
-  const latestProjects = projects.slice(0, 4);
-
+export default function ProjectsPage() {
   return (
-    <section id="projects" className="container py-20 lg:py-24 bg-muted/40">
+    <div id="projects" className="container py-24 sm:py-32">
       <div className="text-center">
-        <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-4xl mb-12">
-          My Projects
-        </h2>
+        <h1 className="text-4xl font-bold font-headline tracking-tighter sm:text-5xl">My Projects</h1>
+        <p className="mt-4 max-w-2xl mx-auto text-muted-foreground md:text-xl">
+          Here are some of the projects I'm proud to have worked on.
+        </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {latestProjects.map((project) => {
+
+      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {projects.map((project) => {
           const projectImage = PlaceHolderImages.find((p) => p.id === project.imageUrlId);
           const hasGithubUrl = project.githubUrl && project.githubUrl !== '#';
           const hasLiveUrl = project.liveUrl && project.liveUrl !== '#';
@@ -89,15 +89,6 @@ export function ProjectsSection() {
           );
         })}
       </div>
-
-      <div className="mt-12 text-center">
-        <Button asChild variant="outline">
-          <Link href="/projects">
-            View All Projects
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-        </Button>
-      </div>
-    </section>
+    </div>
   );
 }

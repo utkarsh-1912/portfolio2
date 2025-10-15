@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../u
 import { useScrollSpy } from '@/hooks/use-scroll-spy';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const navItems = [
   { name: 'About', href: '/#about' },
@@ -22,6 +23,9 @@ const sectionIds = ['hero', 'about', 'education', 'projects', 'blog-preview', 'c
 export function SiteHeader() {
   const activeId = useScrollSpy(sectionIds, { rootMargin: '0% 0% -50% 0%' });
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isProjectsPage = pathname === '/projects';
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -32,7 +36,7 @@ export function SiteHeader() {
         </Link>
         <nav className="hidden flex-1 md:flex items-center gap-6 text-sm font-medium">
           {navItems.map((item) => {
-            const isActive = item.href === `/#${activeId}`;
+            const isActive = item.href === `/#${activeId}` || (item.name === 'Projects' && isProjectsPage);
 
             return (
               <Link
@@ -63,7 +67,7 @@ export function SiteHeader() {
               </SheetHeader>
               <div className="flex flex-col gap-6 pt-6">
                 {navItems.map((item) => {
-                  const isActive = item.href === `/#${activeId}`;
+                  const isActive = item.href === `/#${activeId}` || (item.name === 'Projects' && isProjectsPage);
 
                   return (
                     <Link
