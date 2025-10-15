@@ -14,13 +14,22 @@ export function ProjectsSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project) => {
           const projectImage = PlaceHolderImages.find((p) => p.id === project.imageUrlId);
+          const hasGithubUrl = project.githubUrl && project.githubUrl !== '#';
+          const hasLiveUrl = project.liveUrl && project.liveUrl !== '#';
+
           return (
             <Card
               key={project.title}
               className="flex flex-col overflow-hidden transition-transform transform hover:-translate-y-2 hover:shadow-2xl"
             >
               {projectImage && (
-                <Link href={project.liveUrl} target="_blank" className="block overflow-hidden">
+                <Link
+                  href={hasLiveUrl ? project.liveUrl : '#'}
+                  target="_blank"
+                  className={`block overflow-hidden ${!hasLiveUrl ? 'pointer-events-none' : ''}`}
+                  aria-disabled={!hasLiveUrl}
+                  tabIndex={!hasLiveUrl ? -1 : undefined}
+                >
                   <Image
                     src={projectImage.imageUrl}
                     alt={projectImage.description}
@@ -45,14 +54,26 @@ export function ProjectsSection() {
                 </div>
               </CardContent>
               <CardFooter className="p-6 pt-0 flex justify-start gap-2">
-                <Button asChild variant="outline" size="sm">
-                  <Link href={project.githubUrl} target="_blank">
+                <Button asChild variant="outline" size="sm" disabled={!hasGithubUrl}>
+                  <Link
+                    href={hasGithubUrl ? project.githubUrl : '#'}
+                    target="_blank"
+                    aria-disabled={!hasGithubUrl}
+                    tabIndex={!hasGithubUrl ? -1 : undefined}
+                    className={!hasGithubUrl ? 'pointer-events-none' : ''}
+                  >
                     <Github className="mr-2 h-4 w-4" />
                     GitHub
                   </Link>
                 </Button>
-                <Button asChild size="sm">
-                  <Link href={project.liveUrl} target="_blank">
+                <Button asChild size="sm" disabled={!hasLiveUrl}>
+                  <Link
+                    href={hasLiveUrl ? project.liveUrl : '#'}
+                    target="_blank"
+                    aria-disabled={!hasLiveUrl}
+                    tabIndex={!hasLiveUrl ? -1 : undefined}
+                    className={!hasLiveUrl ? 'pointer-events-none' : ''}
+                  >
                     <ExternalLink className="mr-2 h-4 w-4" />
                     Live Demo
                   </Link>

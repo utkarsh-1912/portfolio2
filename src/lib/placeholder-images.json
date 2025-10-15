@@ -25,6 +25,24 @@
       "imageHint": "library software"
     },
     {
+      "id": "project-code-editor",
+      "description": "Screenshot of a real-time code editor",
+      "imageUrl": "https://picsum.photos/seed/p-code-editor/550/310",
+      "imageHint": "code editor"
+    },
+    {
+      "id": "project-notes-manager",
+      "description": "Screenshot of a notes manager application",
+      "imageUrl": "https://picsum.photos/seed/p-notes/550/310",
+      "imageHint": "notes app"
+    },
+    {
+      "id": "project-formify-json",
+      "description": "Screenshot of a form generator from JSON",
+      "imageUrl": "https://picsum.photos/seed/p-formify/550/310",
+      "imageHint": "json form"
+    },
+    {
       "id": "blog-react-hooks",
       "description": "Abstract image representing React code for a blog post",
       "imageUrl": "https://picsum.photos/seed/b1/550/310",
