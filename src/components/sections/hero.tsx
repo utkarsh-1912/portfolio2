@@ -24,7 +24,7 @@ export function HeroSection() {
             </Button>
           </div>
         </div>
-        <div className="flex justify-center items-center lg:justify-end">
+        <div className="hidden lg:flex justify-center items-center lg:justify-end">
           {heroImage && (
             <div className="relative group w-[300px] h-[300px] sm:w-[450px] sm:h-[450px]">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-full blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
