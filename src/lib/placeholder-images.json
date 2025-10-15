@@ -7,22 +7,22 @@
       "imageHint": "developer portrait"
     },
     {
+      "id": "project-fi-xpert",
+      "description": "Screenshot of a financial assistant application",
+      "imageUrl": "https://picsum.photos/seed/p-fixpert/550/310",
+      "imageHint": "finance app"
+    },
+    {
+      "id": "project-seismic-analysis",
+      "description": "Visualization of seismic data analysis",
+      "imageUrl": "https://picsum.photos/seed/p-seismic/550/310",
+      "imageHint": "data analysis"
+    },
+    {
       "id": "project-book-manager",
       "description": "Screenshot of a book management system",
       "imageUrl": "https://picsum.photos/seed/p-book/550/310",
       "imageHint": "library software"
-    },
-    {
-      "id": "project-blog",
-      "description": "Screenshot of a blog website",
-      "imageUrl": "https://picsum.photos/seed/p-blog/550/310",
-      "imageHint": "blog interface"
-    },
-    {
-      "id": "project-dev-detective",
-      "description": "Screenshot of a GitHub profile finder app",
-      "imageUrl": "https://picsum.photos/seed/p-dev/550/310",
-      "imageHint": "github profile"
     },
     {
       "id": "blog-react-hooks",

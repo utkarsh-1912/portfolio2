@@ -19,6 +19,24 @@ import {
 
 export const projects = [
   {
+    title: 'Fi-Xpert',
+    description:
+      'A financial assistant app to analyze stocks, ETFs, and market trends with an AI-powered chatbot for insights.',
+    tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Shadcn UI', 'Genkit'],
+    imageUrlId: 'project-fi-xpert',
+    liveUrl: 'https://fi-xpert.vercel.app/',
+    githubUrl: '#',
+  },
+  {
+    title: 'Mine Seismic Analysis',
+    description:
+      'A machine learning project to analyze seismic data for mines, predicting seismic events using various classification models.',
+    tags: ['Python', 'Scikit-learn', 'Pandas', 'Google Colab'],
+    imageUrlId: 'project-seismic-analysis',
+    liveUrl: 'https://colab.research.google.com/github/utkarsh-1912/ML_Works/blob/main/Seismic_Analysis_for_Mine.ipynb',
+    githubUrl: 'https://github.com/utkarsh-1912/ML_Works/blob/main/Seismic_Analysis_for_Mine.ipynb',
+  },
+  {
     title: 'Kartavya Bookshop Manager',
     description:
       'Engineered a robust book management system for an NGO bookstore, streamlining inventory and operations using C++ and MySQL.',
@@ -26,22 +44,6 @@ export const projects = [
     imageUrlId: 'project-book-manager',
     liveUrl: 'https://bit.ly/kartavya-book-manager',
     githubUrl: 'https://bit.ly/kartavya-book-manager',
-  },
-  {
-    title: 'Utkristi-Blogs',
-    description: 'A full-stack blogging application where multiple users can read and comment in real-time, with authentication and rich text editing.',
-    tags: ['NextJS', 'Tailwind CSS', 'Firebase', 'Strapi', 'Socket.IO'],
-    imageUrlId: 'project-blog',
-    liveUrl: 'https://utkristi-blog-ui.vercel.app/',
-    githubUrl: '#',
-  },
-  {
-    title: 'Dev-Detective',
-    description: 'A tool for developers to quickly search for GitHub user profiles and view their stats and repositories.',
-    tags: ['JavaScript', 'HTML', 'CSS', 'GitHub API'],
-    imageUrlId: 'project-dev-detective',
-    liveUrl: '#',
-    githubUrl: 'https://github.com/utkarsh-1912/Dev-Detective',
   },
 ];
 
@@ -110,13 +112,13 @@ export const blogPosts = [
   {
     title: 'Understanding React Hooks',
     description: 'A deep dive into useState, useEffect, and other fundamental React hooks.',
-    url: '#',
+    url: 'https://utkristi-blog-ui.vercel.app/',
     imageUrlId: 'blog-react-hooks',
   },
   {
     title: 'The Art of UI/UX Design',
     description: 'Principles and best practices for creating intuitive and engaging user interfaces.',
-    url: '#',
+    url: 'https://utkristi-blog-ui.vercel.app/',
     imageUrlId: 'blog-ui-ux',
   },
 ];
