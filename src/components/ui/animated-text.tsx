@@ -44,7 +44,7 @@ export function AnimatedText({ phrases, className }: AnimatedTextProps) {
   return (
     <span className={cn('text-primary', className)}>
       {text}
-      <span className="animate-blink">|</span>
+      <span className="animate-blink">_</span>
     </span>
   );
 }
