@@ -2,12 +2,12 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { blogPosts } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { getBlogPosts } from '@/lib/strapi';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 
-export function BlogSection() {
-  const latestPosts = blogPosts.slice(0, 2);
+export async function BlogSection() {
+  const allPosts = await getBlogPosts();
+  const latestPosts = allPosts.slice(0, 2);
 
   return (
     <section id="blog-preview" className="container py-20 lg:py-24">
@@ -22,21 +22,20 @@ export function BlogSection() {
 
       <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         {latestPosts.map((post) => {
-          const postImage = PlaceHolderImages.find((p) => p.id === post.imageUrlId);
           return (
             <Card
               key={post.title}
               className="flex flex-col overflow-hidden transition-transform transform hover:-translate-y-2 hover:shadow-2xl"
             >
-              {postImage && (
+              {post.imageUrl && (
                 <Link href={post.url} target="_blank" className="block overflow-hidden">
                   <Image
-                    src={postImage.imageUrl}
-                    alt={postImage.description}
+                    src={post.imageUrl}
+                    alt={post.title}
                     width={550}
                     height={310}
                     className="w-full object-cover aspect-[16/9] transition-transform duration-500 hover:scale-105"
-                    data-ai-hint={postImage.imageHint}
+                    data-ai-hint={post.imageHint}
                   />
                 </Link>
               )}

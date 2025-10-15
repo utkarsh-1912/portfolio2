@@ -16,6 +16,7 @@ import {
   Cloud,
   BriefcaseBusiness,
 } from 'lucide-react';
+import { Post } from './types';
 
 export const projects = [
   {
@@ -132,18 +133,20 @@ export const categorizedSkills = [
   },
 ];
 
-export const blogPosts = [
+export const blogPosts: Post[] = [
   {
     title: 'Understanding React Hooks',
     description: 'A deep dive into useState, useEffect, and other fundamental React hooks.',
     url: 'https://utkristi-blog-ui.vercel.app/',
-    imageUrlId: 'blog-react-hooks',
+    imageUrl: '', // This will be populated by getBlogPosts
+    imageHint: 'react code',
   },
   {
     title: 'The Art of UI/UX Design',
     description: 'Principles and best practices for creating intuitive and engaging user interfaces.',
     url: 'https://utkristi-blog-ui.vercel.app/',
-    imageUrlId: 'blog-ui-ux',
+    imageUrl: '', // This will be populated by getBlogPosts
+    imageHint: 'design process',
   },
 ];
 

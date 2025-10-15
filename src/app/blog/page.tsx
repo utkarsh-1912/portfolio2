@@ -2,11 +2,11 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { blogPosts } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { getBlogPosts } from '@/lib/strapi';
 import { ExternalLink } from 'lucide-react';
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getBlogPosts();
   return (
     <div id="blog" className="container py-24 sm:py-32">
       <div className="text-center">
@@ -17,22 +17,21 @@ export default function BlogPage() {
       </div>
 
       <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {blogPosts.map((post) => {
-          const postImage = PlaceHolderImages.find((p) => p.id === post.imageUrlId);
+        {posts.map((post) => {
           return (
             <Card
               key={post.title}
               className="flex flex-col overflow-hidden transition-transform transform hover:-translate-y-2 hover:shadow-2xl"
             >
-              {postImage && (
+              {post.imageUrl && (
                 <Link href={post.url} target="_blank" className="block overflow-hidden">
                   <Image
-                    src={postImage.imageUrl}
-                    alt={postImage.description}
+                    src={post.imageUrl}
+                    alt={post.title}
                     width={550}
                     height={310}
                     className="w-full object-cover aspect-[16/9] transition-transform duration-500 hover:scale-105"
-                    data-ai-hint={postImage.imageHint}
+                    data-ai-hint={post.imageHint}
                   />
                 </Link>
               )}
