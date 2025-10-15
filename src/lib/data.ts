@@ -62,7 +62,7 @@ export const categorizedSkills = [
     category: 'CS Fundamentals',
     icon: Book,
     skills: [
-      { name: 'OOPs', icon: Code },
+      { name: 'System Design', icon: Network },
       { name: 'DBMS', icon: Database },
       { name: 'OS', icon: Cpu },
       { name: 'Computer Networks', icon: Network },
