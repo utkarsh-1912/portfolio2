@@ -20,7 +20,11 @@ export function HeroSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
         <div className="flex flex-col gap-6 items-center lg:items-start text-center lg:text-left">
           <h1 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl xl:text-7xl/none">
-            Hi, I&apos;m <AnimatedText phrases={roles} />
+            Hi, I&apos;m{' '}
+            <span className="lg:hidden text-primary">Utkarsh Gupta</span>
+            <span className="hidden lg:inline-block">
+              <AnimatedText phrases={roles} />
+            </span>
           </h1>
           <p className="max-w-[600px] text-muted-foreground md:text-xl">
             A software engineer with a passion for debugging complex codebases and developing
