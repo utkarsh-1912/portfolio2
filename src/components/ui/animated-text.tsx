@@ -13,8 +13,8 @@ export function AnimatedText({ phrases, className }: AnimatedTextProps) {
   const [subIndex, setSubIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [text, setText] = useState('');
-  const typingSpeed = 100;
-  const deletingSpeed = 50;
+  const typingSpeed = 150;
+  const deletingSpeed = 75;
   const delay = 2000;
 
   useEffect(() => {
