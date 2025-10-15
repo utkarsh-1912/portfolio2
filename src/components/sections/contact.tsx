@@ -62,10 +62,10 @@ export function ContactSection() {
                 <div>
                   <h3 className="font-semibold">Email</h3>
                   <a
-                    href="mailto:utkarsh.19.12.01@gmail.com"
+                    href="mailto:utkarshofficial1912@gmail.com"
                     className="text-muted-foreground hover:text-primary transition-colors text-sm break-all"
                   >
-                    utkarsh.19.12.01@gmail.com
+                    utkarshofficial1912@gmail.com
                   </a>
                 </div>
               </CardContent>
