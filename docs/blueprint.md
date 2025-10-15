@@ -13,7 +13,6 @@
 
 - Primary color: Deep Indigo (#3F51B5) to convey professionalism and creativity.
 - Background color: Light Gray (#EEEEEE) for a clean, modern backdrop. Desaturated, but visibly of the same hue as the Indigo.
-- Accent color: Electric Blue (#7DF9FF) for highlighting interactive elements.
 - Font pairing: 'Space Grotesk' (sans-serif) for headlines, and 'Inter' (sans-serif) for body text.
 - Use a set of minimalist line icons for skills, technologies, and navigation.
 - Implement a clean, grid-based layout with clear visual hierarchy for easy navigation.
