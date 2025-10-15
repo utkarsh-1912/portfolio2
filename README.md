@@ -1,6 +1,6 @@
-# Firebase Studio Next.js Portfolio
+# Utkristi Portfolio
 
-This is a portfolio website built with Next.js and styled with Tailwind CSS and shadcn/ui. It was bootstrapped using Firebase Studio.
+This is a portfolio website built with Next.js and styled with Tailwind CSS and shadcn/ui.
 
 ## Getting Started
 
