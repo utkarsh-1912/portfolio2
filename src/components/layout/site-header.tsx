@@ -16,7 +16,7 @@ const navItems = [
   { name: 'Contact', href: '/#contact' },
 ];
 
-const sectionIds = ['about', 'education', 'projects', 'contact'];
+const sectionIds = ['hero', 'about', 'education', 'projects', 'contact'];
 
 export function SiteHeader() {
   const activeId = useScrollSpy(sectionIds, { rootMargin: '0% 0% -50% 0%' });
@@ -30,14 +30,14 @@ export function SiteHeader() {
         </Link>
         <nav className="hidden flex-1 md:flex items-center gap-6 text-sm font-medium">
           {navItems.map((item) => {
-            const isActive = item.href === `/#${activeId}` || (item.href === '/blog' && activeId === 'blog');
+            const isActive = item.href === `/#${activeId}`;
             return (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
                   'transition-colors hover:text-primary',
-                  isActive ? 'text-primary' : 'text-foreground/60'
+                  isActive && activeId !== 'hero' ? 'text-primary' : 'text-foreground/60'
                 )}
               >
                 {item.name}
@@ -68,7 +68,7 @@ export function SiteHeader() {
                       href={item.href}
                       className={cn(
                         'text-lg font-medium transition-colors hover:text-primary',
-                        isActive ? 'text-primary' : 'text-foreground'
+                        isActive && activeId !== 'hero' ? 'text-primary' : 'text-foreground'
                       )}
                     >
                       {item.name}
