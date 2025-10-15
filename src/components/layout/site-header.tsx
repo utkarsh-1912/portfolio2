@@ -34,25 +34,25 @@ export function SiteHeader() {
           <Code2 className="h-6 w-6 text-primary" />
           <span className="font-bold font-headline">Utkristi</span>
         </Link>
-        <nav className="hidden flex-1 md:flex items-center gap-6 text-sm font-medium">
-          {navItems.map((item) => {
-            const isActive = item.href === `/#${activeId}` || (item.name === 'Projects' && isProjectsPage);
-
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  'transition-colors hover:text-primary',
-                  isActive && activeId !== 'hero' ? 'text-primary' : 'text-foreground/60'
-                )}
-              >
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
         <div className="flex flex-1 items-center justify-end space-x-2">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+            {navItems.map((item) => {
+              const isActive = item.href === `/#${activeId}` || (item.name === 'Projects' && isProjectsPage);
+
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    'transition-colors hover:text-primary',
+                    isActive && activeId !== 'hero' ? 'text-primary' : 'text-foreground/60'
+                  )}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
           <ThemeToggle />
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
