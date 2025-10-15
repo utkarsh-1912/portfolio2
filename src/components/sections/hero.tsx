@@ -1,11 +1,10 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { AnimatedBackground } from '../ui/animated-background';
+import profileImage from '@/app/profile.jpg';
 
 export function HeroSection() {
-  const heroImage = PlaceHolderImages.find((p) => p.id === 'hero');
   return (
     <section id="hero" className="container py-20 sm:py-32 relative overflow-hidden">
       <AnimatedBackground />
@@ -28,21 +27,18 @@ export function HeroSection() {
             </Button>
           </div>
         </div>
-        <div className="hidden lg:flex justify-center items-center">
-          {heroImage && (
-            <div className="relative group w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] animate-float">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-              <Image
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
-                width={450}
-                height={450}
-                className="rounded-full aspect-square object-cover border-4 border-background shadow-lg relative w-full h-full"
-                data-ai-hint={heroImage.imageHint}
-                priority
-              />
-            </div>
-          )}
+        <div className="hidden lg:flex justify-end items-center">
+          <div className="relative group w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] animate-float">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+            <Image
+              src={profileImage}
+              alt="Portrait of Utkarsh Gupta"
+              width={450}
+              height={450}
+              className="rounded-full aspect-square object-cover border-4 border-background shadow-lg relative w-full h-full"
+              priority
+            />
+          </div>
         </div>
       </div>
     </section>
