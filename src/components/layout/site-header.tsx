@@ -55,11 +55,7 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
-              <div className="flex flex-col gap-6 pt-12">
-                <Link href="/" className="mr-6 flex items-center space-x-2">
-                  <Code2 className="h-6 w-6 text-primary" />
-                  <span className="font-bold font-headline">Utkristi</span>
-                </Link>
+              <div className="flex flex-col gap-6 pt-6">
                 {navItems.map((item) => {
                   const isActive = item.href === `/#${activeId}`;
                   return (
