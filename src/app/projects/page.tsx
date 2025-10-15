@@ -59,7 +59,7 @@ export default function ProjectsPage() {
                   ))}
                 </div>
               </CardContent>
-              <CardFooter className="p-6 pt-0 flex justify-start gap-2">
+              <CardFooter className="p-6 pt-0 flex justify-start gap-x-2">
                 <Button asChild variant="outline" size="sm" disabled={!hasGithubUrl}>
                   <Link
                     href={hasGithubUrl ? project.githubUrl : '#'}
