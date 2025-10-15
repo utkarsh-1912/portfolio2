@@ -127,7 +127,7 @@ export const categorizedSkills = [
       { name: 'Linux', icon: Cpu },
       { name: 'Network & Sockets', icon: Network },
       { name: 'Bash', icon: Terminal },
-      { name: 'Docker', icon: GitGraph },
+      { name: 'Docker & K8s', icon: GitGraph },
       { name: 'GitHub Actions', icon: GitGraph },
     ],
   },
@@ -155,7 +155,7 @@ export const education = [
     degree: 'Software Engineer',
     institution: 'Sosuv Consulting',
     duration: 'July 2024 - Present',
-    description: 'Debugging and refactoring complex codebases in Unix-like environments, improving session proxy reliability for trading workflows. Designing automated scripts and containerized workflows with Docker to optimize efficiency and ensure reproducibility.',
+    description: 'Debugging and refactoring complex codebases in Unix-like environments, improving session proxy reliability for trading workflows. Designing automated scripts and containerized workflows with Docker and Kubernetes to optimize efficiency and ensure reproducibility.',
     icon: Briefcase,
   },
   {

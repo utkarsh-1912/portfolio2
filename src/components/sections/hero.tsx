@@ -24,7 +24,7 @@ export function HeroSection() {
           </h1>
           <p className="max-w-[600px] text-muted-foreground md:text-xl">
             A software engineer with a passion for debugging complex codebases and developing
-            containerized workflows with Docker. Experienced in both front-end and back-end
+            containerized workflows with Docker and Kubernetes. Experienced in both front-end and back-end
             technologies.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">

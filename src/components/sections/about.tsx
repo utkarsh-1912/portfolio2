@@ -17,7 +17,7 @@ export function AboutSection() {
             <p>
               I am a Software Engineer at Sosuv Consulting, where I debug and refactor complex
               codebases, improving system reliability. I specialize in designing automated scripts
-              and containerized workflows with Docker to optimize efficiency.
+              and containerized workflows with Docker and Kubernetes to optimize efficiency.
             </p>
             <p>
               I hold a Bachelor of Technology from IIT (ISM) Dhanbad with a major in Civil
