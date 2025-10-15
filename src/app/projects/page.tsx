@@ -81,7 +81,8 @@ export default function ProjectsPage() {
                     className={!hasLiveUrl ? 'pointer-events-none' : ''}
                   >
                     <ExternalLink className="mr-2 h-4 w-4" />
-                    Live Demo
+                    <span className="sm:hidden">Demo</span>
+                    <span className="hidden sm:inline">Live Demo</span>
                   </Link>
                 </Button>
               </CardFooter>
