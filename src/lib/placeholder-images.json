@@ -1,0 +1,58 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "Portrait of a developer working",
+      "imageUrl": "https://picsum.photos/seed/hero/500/500",
+      "imageHint": "developer portrait"
+    },
+    {
+      "id": "project-fi-xpert",
+      "description": "Screenshot of a financial assistant application",
+      "imageUrl": "https://picsum.photos/seed/p-fixpert/550/310",
+      "imageHint": "finance app"
+    },
+    {
+      "id": "project-seismic-analysis",
+      "description": "Visualization of seismic data analysis",
+      "imageUrl": "https://picsum.photos/seed/p-seismic/550/310",
+      "imageHint": "data analysis"
+    },
+    {
+      "id": "project-book-manager",
+      "description": "Screenshot of a book management system",
+      "imageUrl": "https://picsum.photos/seed/p-book/550/310",
+      "imageHint": "library software"
+    },
+    {
+      "id": "project-code-editor",
+      "description": "Screenshot of a real-time code editor",
+      "imageUrl": "https://picsum.photos/seed/p-code-editor/550/310",
+      "imageHint": "code editor"
+    },
+    {
+      "id": "project-notes-manager",
+      "description": "Screenshot of a notes manager application",
+      "imageUrl": "https://picsum.photos/seed/p-notes/550/310",
+      "imageHint": "notes app"
+    },
+    {
+      "id": "project-formify-json",
+      "description": "Screenshot of a form generator from JSON",
+      "imageUrl": "https://picsum.photos/seed/p-formify/550/310",
+      "imageHint": "json form"
+    },
+    {
+      "id": "blog-react-hooks",
+      "description": "Abstract image representing React code for a blog post",
+      "imageUrl": "https://picsum.photos/seed/b1/550/310",
+      "imageHint": "react code"
+    },
+    {
+      "id": "blog-ui-ux",
+      "description": "Abstract image representing UI/UX design for a blog post",
+      "imageUrl": "https://picsum.photos/seed/b2/550/310",
+      "imageHint": "design process"
+    }
+  ]
+}
