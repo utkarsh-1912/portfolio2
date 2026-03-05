@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
+
 import { db } from '../../../db';
 import { hero, about, skills, projects, education, blogs } from '../../../db/schema';
 import { categorizedSkills, projects as staticProjects, education as staticEducation, blogPosts as staticBlogs } from '../../../lib/data';

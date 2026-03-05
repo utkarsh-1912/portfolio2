@@ -174,7 +174,7 @@ export const education = [
   },
   {
     degree: 'High School Diploma',
-    institution: 'St.Xavier’s High School, Fatehpur',
+    institution: "St.Xavier's High School, Fatehpur",
     duration: '2018 - 2020',
     description:
       'Completed my high school with a focus on Physics, Chemistry, and Mathematics, achieving 95.6% in board examinations.',
