@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Terminal as TerminalIcon, ExternalLink, Github, Send, X, HelpCircle } from 'lucide-react';
+import { Terminal as TerminalIcon, ExternalLink, Github, Send, X, HelpCircle, Briefcase, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -232,13 +232,13 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                         <div className="space-y-6 mt-3 mb-1 max-w-2xl">
                             {workEntries.length > 0 && (
                                 <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3 flex items-center gap-1.5">💼 Work Experience</p>
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3 flex items-center gap-1.5"><Briefcase className="h-3 w-3 text-primary" /> Work Experience</p>
                                     {renderGroup(workEntries)}
                                 </div>
                             )}
                             {eduEntries.length > 0 && (
                                 <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3 flex items-center gap-1.5">🎓 Education</p>
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3 flex items-center gap-1.5"><GraduationCap className="h-3 w-3 text-primary" /> Education</p>
                                     {renderGroup(eduEntries)}
                                 </div>
                             )}
