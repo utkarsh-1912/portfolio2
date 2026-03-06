@@ -18,8 +18,8 @@ export default function AdminLayout({
 
             {/* Main Content Area */}
             <main className="flex-1 overflow-y-auto relative bg-gradient-to-br from-background to-muted/20">
-                <div className="container mx-auto p-8 max-w-6xl">
-                    <div className="bg-card shadow-xl rounded-xl border border-border/50 p-6 md:p-8 backdrop-blur-xl">
+                <div className="container mx-auto p-2 md:p-8 max-w-6xl">
+                    <div className="bg-card shadow-xl rounded-xl border border-border/50 p-2 md:p-8 backdrop-blur-xl">
                         {children}
                     </div>
                 </div>

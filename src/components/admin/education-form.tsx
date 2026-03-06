@@ -7,7 +7,7 @@ import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { GraduationCap, Plus, Trash2, Edit, Save, X, Building2, Calendar, FileText, Component } from 'lucide-react';
+import { GraduationCap, Briefcase, Plus, Trash2, Edit, Save, X, Building2, Calendar, FileText } from 'lucide-react';
 
 export function AdminEducationForm({ initialData }: { initialData: any[] }) {
     const [items, setItems] = useState(initialData || []);
@@ -75,9 +75,29 @@ export function AdminEducationForm({ initialData }: { initialData: any[] }) {
                             <Textarea className="bg-background/80 resize-none" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} required rows={3} />
                         </div>
                         <div className="space-y-2">
-                            <Label className="flex items-center gap-2"><Component className="h-4 w-4" /> Icon Name</Label>
-                            <Input className="bg-background/80" placeholder="Briefcase or GraduationCap" value={formData.icon} onChange={e => setFormData({ ...formData, icon: e.target.value })} required />
-                            <p className="text-xs text-muted-foreground mt-1">Accepts standard lucide-react icon names like `Briefcase` or `GraduationCap`.</p>
+                            <Label className="flex items-center gap-2">Entry Type</Label>
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, icon: 'GraduationCap' })}
+                                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border-2 text-sm font-semibold transition-all ${formData.icon !== 'Briefcase'
+                                            ? 'border-primary bg-primary/10 text-primary'
+                                            : 'border-border/50 bg-background/60 text-muted-foreground hover:border-primary/40'
+                                        }`}
+                                >
+                                    <GraduationCap className="h-4 w-4" /> Education
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, icon: 'Briefcase' })}
+                                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border-2 text-sm font-semibold transition-all ${formData.icon === 'Briefcase'
+                                            ? 'border-primary bg-primary/10 text-primary'
+                                            : 'border-border/50 bg-background/60 text-muted-foreground hover:border-primary/40'
+                                        }`}
+                                >
+                                    <Briefcase className="h-4 w-4" /> Work
+                                </button>
+                            </div>
                         </div>
                     </CardContent>
                     <CardFooter className="bg-muted/30 py-4 px-6 border-t border-border/30 rounded-b-xl flex justify-end gap-3">

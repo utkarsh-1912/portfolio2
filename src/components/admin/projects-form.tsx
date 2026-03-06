@@ -7,7 +7,7 @@ import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Code, Plus, Trash2, Edit, Save, X, ExternalLink, Github, UploadCloud, Tag } from 'lucide-react';
+import { Code, Plus, Trash2, Edit, Save, X, ExternalLink, Github, UploadCloud, Tag, ListOrdered } from 'lucide-react';
 
 export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
     const [projects, setProjects] = useState(initialData || []);
@@ -23,7 +23,7 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
 
     const handleAddNew = () => {
         setEditingId('new');
-        setFormData({ title: '', description: '', tags: [], imageUrl: '', liveUrl: '', githubUrl: '' });
+        setFormData({ title: '', description: '', tags: [], imageUrl: '', liveUrl: '', githubUrl: '', sequence: 0 });
     };
 
     const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,9 +93,16 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                             <Label className="flex items-center gap-2">Description</Label>
                             <Textarea className="bg-background/80 resize-none min-h-[100px]" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} required />
                         </div>
-                        <div className="space-y-2">
-                            <Label className="flex items-center gap-2"><Tag className="h-4 w-4" /> Tech Stack / Tags (comma separated)</Label>
-                            <Input className="bg-background/80" value={formData.tags?.join(', ')} onChange={handleTagsChange} required />
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="md:col-span-2 space-y-2">
+                                <Label className="flex items-center gap-2"><Tag className="h-4 w-4" /> Tech Stack / Tags (comma separated)</Label>
+                                <Input className="bg-background/80" value={formData.tags?.join(', ')} onChange={handleTagsChange} required />
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="flex items-center gap-2"><ListOrdered className="h-4 w-4" /> Display Order</Label>
+                                <Input className="bg-background/80" type="number" min={0} value={formData.sequence ?? 0} onChange={e => setFormData({ ...formData, sequence: parseInt(e.target.value) || 0 })} />
+                                <p className="text-xs text-muted-foreground">Lower = shown first (0 = top)</p>
+                            </div>
                         </div>
 
                         <div className="border border-primary/20 bg-primary/5 p-4 rounded-xl space-y-4">

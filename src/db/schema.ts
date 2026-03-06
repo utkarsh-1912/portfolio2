@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, jsonb } from "drizzle-orm/pg-core";
 
 export const hero = pgTable('hero', {
     id: serial('id').primaryKey(),
@@ -31,6 +31,7 @@ export const projects = pgTable('projects', {
     imageUrl: text('image_url'), // Instead of imageUrlId, we just store full image URL from imgbb
     liveUrl: text('live_url'),
     githubUrl: text('github_url'),
+    sequence: integer('sequence').default(0),
     createdAt: timestamp('created_at').defaultNow(),
 });
 
@@ -50,6 +51,7 @@ export const blogs = pgTable('blogs', {
     url: text('url').notNull(),
     imageUrl: text('image_url'),
     imageHint: text('image_hint'),
+    sequence: integer('sequence').default(0),
 });
 
 export const contacts = pgTable('contacts', {

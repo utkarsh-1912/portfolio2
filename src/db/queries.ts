@@ -1,6 +1,6 @@
 import { db } from './index';
 import { hero, about, projects, education, skills, blogs, contacts } from './schema';
-import { desc, eq, count } from 'drizzle-orm';
+import { asc, desc, eq } from 'drizzle-orm';
 
 export async function getHero() {
     const data = await db.select().from(hero).limit(1);
@@ -13,7 +13,7 @@ export async function getAbout() {
 }
 
 export async function getProjects() {
-    return db.select().from(projects).orderBy(desc(projects.createdAt));
+    return db.select().from(projects).orderBy(asc(projects.sequence), desc(projects.createdAt));
 }
 
 export async function getEducation() {
@@ -25,7 +25,7 @@ export async function getSkills() {
 }
 
 export async function getBlogs() {
-    return db.select().from(blogs);
+    return db.select().from(blogs).orderBy(asc(blogs.sequence), asc(blogs.id));
 }
 
 export async function getContacts() {

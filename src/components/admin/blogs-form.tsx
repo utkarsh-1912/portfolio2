@@ -7,7 +7,7 @@ import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { FileText, Plus, Trash2, Edit, Save, X, ExternalLink, UploadCloud, MessageSquare } from 'lucide-react';
+import { FileText, Plus, Trash2, Edit, Save, X, ExternalLink, UploadCloud, MessageSquare, ListOrdered } from 'lucide-react';
 
 export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
     const [items, setItems] = useState(initialData || []);
@@ -23,7 +23,7 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
 
     const handleAddNew = () => {
         setEditingId('new');
-        setFormData({ title: '', description: '', url: '', imageUrl: '', imageHint: '' });
+        setFormData({ title: '', description: '', url: '', imageUrl: '', imageHint: '', sequence: 0 });
     };
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,9 +88,16 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
                             <Label className="flex items-center gap-2">Short Description / Excerpt</Label>
                             <Textarea className="bg-background/80 resize-none min-h-[100px]" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} required />
                         </div>
-                        <div className="space-y-2">
-                            <Label className="flex items-center gap-2"><ExternalLink className="h-4 w-4" /> Original Article URL</Label>
-                            <Input className="bg-background/80" type="url" placeholder="https://medium.com/..." value={formData.url} onChange={e => setFormData({ ...formData, url: e.target.value })} required />
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="md:col-span-2 space-y-2">
+                                <Label className="flex items-center gap-2"><ExternalLink className="h-4 w-4" /> Original Article URL</Label>
+                                <Input className="bg-background/80" type="url" placeholder="https://medium.com/..." value={formData.url} onChange={e => setFormData({ ...formData, url: e.target.value })} required />
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="flex items-center gap-2"><ListOrdered className="h-4 w-4" /> Display Order</Label>
+                                <Input className="bg-background/80" type="number" min={0} value={formData.sequence ?? 0} onChange={e => setFormData({ ...formData, sequence: parseInt(e.target.value) || 0 })} />
+                                <p className="text-xs text-muted-foreground">Lower = shown first (0 = top)</p>
+                            </div>
                         </div>
 
                         <div className="border border-primary/20 bg-primary/5 p-4 rounded-xl space-y-4">
