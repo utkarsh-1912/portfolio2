@@ -14,11 +14,11 @@ const navItems = [
   { name: 'About', href: '/#about' },
   { name: 'Experience', href: '/#education' },
   { name: 'Projects', href: '/#projects' },
-  { name: 'Blog', href: '/#blog-preview' },
+  { name: 'Blog', href: '/#blog' },
   { name: 'Contact', href: '/#contact' },
 ];
 
-const sectionIds = ['hero', 'about', 'education', 'projects', 'blog-preview', 'contact'];
+const sectionIds = ['hero', 'about', 'education', 'projects', 'blog', 'contact'];
 
 export function SiteHeader() {
   const activeId = useScrollSpy(sectionIds, { rootMargin: '0% 0% -50% 0%' });

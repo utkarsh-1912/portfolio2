@@ -63,9 +63,9 @@ function LoginForm() {
             <Button type="submit" className="w-full rounded-none tech-border font-bold tracking-widest uppercase transition-all" disabled={isLoading}>
                 {isLoading ? './verifying...' : './login'}
             </Button>
-            <Button className="w-full mt-4 rounded-none border border-primary bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-mono uppercase tracking-[0.2em] transition-all duration-300" size="lg">
+            <Button type="button" asChild className="w-full mt-4 rounded-none border border-primary bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-mono uppercase tracking-[0.2em] transition-all duration-300" size="lg">
                  <Link href="/" className="flex items-center justify-center gap-2 w-full">
-                    <span>./back_to_website</span>
+                    <span>&gt;cd ./home</span>
                 </Link>
             </Button>
         </form>
