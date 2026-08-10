@@ -115,7 +115,7 @@ export function AdminEducationForm({ initialData }: { initialData: any[] }) {
 
     return (
         <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
-            <CardHeader className="pb-4 border-b border-border/30 mb-6 flex flex-row items-center justify-between">
+            <CardHeader className="pb-4 border-b border-border/30 mb-6 flex flex-col sm:flex-row items-center justify-between">
                 <div>
                     <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
                         <GraduationCap className="h-5 w-5 text-primary" />
