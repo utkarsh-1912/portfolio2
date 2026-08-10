@@ -52,7 +52,7 @@
 
 @layer utilities {
   .tech-border {
-    @apply border border-primary/30 hover:border-primary/80 transition-colors shadow-[0_0_15px_rgba(0,240,255,0.05)] hover:shadow-[0_0_20px_rgba(0,240,255,0.15)];
+    @apply border border-primary/30 hover:border-primary/80 transition-colors shadow-[0_0_15px_hsl(var(--primary)/0.05)] hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)];;
   }
   .bg-grid {
     background-size: 40px 40px;

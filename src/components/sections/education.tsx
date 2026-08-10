@@ -33,7 +33,7 @@ export async function EducationSection() {
                 </div>
 
                 {/* Center Node */}
-                <div className="absolute left-4 top-0 sm:left-1/2 -translate-x-1/2 z-10 flex items-center justify-center w-8 h-8 bg-background rounded-full border-2 border-primary shadow-[0_0_15px_rgba(0,255,255,0.5)]">
+                <div className="absolute left-4 top-0 sm:left-1/2 -translate-x-1/2 z-10 flex items-center justify-center w-8 h-8 bg-background rounded-full border-2 border-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)]">
                   <IconComp className="h-4 w-4 text-primary" />
                 </div>
 
