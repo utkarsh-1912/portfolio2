@@ -29,7 +29,7 @@ export async function HeroSection() {
             <span className="text-muted-foreground">&gt; I am </span>
             <span className="text-primary">{heroData?.title || 'Utkarsh Gupta'}</span>
           </h1>
-          <div className="text-xl sm:text-2xl text-foreground/80 h-10 flex items-center">
+          <div className="text-md sm:text-2xl text-foreground/80 h-10 flex items-center">
              <span className="text-primary mr-2">const</span> role = "<AnimatedText phrases={heroData?.roles || ['Developer']} />";
           </div>
           <p className="max-w-[600px] text-muted-foreground md:text-lg relative z-20 font-sans mt-4">

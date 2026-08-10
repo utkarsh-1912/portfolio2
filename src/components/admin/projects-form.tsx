@@ -185,9 +185,9 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                             <div className="flex-1 min-w-0">
                                 <h4 className="font-bold font-headline text-lg truncate mb-1">{proj.title}</h4>
                                 <p className="text-sm text-muted-foreground line-clamp-2">{proj.description}</p>
-                                <div className="flex gap-2 mt-3 overflow-hidden">
+                                <div className="flex flex-wrap gap-1.5 mt-3 min-w-0 max-w-full overflow-hidden">
                                     {proj.tags?.slice(0, 3).map((t: string) => (
-                                        <span key={t} className="px-2 py-0.5 bg-secondary text-secondary-foreground text-xs rounded-md whitespace-nowrap">{t}</span>
+                                        <span key={t} className="inline-flex max-w-full items-center px-2 py-0.5 bg-secondary text-secondary-foreground text-xs rounded-md whitespace-nowrap">{t}</span>
                                     ))}
                                     {(proj.tags?.length || 0) > 3 && <span className="px-2 py-0.5 bg-secondary/50 text-muted-foreground text-xs rounded-md">+{proj.tags.length - 3}</span>}
                                 </div>

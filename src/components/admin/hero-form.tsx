@@ -7,7 +7,7 @@ import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Github, Linkedin, Save, Plus, X, Upload, Loader2, Link as LinkIcon, Youtube } from 'lucide-react';
+import { Github, Linkedin, Save, Plus, X, Upload, Loader2, Link as LinkIcon, Youtube, User } from 'lucide-react';
 import { XLogo } from '@/components/ui/x-logo';
 
 const DEFAULT_PHOTO = '/profile.jpg';
