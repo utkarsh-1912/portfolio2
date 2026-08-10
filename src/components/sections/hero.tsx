@@ -23,7 +23,7 @@ export async function HeroSection() {
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
             System Online
           </div>
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-foreground">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight text-foreground">
             &gt; Hello, World.
             <br />
             <span className="text-muted-foreground">&gt; I am </span>
