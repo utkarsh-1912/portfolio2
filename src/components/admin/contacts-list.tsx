@@ -74,13 +74,13 @@ export function AdminContactsView({ initialData }: { initialData: Contact[] }) {
             </div>
 
             <div className="flex gap-4 mb-6">
-                <Badge variant="destructive" className="px-4 py-1 text-sm bg-destructive/10 text-destructive border-transparent">
+                <Badge variant="destructive" className="px-3 py-1 text-sm bg-destructive/10 text-destructive border-transparent rounded-none">
                     {unread.length} Unread
                 </Badge>
-                <Badge variant="secondary" className="px-4 py-1 text-sm">
+                <Badge variant="secondary" className="px-3 py-1 text-sm rounded-none">
                     {read.length} Read
                 </Badge>
-                <Badge variant="outline" className="px-4 py-1 text-sm border-primary/20 text-primary">
+                <Badge variant="outline" className="px-3 py-1 text-sm border-primary/20 text-primary  rounded-none">
                     {resolved.length} Resolved
                 </Badge>
             </div>
