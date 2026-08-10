@@ -89,20 +89,7 @@ export function ProjectsSectionClient({ projects }: { projects: Project[] }) {
                                 <div className="flex-1 flex flex-col p-5 font-mono">
                                     <h3 className="font-bold text-lg mb-2 text-primary">{project.title}</h3>
                                     <p className="text-muted-foreground text-xs leading-relaxed mb-4 flex-1 line-clamp-3 font-sans">{project.description}</p>
-
-                                    <div className="flex flex-wrap gap-1.5 mb-4">
-                                        {project.tags.slice(0, 4).map((tag) => (
-                                            <Badge key={tag} variant="outline" className="rounded-none border-primary/20 bg-primary/5 text-primary text-[10px] uppercase font-bold tracking-wider">
-                                                {tag}
-                                            </Badge>
-                                        ))}
-                                        {project.tags.length > 4 && (
-                                            <Badge variant="outline" className="rounded-none border-primary/20 bg-primary/5 text-primary text-[10px] uppercase font-bold tracking-wider">
-                                                +{project.tags.length - 4}
-                                            </Badge>
-                                        )}
-                                    </div>
-
+                                    
                                     {/* GitHub Stats */}
                                     {project.githubStats && (
                                         <div className="flex items-center gap-4 mt-auto mb-4 text-xs font-mono text-muted-foreground">
@@ -115,13 +102,25 @@ export function ProjectsSectionClient({ projects }: { projects: Project[] }) {
                                                 <span>{project.githubStats.forks_count}</span>
                                             </div>
                                             {project.githubStats.language && (
-                                                <div className="flex items-center gap-1.5" title="Primary Language">
+                                                <div className="flex items-center gap-1.5 ml-auto" title="Primary Language">
                                                     <div className="h-2 w-2 rounded-full bg-blue-500/80 ring-2 ring-blue-500/20"></div>
                                                     <span>{project.githubStats.language}</span>
                                                 </div>
                                             )}
                                         </div>
                                     )}
+                                    <div className="flex flex-wrap gap-1.5 mb-4">
+                                        {project.tags.slice(0, 4).map((tag) => (
+                                            <Badge key={tag} variant="outline" className="rounded-none border-primary/20 bg-primary/5 text-primary text-[10px] uppercase font-bold tracking-wider">
+                                                {tag}
+                                            </Badge>
+                                        ))}
+                                        {project.tags.length > 4 && (
+                                            <Badge variant="outline" className="rounded-none border-primary/20 bg-primary/5 text-primary text-[10px] uppercase font-bold tracking-wider">
+                                                +{project.tags.length - 4}
+                                            </Badge>
+                                        )}
+                                    </div>
 
                                     {/* Footer links — stop propagation so clicks don't re-open modal */}
                                     <div className="flex items-center gap-2 pt-3 border-t border-primary/20" onClick={e => e.stopPropagation()}>

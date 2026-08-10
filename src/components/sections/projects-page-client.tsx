@@ -142,18 +142,9 @@ export function ProjectsPageClient({ projects }: { projects: Project[] }) {
                                 <h3 className="font-bold text-base mb-2 text-primary transition-colors">{project.title}</h3>
                                 <p className="text-muted-foreground font-sans text-sm leading-relaxed mb-4 flex-1 line-clamp-2">{project.description}</p>
 
-                                <div className="flex flex-wrap gap-1.5 mb-4">
-                                    {project.tags.slice(0, 4).map((tag) => (
-                                        <Badge key={tag} variant="secondary" className="text-[10px] rounded-none bg-primary/10 text-primary border-primary/20 uppercase tracking-wider">
-                                            {tag}
-                                        </Badge>
-                                    ))}
-                                    {project.tags.length > 4 && <Badge variant="outline" className="text-[10px] rounded-none border-primary/20 text-primary">+{project.tags.length - 4}</Badge>}
-                                </div>
-
                                 {/* GitHub Stats */}
                                 {project.githubStats && (
-                                    <div className="flex items-center gap-4 mb-4 pt-4 border-t border-primary/20 text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+                                    <div className="flex items-center gap-4 mt-auto mb-4 text-xs font-mono text-muted-foreground">
                                         <div className="flex items-center gap-1.5" title="Stars">
                                             <Star className="h-3.5 w-3.5 text-yellow-500" />
                                             <span>{project.githubStats.stargazers_count}</span>
@@ -170,6 +161,15 @@ export function ProjectsPageClient({ projects }: { projects: Project[] }) {
                                         )}
                                     </div>
                                 )}
+
+                                <div className="flex flex-wrap gap-1.5 mb-4">
+                                    {project.tags.slice(0, 4).map((tag) => (
+                                        <Badge key={tag} variant="secondary" className="text-[10px] rounded-none bg-primary/10 text-primary border-primary/20 uppercase tracking-wider">
+                                            {tag}
+                                        </Badge>
+                                    ))}
+                                    {project.tags.length > 4 && <Badge variant="outline" className="text-[10px] rounded-none border-primary/20 text-primary">+{project.tags.length - 4}</Badge>}
+                                </div>
 
                                 <div className="flex items-center gap-2 pt-4 border-t border-primary/20" onClick={e => e.stopPropagation()}>
                                     {hasGit && (

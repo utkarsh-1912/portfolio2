@@ -108,7 +108,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                                 href={project.liveUrl!}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-none tech-border bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-colors"
+                                className="flex items-center gap-2 px-2 sm:px-5 py-2.5 rounded-none tech-border bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-colors"
                             >
                                 <ExternalLink className="h-4 w-4" /> ./execute
                             </a>
@@ -118,7 +118,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                                 href={project.githubUrl!}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-none tech-border bg-background text-foreground font-bold text-xs uppercase tracking-widest hover:bg-muted transition-colors"
+                                className="flex items-center gap-2 px-2 sm:px-5 py-2.5 rounded-none tech-border bg-background text-foreground font-bold text-xs uppercase tracking-widest hover:bg-muted transition-colors"
                             >
                                 <Github className="h-4 w-4" /> git clone
                             </a>

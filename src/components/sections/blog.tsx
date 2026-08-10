@@ -55,7 +55,7 @@ export async function BlogSection() {
                       alt={first.title}
                       fill
                       unoptimized={firstImg.startsWith('http')}
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105 filter grayscale group-hover:grayscale-0"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                   </div>
@@ -101,7 +101,7 @@ export async function BlogSection() {
                             alt={post.title}
                             fill
                             unoptimized={imgUrl.startsWith('http')}
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105 filter grayscale group-hover:grayscale-0"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                         </div>

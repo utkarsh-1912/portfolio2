@@ -160,7 +160,7 @@ export function ContactSection({ heroData }: { heroData?: any }) {
               </div>
             </div>
           </div>
-          <Card className="shadow-2xl border-primary/30 rounded-none bg-background relative overflow-hidden group">
+          <Card className="hover:shadow-2xl border-primary/30 rounded-none bg-background relative overflow-hidden group">
             {/* Glowing top line */}
             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
             <CardHeader className="border-b border-primary/20 bg-primary/5 pb-4 px-6 flex flex-row items-center justify-between space-y-0">
