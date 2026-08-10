@@ -80,7 +80,7 @@ export function AdminContactsView({ initialData }: { initialData: Contact[] }) {
                 <Badge variant="secondary" className="px-3 py-1 text-sm rounded-none">
                     {read.length} Read
                 </Badge>
-                <Badge variant="outline" className="px-3 py-1 text-sm border-primary/20 text-primary  rounded-none">
+                <Badge variant="outline" className="px-3 py-1 text-sm border-primary/20 text-primary bg-primary/10 rounded-none">
                     {resolved.length} Resolved
                 </Badge>
             </div>

@@ -73,7 +73,7 @@ function SidebarContent({ currentTab, onNavigate }: { currentTab: string; onNavi
                 >
                     <Link href="/">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        ./exit_to_site
+                        cd ./exit
                     </Link>
                 </Button>
                 <Button
