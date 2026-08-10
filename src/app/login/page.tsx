@@ -63,6 +63,12 @@ function LoginForm() {
             <Button type="submit" className="w-full rounded-none tech-border font-bold tracking-widest uppercase transition-all" disabled={isLoading}>
                 {isLoading ? './verifying...' : './login'}
             </Button>
+            <Button className="w-full mt-4 rounded-none border border-primary bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-mono uppercase tracking-[0.2em] transition-all duration-300" size="lg">
+                 <Link href="/" className="flex items-center justify-center gap-2 w-full">
+                    <ArrowLeft className="h-4 w-4" />
+                    <span>./back_to_website</span>
+                </Link>
+            </Button>
         </form>
     );
 }
@@ -75,12 +81,6 @@ export default function LoginPage() {
 
             <Card className="w-full max-w-md shadow-2xl rounded-none tech-border bg-card/80 backdrop-blur-xl relative z-10 animate-in zoom-in-95 duration-500">
                 <CardHeader className="space-y-1 pb-6 text-center relative border-b border-primary/20 bg-muted/30">
-                    <Button variant="ghost" size="icon" asChild className="absolute left-4 top-4 text-muted-foreground hover:text-primary rounded-none">
-                        <Link href="/">
-                            <ArrowLeft className="h-4 w-4" />
-                            <span className="sr-only">Back to Website</span>
-                        </Link>
-                    </Button>
                     <div className="w-12 h-12 bg-primary/10 rounded-none border border-primary/30 flex items-center justify-center mx-auto mb-4 mt-2">
                         <Lock className="w-5 h-5 text-primary" />
                     </div>
