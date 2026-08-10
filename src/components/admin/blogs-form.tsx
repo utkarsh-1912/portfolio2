@@ -70,7 +70,7 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
 
     if (editingId) {
         return (
-            <Card className="border-border/50 shadow-sm bg-background/50 backdrop-blur-sm animate-in zoom-in-95 duration-200">
+            <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm animate-in zoom-in-95 duration-200 font-mono">
                 <CardHeader className="pb-4 border-b border-border/30 mb-6">
                     <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
                         <FileText className="h-5 w-5 text-primary" />
@@ -100,7 +100,7 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
                             </div>
                         </div>
 
-                        <div className="border border-primary/20 bg-primary/5 p-4 rounded-xl space-y-4">
+                        <div className="border border-primary/20 bg-primary/5 p-4 rounded-none space-y-4">
                             <Label className="flex items-center gap-2 font-semibold"><UploadCloud className="h-4 w-4 text-primary" /> Cover Image (ImgBB)</Label>
                             <div className="flex flex-col sm:flex-row items-center gap-4">
                                 <Input type="file" accept="image/*" onChange={handleImageUpload} disabled={isUploading} className="bg-background" />
@@ -136,7 +136,7 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
     }
 
     return (
-        <Card className="border-border/50 shadow-sm bg-background/50 backdrop-blur-sm">
+        <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
             <CardHeader className="pb-4 border-b border-border/30 mb-6 flex flex-row items-center justify-between">
                 <div>
                     <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
@@ -152,7 +152,7 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
             <CardContent>
                 <div className="grid gap-4">
                     {items.map((item) => (
-                        <div key={item.id} className="border border-border/50 bg-card p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-shadow">
+                        <div key={item.id} className="border border-border/50 bg-card p-4 rounded-none flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-shadow">
                             <div className="flex-1 min-w-0">
                                 <h4 className="font-bold font-headline text-lg truncate mb-1">{item.title}</h4>
                                 <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
@@ -169,7 +169,7 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
                         </div>
                     ))}
                     {items.length === 0 && (
-                        <div className="text-center py-12 border-2 border-dashed rounded-xl border-border/50">
+                        <div className="text-center py-12 border-2 border-dashed rounded-none border-border/50">
                             <FileText className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
                             <p className="text-muted-foreground font-medium">No blog posts found. Link your first article!</p>
                         </div>

@@ -31,7 +31,7 @@ export function AdminAboutForm({ initialData }: { initialData: any }) {
     };
 
     return (
-        <Card className="border-border/50 shadow-sm bg-background/50 backdrop-blur-sm">
+        <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
             <CardHeader className="pb-4 border-b border-border/30 mb-6">
                 <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
                     <UserCircle className="h-5 w-5 text-primary" />

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import React, { useState, useTransition, useMemo } from 'react';
 import { addProjectAction, updateProjectAction, deleteProjectAction } from '../../app/admin/actions';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { TagInput } from '@/components/ui/tag-input';
 import { Code, Plus, Trash2, Edit, Save, X, ExternalLink, Github, UploadCloud, Tag, ListOrdered } from 'lucide-react';
 
 export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
@@ -15,6 +16,19 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
     const [formData, setFormData] = useState<any>({});
     const [isPending, startTransition] = useTransition();
     const [isUploading, setIsUploading] = useState(false);
+
+    // Calculate tag frequencies from initialData and sort descending
+    const sortedTags = React.useMemo(() => {
+        const tagFrequencies = (initialData || []).reduce((acc: Record<string, number>, proj: any) => {
+            proj.tags?.forEach((tag: string) => {
+                acc[tag] = (acc[tag] || 0) + 1;
+            });
+            return acc;
+        }, {});
+        return Object.entries(tagFrequencies)
+            .sort((a, b) => b[1] - a[1])
+            .map(([tag]) => tag);
+    }, [initialData]);
 
     const handleEdit = (proj: any) => {
         setEditingId(proj.id);
@@ -75,7 +89,7 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
 
     if (editingId) {
         return (
-            <Card className="border-border/50 shadow-sm bg-background/50 backdrop-blur-sm animate-in zoom-in-95 duration-200">
+            <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm animate-in zoom-in-95 duration-200 font-mono">
                 <CardHeader className="pb-4 border-b border-border/30 mb-6">
                     <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
                         <Code className="h-5 w-5 text-primary" />
@@ -95,8 +109,13 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="md:col-span-2 space-y-2">
-                                <Label className="flex items-center gap-2"><Tag className="h-4 w-4" /> Tech Stack / Tags (comma separated)</Label>
-                                <Input className="bg-background/80" value={formData.tags?.join(', ')} onChange={handleTagsChange} required />
+                                <Label className="flex items-center gap-2"><Tag className="h-4 w-4" /> Tech Stack / Tags</Label>
+                                <TagInput 
+                                    value={formData.tags || []} 
+                                    onChange={(tags) => setFormData({ ...formData, tags })} 
+                                    suggestions={sortedTags} 
+                                    placeholder="Type a tag..." 
+                                />
                             </div>
                             <div className="space-y-2">
                                 <Label className="flex items-center gap-2"><ListOrdered className="h-4 w-4" /> Display Order</Label>
@@ -105,7 +124,7 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                             </div>
                         </div>
 
-                        <div className="border border-primary/20 bg-primary/5 p-4 rounded-xl space-y-4">
+                        <div className="border border-primary/20 bg-primary/5 p-4 rounded-none space-y-4">
                             <Label className="flex items-center gap-2 font-semibold"><UploadCloud className="h-4 w-4 text-primary" /> Cover Image (ImgBB)</Label>
                             <div className="flex flex-col sm:flex-row items-center gap-4">
                                 <Input type="file" accept="image/*" onChange={handleImageUpload} disabled={isUploading} className="bg-background" />
@@ -146,7 +165,7 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
     }
 
     return (
-        <Card className="border-border/50 shadow-sm bg-background/50 backdrop-blur-sm">
+        <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
             <CardHeader className="pb-4 border-b border-border/30 mb-6 flex flex-row items-center justify-between">
                 <div>
                     <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
@@ -162,7 +181,7 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
             <CardContent>
                 <div className="grid gap-4">
                     {projects.map((proj) => (
-                        <div key={proj.id} className="border border-border/50 bg-card p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-shadow">
+                        <div key={proj.id} className="border border-border/50 bg-card p-4 rounded-none flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-shadow">
                             <div className="flex-1 min-w-0">
                                 <h4 className="font-bold font-headline text-lg truncate mb-1">{proj.title}</h4>
                                 <p className="text-sm text-muted-foreground line-clamp-2">{proj.description}</p>
@@ -185,7 +204,7 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                         </div>
                     ))}
                     {projects.length === 0 && (
-                        <div className="text-center py-12 border-2 border-dashed rounded-xl">
+                        <div className="text-center py-12 border-2 border-dashed rounded-none">
                             <Code className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
                             <p className="text-muted-foreground font-medium">No projects found. Add your first showcase!</p>
                         </div>

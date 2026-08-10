@@ -43,16 +43,16 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300',
+        'sticky top-0 z-50 w-full transition-all duration-300 font-mono',
         scrolled
-          ? 'border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
+          ? 'bg-background/95 backdrop-blur border-b border-primary/30 shadow-[0_4px_20px_rgba(0,240,255,0.05)]'
           : 'bg-transparent'
       )}
     >
       <div className="container flex h-14 max-w-screen-2xl items-center px-4 md:px-8">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <Code2 className="h-6 w-6 text-primary" />
-          <span className="font-bold font-headline">Utkristi</span>
+          <span className="font-bold text-lg tracking-wider">Utkristi</span>
         </Link>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -64,8 +64,8 @@ export function SiteHeader() {
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    'transition-colors hover:text-primary',
-                    isActive && activeId !== 'hero' ? 'text-primary' : 'text-foreground/60'
+                    'transition-colors hover:text-primary hover:underline underline-offset-4 decoration-primary/50',
+                    isActive && activeId !== 'hero' ? 'text-primary' : 'text-foreground/70'
                   )}
                 >
                   {item.name}

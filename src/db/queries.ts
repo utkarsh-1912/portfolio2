@@ -3,31 +3,66 @@ import { hero, about, projects, education, skills, blogs, contacts } from './sch
 import { asc, desc, eq } from 'drizzle-orm';
 
 export async function getHero() {
-    const data = await db.select().from(hero).limit(1);
-    return data[0];
+    try {
+        const data = await db.select().from(hero).limit(1);
+        return data[0] || null;
+    } catch (e) {
+        console.error('getHero error:', e);
+        return null;
+    }
 }
 
 export async function getAbout() {
-    const data = await db.select().from(about).limit(1);
-    return data[0];
+    try {
+        const data = await db.select().from(about).limit(1);
+        return data[0] || null;
+    } catch (e) {
+        console.error('getAbout error:', e);
+        return null;
+    }
 }
 
 export async function getProjects() {
-    return db.select().from(projects).orderBy(asc(projects.sequence), desc(projects.createdAt));
+    try {
+        return await db.select().from(projects).orderBy(asc(projects.sequence), desc(projects.createdAt));
+    } catch (e) {
+        console.error('getProjects error:', e);
+        return [];
+    }
 }
 
 export async function getEducation() {
-    return db.select().from(education);
+    try {
+        return await db.select().from(education);
+    } catch (e) {
+        console.error('getEducation error:', e);
+        return [];
+    }
 }
 
 export async function getSkills() {
-    return db.select().from(skills);
+    try {
+        return await db.select().from(skills).orderBy(asc(skills.category));
+    } catch (e) {
+        console.error('getSkills error:', e);
+        return [];
+    }
 }
 
 export async function getBlogs() {
-    return db.select().from(blogs).orderBy(asc(blogs.sequence), asc(blogs.id));
+    try {
+        return await db.select().from(blogs).orderBy(asc(blogs.sequence));
+    } catch (e) {
+        console.error('getBlogs error:', e);
+        return [];
+    }
 }
 
 export async function getContacts() {
-    return db.select().from(contacts).orderBy(desc(contacts.createdAt));
+    try {
+        return await db.select().from(contacts).orderBy(desc(contacts.createdAt));
+    } catch (e) {
+        console.error('getContacts error:', e);
+        return [];
+    }
 }

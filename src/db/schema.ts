@@ -8,6 +8,7 @@ export const hero = pgTable('hero', {
     githubUrl: text('github_url'),
     linkedinUrl: text('linkedin_url'),
     twitterUrl: text('twitter_url'),
+    youtubeUrl: text('youtube_url'),
     photoUrl: text('photo_url'),
 });
 

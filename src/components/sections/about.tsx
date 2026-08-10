@@ -1,74 +1,41 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getAbout, getSkills } from '@/db/queries';
-import {
-  Code, Database, Server, Wind, Briefcase, GitGraph,
-  Cpu, Fingerprint, FileCode, GraduationCap, Network,
-  Book, Terminal, Cloud, BriefcaseBusiness
-} from 'lucide-react';
-
-const iconsMap: any = { Code, Database, Server, Wind, Briefcase, GitGraph, Cpu, Fingerprint, FileCode, GraduationCap, Network, Book, Terminal, Cloud, BriefcaseBusiness };
+import { getAbout } from '@/db/queries';
+import { Terminal } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export async function AboutSection() {
   const about = await getAbout();
-  const skills = await getSkills();
 
   return (
-    <section id="about" className="w-full py-20 lg:py-24 bg-muted/40">
-      <div className="container grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
-        <div className="lg:col-span-3">
-          <h2 className="text-3xl font-bold font-headline tracking-tighter sm:text-4xl mb-6">About Me</h2>
-          <div className="space-y-4 text-muted-foreground">
-            {about?.paragraphs.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
+    <section id="about" className="w-full min-h-screen py-20 bg-background relative border-t border-border/50 snap-start flex flex-col justify-center">
+      <div className="absolute inset-0 bg-dot-matrix opacity-20 pointer-events-none"></div>
+
+      <div className="container relative z-10 flex flex-col items-center justify-center max-w-4xl mx-auto h-full">
+        <div className="text-center font-mono mb-8">
+          <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3 bg-primary/10 px-4 py-1 border border-primary/30 rounded-none">./about</span>
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl uppercase text-foreground">&gt; whoami</h2>
+        </div>
+
+        <div className="w-full text-left bg-card/80 backdrop-blur border border-primary/20 p-6 md:p-10 font-mono mb-10 tech-border relative overflow-hidden group shadow-2xl">
+          <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+          <div className="flex items-center gap-2 mb-6 border-b border-primary/20 pb-4">
+            <div className="w-2.5 h-2.5 bg-primary/40"></div>
+            <div className="w-2.5 h-2.5 bg-primary/60"></div>
+            <div className="w-2.5 h-2.5 bg-primary"></div>
           </div>
+          <p className="text-muted-foreground text-sm md:text-base leading-relaxed whitespace-pre-line">
+            <span className="text-primary font-bold mr-2">root@system:~$</span> <span className="text-foreground">cat summary.txt</span>
+            <br/><br/>
+            {about?.paragraphs[0]}
+            <span className="animate-blink text-primary inline-block ml-1">_</span>
+          </p>
         </div>
-        <div className="lg:col-span-2">
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="font-headline text-2xl">My Skills</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Accordion type="single" collapsible defaultValue="Programming" className="w-full">
-                {skills.map((category) => {
-                  const CatIcon = iconsMap[category.categoryIcon] || Code;
-                  return (
-                    <AccordionItem key={category.category} value={category.category}>
-                      <AccordionTrigger className="font-semibold">
-                        <div className="flex items-center gap-3">
-                          <CatIcon className="h-5 w-5 text-primary" />
-                          {category.category}
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="grid grid-cols-2 gap-4 pt-4">
-                          {category.items.map((skill) => {
-                            const SkillIcon = iconsMap[skill.icon] || Code;
-                            return (
-                              <div
-                                key={skill.name}
-                                className="flex items-center gap-3 p-3 rounded-lg bg-background hover:bg-secondary/50 transition-colors"
-                              >
-                                <SkillIcon className="h-5 w-5 text-primary/80" />
-                                <span className="font-medium text-sm">{skill.name}</span>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  )
-                })}
-              </Accordion>
-            </CardContent>
-          </Card>
-        </div>
+        
+        <Link href="/about">
+          <Button variant="outline" className="tech-border rounded-none bg-primary/5 hover:bg-primary hover:text-primary-foreground font-mono px-8 py-6 uppercase tracking-widest transition-colors duration-300">
+             <Terminal className="h-5 w-5 mr-3" /> cd ./about --verbose
+          </Button>
+        </Link>
       </div>
     </section>
   );

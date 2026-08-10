@@ -127,17 +127,17 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                     output = (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3 mb-1">
                             {data.projects.map(p => (
-                                <div key={p.id} className="p-4 flex flex-col rounded-xl bg-card border border-primary/20 hover:border-primary/50 transition-colors">
+                                <div key={p.id} className="p-4 flex flex-col rounded-none bg-card tech-border hover:border-primary/50 transition-colors">
                                     <div className="flex justify-between items-start mb-2">
                                         <h3 className="font-bold text-sm leading-tight text-foreground">{p.title}</h3>
-                                        <Badge variant="outline" className="text-[10px] text-primary border-primary/30 shrink-0 ml-2">#{p.id}</Badge>
+                                        <Badge variant="outline" className="text-[10px] text-primary border-primary/30 shrink-0 ml-2 rounded-none">#{p.id}</Badge>
                                     </div>
-                                    <p className="text-xs text-muted-foreground line-clamp-2 mb-3 flex-1">{p.description}</p>
+                                    <p className="text-xs text-muted-foreground line-clamp-2 mb-3 flex-1 font-sans">{p.description}</p>
                                     <div className="flex flex-wrap gap-1">
                                         {p.tags.slice(0, 3).map((tag: string, i: number) => (
-                                            <Badge key={i} variant="secondary" className="text-[10px] bg-primary/10 text-primary">{tag}</Badge>
+                                            <Badge key={i} variant="secondary" className="text-[10px] bg-primary/10 text-primary rounded-none">{tag}</Badge>
                                         ))}
-                                        {p.tags.length > 3 && <Badge variant="secondary" className="text-[10px] bg-primary/10 text-primary">+{p.tags.length - 3}</Badge>}
+                                        {p.tags.length > 3 && <Badge variant="secondary" className="text-[10px] bg-primary/10 text-primary rounded-none">+{p.tags.length - 3}</Badge>}
                                     </div>
                                 </div>
                             ))}
@@ -195,12 +195,12 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                     const b = data?.blogs?.find((blog: any) => blog.id === parseInt(args[1]));
                     if (b) {
                         output = (
-                            <div className="mt-3 mb-1 max-w-2xl rounded-xl border border-primary/30 bg-card shadow-md p-4">
-                                <Badge className="mb-3 bg-primary/10 text-primary border-transparent text-xs">Article #{b.id}</Badge>
+                            <div className="mt-3 mb-1 max-w-2xl rounded-none tech-border bg-card p-4">
+                                <Badge className="mb-3 bg-primary/10 text-primary border-transparent text-xs rounded-none">Article #{b.id}</Badge>
                                 <h2 className="text-lg font-bold mb-3 text-foreground">{b.title}</h2>
-                                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{b.description}</p>
-                                <a href={b.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 text-sm">
-                                    Read Article <ExternalLink className="h-3.5 w-3.5" />
+                                <p className="text-sm text-muted-foreground leading-relaxed mb-4 font-sans">{b.description}</p>
+                                <a href={b.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-bold uppercase tracking-wider rounded-none hover:bg-primary/90 text-sm tech-border">
+                                    ./read_article.sh <ExternalLink className="h-3.5 w-3.5" />
                                 </a>
                             </div>
                         );
@@ -310,7 +310,7 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                         onClick={() => setIsOpen(true)}
                         size="icon"
                         title="Open Terminal (Ctrl+`)"
-                        className="h-12 w-12 rounded-full shadow-xl bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-transform"
+                        className="h-12 w-12 rounded-none tech-border shadow-xl bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-transform"
                     >
                         <TerminalIcon className="h-5 w-5" />
                     </Button>
@@ -353,7 +353,7 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                             <button
                                 key={cmd}
                                 onClick={() => handleChip(cmd)}
-                                className="shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-primary-foreground transition-all active:scale-95"
+                                className="shrink-0 px-3 py-1 rounded-none text-[11px] font-bold tracking-wider uppercase tech-border bg-primary/5 text-primary hover:bg-primary hover:text-primary-foreground transition-all active:scale-95"
                             >
                                 {cmd}
                             </button>
@@ -426,7 +426,7 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                         {/* Send button — key for mobile since Enter key is often off-screen */}
                         <button
                             type="submit"
-                            className="shrink-0 p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-40"
+                            className="shrink-0 p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-40 md:hidden"
                             disabled={!input.trim()}
                         >
                             <Send className="h-4 w-4" />

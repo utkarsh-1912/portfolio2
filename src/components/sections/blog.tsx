@@ -19,13 +19,13 @@ export async function BlogSection() {
   const latestPosts = allPosts.slice(0, 3);
 
   return (
-    <section id="blog-preview" className="w-full py-10 lg:py-18">
-      <div className="container">
+    <section id="blog" className="w-full min-h-screen py-10 md:py-16 lg:py-28 bg-background relative border-t border-border/50 snap-start flex flex-col justify-center overflow-y-auto">
+      <div className="container relative z-10">
         {/* Header */}
-        <div className="text-center mb-14">
-          <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3 bg-primary/10 px-4 py-1.5 rounded-full">Writing</span>
-          <h2 className="text-4xl font-bold font-headline tracking-tighter sm:text-5xl">From the Blog</h2>
-          <p className="mt-4 max-w-xl mx-auto text-muted-foreground">
+        <div className="text-center md:text-left mb-14 font-mono">
+          <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3 bg-primary/10 px-4 py-1 border border-primary/30 rounded-none">./writing</span>
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-foreground">&gt; ls -la ./blog</h2>
+          <p className="mt-4 max-w-xl text-muted-foreground font-sans">
             Thoughts on web development, engineering, and technology.
           </p>
         </div>
@@ -46,7 +46,7 @@ export async function BlogSection() {
                 href={first.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group lg:col-span-3 flex flex-col rounded-2xl border border-border/50 bg-card overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                className="group lg:col-span-3 flex flex-col rounded-none tech-border bg-card overflow-hidden transition-all duration-300 font-mono"
               >
                 {firstImg ? (
                   <div className="relative aspect-[16/9] overflow-hidden bg-muted">
@@ -66,12 +66,12 @@ export async function BlogSection() {
                 )}
                 <div className="flex-1 flex flex-col p-6">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-bold uppercase tracking-widest text-primary bg-primary/10 px-2.5 py-1 rounded-full">Featured</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-primary border border-primary/30 bg-primary/10 px-2.5 py-1 rounded-none">Featured</span>
                   </div>
-                  <h3 className="font-bold font-headline text-xl mb-3 group-hover:text-primary transition-colors leading-snug">{first.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed flex-1 line-clamp-3">{first.description}</p>
-                  <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary mt-5">
-                    Read Article <ExternalLink className="h-4 w-4" />
+                  <h3 className="font-bold text-xl mb-3 text-primary transition-colors leading-snug">{first.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed flex-1 line-clamp-3 font-sans">{first.description}</p>
+                  <div className="inline-flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase group-hover:text-primary mt-5 transition-colors">
+                    <ExternalLink className="h-4 w-4" /> execute ./read
                   </div>
                 </div>
               </Link>
@@ -91,7 +91,7 @@ export async function BlogSection() {
                       href={post.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex flex-col rounded-2xl border border-border/50 bg-card overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                      className="group flex flex-col rounded-none tech-border bg-card overflow-hidden transition-all duration-300 font-mono"
                     >
                       {/* Image / fallback */}
                       {imgUrl ? (
@@ -114,20 +114,19 @@ export async function BlogSection() {
                       {/* Body */}
                       <div className="flex flex-col flex-1 p-4">
                         {/* Number badge */}
-                        <span className="self-start text-[10px] font-bold tracking-[0.15em] uppercase text-primary bg-primary/10 px-2.5 py-1 rounded-full mb-3">
+                        <span className="self-start text-[10px] font-bold tracking-[0.15em] uppercase text-primary border border-primary/30 bg-primary/10 px-2.5 py-1 rounded-none mb-3">
                           #{idx + 2}
                         </span>
-                        <h4 className="font-bold font-headline text-sm leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                        <h4 className="font-bold text-sm leading-snug mb-2 text-primary transition-colors line-clamp-2">
                           {post.title}
                         </h4>
-                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1">
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1 font-sans">
                           {post.description}
                         </p>
-                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/30">
-                          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-primary">
-                            Read Article <ExternalLink className="h-3 w-3" />
+                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-primary/20">
+                          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase text-muted-foreground group-hover:text-primary transition-colors">
+                            <ExternalLink className="h-3 w-3" /> execute ./read
                           </span>
-                          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary/60 transition-colors" />
                         </div>
                       </div>
                     </Link>
@@ -140,10 +139,10 @@ export async function BlogSection() {
         })()}
 
         {/* CTA */}
-        <div className="mt-12 text-center">
-          <Button asChild variant="outline" size="lg" className="rounded-full border-primary/30 hover:border-primary">
+        <div className="mt-12 flex justify-center">
+          <Button asChild variant="outline" size="lg" className="rounded-none tech-border font-mono uppercase tracking-wider text-primary hover:bg-primary/10">
             <Link href="/blog">
-              View All Posts <ArrowRight className="ml-2 h-4 w-4" />
+              ./read_all.sh <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>

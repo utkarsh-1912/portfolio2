@@ -44,9 +44,11 @@ function LoginForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-primary font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                    <span className="text-primary/50">&gt;</span> Enter password
+                </Label>
                 <Input
                     id="password"
                     type="password"
@@ -54,12 +56,12 @@ function LoginForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="bg-background/50"
+                    className="bg-background/80 rounded-none tech-border focus-visible:ring-primary/50 font-mono"
                 />
             </div>
-            {error && <p className="text-sm text-destructive text-center font-medium">{error}</p>}
-            <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Verifying...' : 'Login'}
+            {error && <p className="text-sm text-destructive text-center font-bold bg-destructive/10 p-2 border border-destructive/30">ERR: {error}</p>}
+            <Button type="submit" className="w-full rounded-none tech-border font-bold tracking-widest uppercase transition-all" disabled={isLoading}>
+                {isLoading ? './verifying...' : './login'}
             </Button>
         </form>
     );
@@ -67,28 +69,31 @@ function LoginForm() {
 
 export default function LoginPage() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-muted/40 p-4">
-            <Card className="w-full max-w-md shadow-2xl border-primary/10 bg-background/60 backdrop-blur-xl">
-                <CardHeader className="space-y-1 pb-6 text-center relative">
-                    <Button variant="ghost" size="icon" asChild className="absolute left-4 top-4 text-muted-foreground hover:text-foreground">
+        <div className="min-h-screen flex items-center justify-center bg-background relative p-4 font-mono">
+            {/* Background pattern */}
+            <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none"></div>
+
+            <Card className="w-full max-w-md shadow-2xl rounded-none tech-border bg-card/80 backdrop-blur-xl relative z-10 animate-in zoom-in-95 duration-500">
+                <CardHeader className="space-y-1 pb-6 text-center relative border-b border-primary/20 bg-muted/30">
+                    <Button variant="ghost" size="icon" asChild className="absolute left-4 top-4 text-muted-foreground hover:text-primary rounded-none">
                         <Link href="/">
                             <ArrowLeft className="h-4 w-4" />
                             <span className="sr-only">Back to Website</span>
                         </Link>
                     </Button>
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 mt-2">
-                        <Lock className="w-6 h-6 text-primary" />
+                    <div className="w-12 h-12 bg-primary/10 rounded-none border border-primary/30 flex items-center justify-center mx-auto mb-4 mt-2">
+                        <Lock className="w-5 h-5 text-primary" />
                     </div>
-                    <CardTitle className="text-2xl font-bold font-headline">Admin Access</CardTitle>
-                    <CardDescription>Enter the master password to access the CMS</CardDescription>
+                    <CardTitle className="text-2xl font-bold text-primary">&gt; sudo su</CardTitle>
+                    <CardDescription className="text-muted-foreground font-sans">Authorize access to the admin system</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <Suspense fallback={<div className="text-center py-4">Loading login...</div>}>
+                <CardContent className="pt-6">
+                    <Suspense fallback={<div className="text-center py-4 text-primary animate-pulse">Loading login module...</div>}>
                         <LoginForm />
                     </Suspense>
                 </CardContent>
-                <CardFooter className="flex justify-center border-t py-4 text-xs text-muted-foreground">
-                    Secure Portfolio Service
+                <CardFooter className="flex justify-center border-t border-primary/20 py-4 text-xs font-bold tracking-widest uppercase text-primary/50 bg-muted/10">
+                    System Secured
                 </CardFooter>
             </Card>
         </div>

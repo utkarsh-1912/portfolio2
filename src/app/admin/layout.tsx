@@ -17,11 +17,11 @@ export default function AdminLayout({
             <AdminSidebar />
 
             {/* Main Content Area */}
-            <main className="flex-1 overflow-y-auto relative bg-gradient-to-br from-background to-muted/20">
-                <div className="container mx-auto p-2 md:p-8 max-w-6xl">
-                    <div className="bg-card shadow-xl rounded-xl border border-border/50 p-2 md:p-8 backdrop-blur-xl">
-                        {children}
-                    </div>
+            <main className="flex-1 overflow-y-auto relative bg-background font-mono">
+                {/* Tech background pattern */}
+                <div className="absolute inset-0 bg-grid opacity-10 pointer-events-none"></div>
+                <div className="container mx-auto p-4 md:p-8 max-w-6xl relative z-10 animate-in fade-in duration-500">
+                    {children}
                 </div>
             </main>
         </div>

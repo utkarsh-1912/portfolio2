@@ -40,8 +40,8 @@ function SidebarContent({ currentTab, onNavigate }: { currentTab: string; onNavi
         <div className="flex h-full flex-col bg-card">
             <div className="flex-1 overflow-auto py-6">
                 <nav className="grid gap-2 px-4">
-                    <div className="mb-4 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Portfolio Management
+                    <div className="mb-4 px-2 text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-2">
+                        <span className="text-primary/50">&gt;</span> ./admin_panel
                     </div>
                     {navItems.map((item) => {
                         const isActive = currentTab === item.id;
@@ -51,10 +51,10 @@ function SidebarContent({ currentTab, onNavigate }: { currentTab: string; onNavi
                                 href={item.href}
                                 onClick={onNavigate}
                                 className={cn(
-                                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:text-primary',
+                                    'flex items-center gap-3 rounded-none border border-transparent px-3 py-2 text-sm font-mono font-medium transition-all hover:text-primary',
                                     isActive
-                                        ? 'bg-primary/10 text-primary'
-                                        : 'text-muted-foreground hover:bg-muted'
+                                        ? 'bg-primary/10 text-primary border-primary/30'
+                                        : 'text-muted-foreground hover:bg-primary/5 hover:border-primary/20'
                                 )}
                             >
                                 <item.icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")} />
@@ -65,24 +65,24 @@ function SidebarContent({ currentTab, onNavigate }: { currentTab: string; onNavi
                 </nav>
             </div>
 
-            <div className="border-t p-4 mt-auto space-y-2">
+            <div className="border-t border-primary/20 p-4 mt-auto space-y-2 bg-muted/10 font-mono text-sm">
                 <Button
                     variant="outline"
                     asChild
-                    className="w-full justify-start text-muted-foreground hover:text-foreground border-dashed"
+                    className="w-full justify-start text-muted-foreground hover:text-accent-foreground rounded-none tech-border transition-colors"
                 >
                     <Link href="/">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Website
+                        ./exit_to_site
                     </Link>
                 </Button>
                 <Button
                     variant="outline"
-                    className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 border-dashed"
+                    className="w-full justify-start text-muted-foreground hover:text-destructive rounded-none tech-border hover:bg-destructive/10 hover:border-destructive/30 transition-colors"
                     onClick={handleLogout}
                 >
                     <LogOut className="mr-2 h-4 w-4" />
-                    Secure Logout
+                    sudo logout
                 </Button>
             </div>
         </div>
@@ -124,7 +124,7 @@ export function AdminSidebar() {
             </div>
 
             {/* Desktop Permanent Sidebar */}
-            <div className="hidden md:flex h-full w-64 flex-col border-r border-border shadow-sm z-10">
+            <div className="hidden md:flex h-full w-64 flex-col border-r border-primary/20 shadow-sm z-10 bg-background/90 backdrop-blur">
                 <SidebarContent currentTab={currentTab} />
             </div>
         </>

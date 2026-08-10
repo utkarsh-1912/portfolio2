@@ -86,7 +86,7 @@ export function AdminContactsView({ initialData }: { initialData: Contact[] }) {
             </div>
 
             {displayContacts.length === 0 ? (
-                <div className="p-12 border-2 border-dashed rounded-xl flex flex-col items-center justify-center text-muted-foreground">
+                <div className="p-12 border-2 border-dashed rounded-none flex flex-col items-center justify-center text-muted-foreground">
                     <Mail className="h-12 w-12 mb-4 text-muted" />
                     <p>No contact tickets found.</p>
                 </div>

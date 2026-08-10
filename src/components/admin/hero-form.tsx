@@ -7,7 +7,8 @@ import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Save, User, Briefcase, FileText, Github, Linkedin, Twitter, Upload, ImageIcon, RotateCcw, CheckCircle2, Loader2 } from 'lucide-react';
+import { Github, Linkedin, Save, Plus, X, Upload, Loader2, Link as LinkIcon, Youtube } from 'lucide-react';
+import { XLogo } from '@/components/ui/x-logo';
 
 const DEFAULT_PHOTO = '/profile.jpg';
 
@@ -87,7 +88,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
     const isUsingDefault = !data.photoUrl;
 
     return (
-        <Card className="border-border/50 shadow-sm bg-background/50 backdrop-blur-sm">
+        <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
             <CardHeader className="pb-4 border-b border-border/30 mb-6">
                 <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
                     <User className="h-5 w-5 text-primary" />
@@ -145,7 +146,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
 
                             {/* Drop zone */}
                             <div
-                                className={`flex-1 w-full border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all
+                                className={`flex-1 w-full border-2 border-dashed rounded-none p-6 text-center cursor-pointer transition-all
                                     ${isDragging
                                         ? 'border-primary bg-primary/10 scale-[1.01]'
                                         : uploadStatus === 'done'
@@ -248,13 +249,22 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                                 onChange={e => setData({ ...data, linkedinUrl: e.target.value })}
                             />
                         </div>
-                        <div className="space-y-2 md:col-span-2">
-                            <Label className="flex items-center gap-2"><Twitter className="h-4 w-4" /> Twitter/X URL</Label>
+                        <div className="space-y-2">
+                            <Label className="flex items-center gap-2"><XLogo className="h-4 w-4" /> X (Twitter) URL</Label>
                             <Input
                                 className="bg-background/80"
                                 type="url"
                                 value={data.twitterUrl || ''}
                                 onChange={e => setData({ ...data, twitterUrl: e.target.value })}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="flex items-center gap-2"><Youtube className="h-4 w-4" /> YouTube URL</Label>
+                            <Input
+                                className="bg-background/80"
+                                type="url"
+                                value={data.youtubeUrl || ''}
+                                onChange={e => setData({ ...data, youtubeUrl: e.target.value })}
                             />
                         </div>
                     </div>

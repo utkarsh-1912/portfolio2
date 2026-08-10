@@ -10,6 +10,29 @@ First, install the dependencies:
 npm install
 ```
 
+### Environment Variables
+
+Create a `.env` or `.env.local` file in the root of your project and add the following variables:
+
+```env
+# Database (Neon / Postgres)
+DATABASE_URL="your_database_url_here"
+
+# Admin Authentication
+ADMIN_USERNAME="your_admin_username"
+ADMIN_PASSWORD="your_admin_password"
+
+# File Uploads (ImgBB)
+IMGBB_API_KEY="your_imgbb_api_key_here"
+
+# GitHub API (For repo stats and live coding stats)
+# Generate a personal access token (classic or fine-grained) on GitHub
+GITHUB_TOKEN="your_github_personal_access_token"
+
+# Google Analytics (Optional)
+NEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"
+```
+
 Then, run the development server:
 
 ```bash

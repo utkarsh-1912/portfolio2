@@ -5,10 +5,15 @@ import { ContactSection } from '@/components/sections/contact';
 import { EducationSection } from '@/components/sections/education';
 import { BlogSection } from '@/components/sections/blog';
 import { Suspense } from 'react';
+import { getHero } from '@/db/queries';
+import { ScrollSnapper } from '@/components/ui/scroll-snapper';
 
-export default function Home() {
+export default async function Home() {
+  const heroData = await getHero();
+
   return (
     <>
+      <ScrollSnapper />
       <HeroSection />
       <AboutSection />
       <EducationSection />
@@ -16,7 +21,7 @@ export default function Home() {
       <Suspense fallback={<div>Loading blog...</div>}>
         <BlogSection />
       </Suspense>
-      <ContactSection />
+      <ContactSection heroData={heroData} />
     </>
   );
 }

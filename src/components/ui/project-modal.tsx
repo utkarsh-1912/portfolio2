@@ -54,12 +54,12 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
             onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
         >
-            <div className="relative bg-card w-full max-w-2xl rounded-2xl shadow-2xl border border-border/60 overflow-hidden animate-in zoom-in-95 fade-in duration-200 max-h-[90vh] flex flex-col">
+            <div className="relative bg-card w-full max-w-2xl rounded-none shadow-2xl tech-border overflow-hidden animate-in zoom-in-95 fade-in duration-200 max-h-[90vh] flex flex-col font-mono">
 
                 {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 z-10 p-2 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 text-muted-foreground hover:text-foreground hover:bg-background transition-all"
+                    className="absolute top-4 right-4 z-10 p-2 rounded-none bg-background/80 backdrop-blur-sm tech-border text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
                     aria-label="Close"
                 >
                     <X className="h-4 w-4" />
@@ -84,17 +84,17 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto p-6">
-                    <h2 className="text-2xl font-bold font-headline mb-3 text-foreground pr-8">{project.title}</h2>
-                    <p className="text-muted-foreground leading-relaxed mb-6">{project.description}</p>
+                    <h2 className="text-xl font-bold text-primary pr-8 mb-4 uppercase tracking-wider">&gt; {project.title}</h2>
+                    <p className="text-muted-foreground leading-relaxed mb-6 font-sans">{project.description}</p>
 
                     {/* Tags */}
                     <div className="mb-6">
-                        <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground uppercase tracking-widest font-semibold">
+                        <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground uppercase tracking-widest font-bold">
                             <Tag className="h-3 w-3" /> Tech Stack
                         </div>
                         <div className="flex flex-wrap gap-2">
                             {project.tags.map((tag) => (
-                                <Badge key={tag} variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                                <Badge key={tag} variant="secondary" className="bg-primary/10 text-primary rounded-none">
                                     {tag}
                                 </Badge>
                             ))}
@@ -102,15 +102,15 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     </div>
 
                     {/* Action links */}
-                    <div className="flex flex-wrap gap-3 pt-4 border-t border-border/40">
+                    <div className="flex flex-wrap gap-3 pt-4 border-t border-primary/20">
                         {hasLive && (
                             <a
                                 href={project.liveUrl!}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 transition-colors"
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-none tech-border bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest hover:bg-primary/90 transition-colors"
                             >
-                                <ExternalLink className="h-4 w-4" /> Live Demo
+                                <ExternalLink className="h-4 w-4" /> ./execute
                             </a>
                         )}
                         {hasGit && (
@@ -118,9 +118,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                                 href={project.githubUrl!}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border bg-background text-foreground font-semibold text-sm hover:bg-muted transition-colors"
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-none tech-border bg-background text-foreground font-bold text-xs uppercase tracking-widest hover:bg-muted transition-colors"
                             >
-                                <Github className="h-4 w-4" /> Source Code
+                                <Github className="h-4 w-4" /> git clone
                             </a>
                         )}
                         {!hasLive && !hasGit && (

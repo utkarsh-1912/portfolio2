@@ -46,7 +46,7 @@ export function AdminEducationForm({ initialData }: { initialData: any[] }) {
 
     if (editingId) {
         return (
-            <Card className="border-border/50 shadow-sm bg-background/50 backdrop-blur-sm animate-in zoom-in-95 duration-200">
+            <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm animate-in zoom-in-95 duration-200 font-mono">
                 <CardHeader className="pb-4 border-b border-border/30 mb-6">
                     <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
                         <GraduationCap className="h-5 w-5 text-primary" />
@@ -114,7 +114,7 @@ export function AdminEducationForm({ initialData }: { initialData: any[] }) {
     }
 
     return (
-        <Card className="border-border/50 shadow-sm bg-background/50 backdrop-blur-sm">
+        <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
             <CardHeader className="pb-4 border-b border-border/30 mb-6 flex flex-row items-center justify-between">
                 <div>
                     <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
@@ -130,7 +130,7 @@ export function AdminEducationForm({ initialData }: { initialData: any[] }) {
             <CardContent>
                 <div className="grid gap-4">
                     {items.map((item) => (
-                        <div key={item.id} className="border border-border/50 bg-card p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-shadow">
+                        <div key={item.id} className="border border-border/50 bg-card p-4 rounded-none flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-shadow">
                             <div className="flex-1">
                                 <h4 className="font-bold font-headline text-lg">{item.degree}</h4>
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
@@ -153,7 +153,7 @@ export function AdminEducationForm({ initialData }: { initialData: any[] }) {
                         </div>
                     ))}
                     {items.length === 0 && (
-                        <div className="text-center py-12 border-2 border-dashed rounded-xl border-border/50">
+                        <div className="text-center py-12 border-2 border-dashed rounded-none border-border/50">
                             <GraduationCap className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
                             <p className="text-muted-foreground font-medium">No education or experience entries yet.</p>
                         </div>

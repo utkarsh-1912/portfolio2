@@ -6,6 +6,7 @@ import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { Toaster } from '@/components/ui/toaster';
 import { TerminalUI } from '@/components/ui/terminal';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 import { getHero, getAbout, getProjects, getBlogs, getEducation, getSkills } from '@/db/queries';
 
@@ -48,6 +49,7 @@ export default async function RootLayout({
           </div>
           <Toaster />
         </ThemeProvider>
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || 'G-XXXXXXXXXX'} />
       </body>
     </html>
   );
