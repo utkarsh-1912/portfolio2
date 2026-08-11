@@ -90,6 +90,9 @@ export function AboutPageClient({ about, skills, stats }: { about: any, skills: 
                                 <span className="text-yellow-500 font-bold">{stats.lcStats.mediumSolved} M</span>
                                 <span className="text-red-500 font-bold">{stats.lcStats.hardSolved} H</span>
                             </div>
+                            <Link href={`https://leetcode.com/u/user7883p`} target="_blank" className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <LinkIcon className="h-4 w-4 text-primary" />
+                            </Link>
                         </>
                     ) : (
                         <div className="text-xs text-muted-foreground">Failed to fetch.</div>
