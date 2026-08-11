@@ -22,7 +22,7 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
     const [history, setHistory] = useState<{ command: string; output: string | React.ReactNode; type: 'input' | 'output' }[]>([
         {
             command: '',
-            output: 'Welcome to Utkristi OS  v2.0\nType a command or tap a chip below.',
+            output: 'Welcome to Utkristi OS\nType a command or tap a chip below.',
             type: 'output'
         }
     ]);
