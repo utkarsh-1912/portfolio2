@@ -9,7 +9,7 @@ export async function AboutSection() {
   return (
     <section id="about" className="w-full min-h-screen py-20 bg-background relative border-t border-border/50 snap-start flex flex-col justify-center">
       {/* Subtle grid background overlay */}
-      <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none"></div>
 
       <div className="container relative z-10 flex flex-col items-center justify-center max-w-4xl mx-auto h-full">
         <div className="text-center font-mono mb-8">
