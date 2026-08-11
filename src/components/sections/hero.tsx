@@ -15,7 +15,7 @@ export async function HeroSection() {
   const photoSrc = heroData?.photoUrl || profileImage;
 
   return (
-    <section id="hero" className="container mx-auto w-full min-h-screen py-5 sm:pt-20 sm:pb-10 md:pt-28 lg:pt-32 relative overflow-hidden bg-background snap-start flex flex-col justify-center">
+    <section id="hero" className="container mx-auto w-full min-h-screen py-4 sm:pt-10 sm:pb-10 md:pt-16 lg:pt-20 relative overflow-hidden bg-background snap-start flex flex-col justify-center">
       <AnimatedBackground />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
         <div className="flex flex-col gap-6 items-center lg:items-start text-center lg:text-left font-mono">
