@@ -45,7 +45,7 @@ export function SiteHeader() {
       className={cn(
         'sticky top-0 z-50 w-full transition-all duration-300 font-mono',
         scrolled
-          ? 'bg-background/95 backdrop-blur border-b border-primary/30 shadow-[0_4px_20px_rgba(0,240,255,0.05)]'
+          ? 'bg-background/95 backdrop-blur border-b border-primary/30 shadow-[0_4px_20px_hsl(var(--primary)/0.15)]'
           : 'bg-transparent'
       )}
     >
