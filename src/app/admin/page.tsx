@@ -1,10 +1,11 @@
-import { getHero, getAbout, getProjects, getEducation, getBlogs, getContacts } from '../../db/queries';
+import { getHero, getAbout, getProjects, getEducation, getBlogs, getContacts, getSkills } from '../../db/queries';
 import { AdminHeroForm } from '../../components/admin/hero-form';
 import { AdminAboutForm } from '../../components/admin/about-form';
 import { AdminProjectsForm } from '../../components/admin/projects-form';
 import { AdminEducationForm } from '../../components/admin/education-form';
 import { AdminBlogsForm } from '../../components/admin/blogs-form';
 import { AdminContactsView } from '../../components/admin/contacts-list';
+import { AdminSkillsForm } from '../../components/admin/skills-form';
 import { Code, FileText, GraduationCap, Mail, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -19,11 +20,12 @@ export default async function AdminPage({
     const rawParams = await searchParams;
     const tab = (rawParams?.tab as string) || 'dashboard';
 
-    const [hero, about, projects, education, blogs, contacts] = await Promise.all([
+    const [hero, about, projects, education, skillsData, blogs, contacts] = await Promise.all([
         getHero(),
         getAbout(),
         getProjects(),
         getEducation(),
+        getSkills(),
         getBlogs(),
         getContacts(),
     ]);
@@ -132,7 +134,7 @@ export default async function AdminPage({
             )}
 
             {tab === 'hero' && <AdminHeroForm initialData={hero} />}
-            {tab === 'about' && <AdminAboutForm initialData={about} />}
+            {tab === 'about' && <AdminAboutForm initialData={about} skillsData={skillsData} />}
             {tab === 'projects' && <AdminProjectsForm initialData={projects} />}
             {tab === 'education' && <AdminEducationForm initialData={education} />}
             {tab === 'blogs' && <AdminBlogsForm initialData={blogs} />}

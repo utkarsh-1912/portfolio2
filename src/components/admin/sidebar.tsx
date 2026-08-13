@@ -9,6 +9,7 @@ import {
     UserCircle,
     Code,
     Code2,
+    Cpu,
     GraduationCap,
     FileText,
     LogOut,
@@ -23,7 +24,7 @@ import { useState, useEffect } from 'react';
 const navItems = [
     { href: '/admin', id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin?tab=hero', id: 'hero', label: 'Hero Section', icon: Text },
-    { href: '/admin?tab=about', id: 'about', label: 'About', icon: UserCircle },
+    { href: '/admin?tab=about', id: 'about', label: 'About & Skills', icon: UserCircle },
     { href: '/admin?tab=projects', id: 'projects', label: 'Projects', icon: Code },
     { href: '/admin?tab=education', id: 'education', label: 'Education', icon: GraduationCap },
     { href: '/admin?tab=blogs', id: 'blogs', label: 'Blogs', icon: FileText },

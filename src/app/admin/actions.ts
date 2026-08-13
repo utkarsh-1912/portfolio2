@@ -102,3 +102,33 @@ export async function deleteBlogAction(id: number) {
     revalidatePath('/');
     revalidatePath('/admin');
 }
+
+// -- Skills Actions --
+export async function addSkillCategoryAction(data: { category: string; categoryIcon: string; items: { name: string; icon: string }[] }) {
+    const result = await db.insert(skills).values(data).returning();
+    revalidatePath('/');
+    revalidatePath('/admin');
+    return result[0] || null;
+}
+
+export async function updateSkillCategoryAction(id: number, data: { category: string; categoryIcon: string; items: { name: string; icon: string }[] }) {
+    await db.update(skills).set(data).where(eq(skills.id, id));
+    revalidatePath('/');
+    revalidatePath('/admin');
+}
+
+export async function deleteSkillCategoryAction(id: number) {
+    await db.delete(skills).where(eq(skills.id, id));
+    revalidatePath('/');
+    revalidatePath('/admin');
+}
+
+export async function reorderSkillsAction(orderedIds: number[]) {
+    await Promise.all(
+        orderedIds.map((id, index) =>
+            db.update(skills).set({ sequence: index }).where(eq(skills.id, id))
+        )
+    );
+    revalidatePath('/');
+    revalidatePath('/admin');
+}

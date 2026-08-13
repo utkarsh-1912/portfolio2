@@ -22,6 +22,7 @@ export const skills = pgTable('skills', {
     category: text('category').notNull(),
     categoryIcon: text('category_icon').notNull(),
     items: jsonb('items').$type<{ name: string, icon: string }[]>().notNull(),
+    sequence: integer('sequence').default(0),
 });
 
 export const projects = pgTable('projects', {

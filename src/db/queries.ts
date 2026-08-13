@@ -42,7 +42,7 @@ export async function getEducation() {
 
 export async function getSkills() {
     try {
-        return await db.select().from(skills).orderBy(asc(skills.category));
+        return await db.select().from(skills).orderBy(asc(skills.sequence), asc(skills.category));
     } catch (e) {
         console.error('getSkills error:', e);
         return [];
