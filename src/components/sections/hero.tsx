@@ -73,26 +73,6 @@ export async function HeroSection() {
             <div data-reveal="up" style={{ '--i': 7 } as React.CSSProperties}>
               <SocialLinks data={heroData} className="mt-10" />
             </div>
-
-            {/* Latest work, like the "Latest research" card on eddyrlora.com */}
-            {latest && (
-              <Link
-                href="/projects"
-                data-reveal="up"
-                style={{ '--i': 8 } as React.CSSProperties}
-                data-spotlight
-                className="lift group mt-10 flex max-w-md items-center gap-4 rounded-2xl border border-border bg-card/70 p-4 backdrop-blur hover:border-foreground/25"
-              >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 font-headline text-lg font-semibold text-primary">
-                  {latest.title[0]}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="eyebrow block">Latest project</span>
-                  <span className="mt-1 block truncate font-medium">{latest.title}</span>
-                </span>
-                <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
-              </Link>
-            )}
           </div>
 
           <div className="hidden lg:col-span-5 lg:block">
