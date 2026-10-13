@@ -11,6 +11,14 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No image file uploaded' }, { status: 400 });
         }
 
+        // Middleware already requires an admin session; also bound what can be sent to ImgBB
+        if (!file.type.startsWith('image/')) {
+            return NextResponse.json({ error: 'Only image files can be uploaded' }, { status: 400 });
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            return NextResponse.json({ error: 'Image must be 5 MB or smaller' }, { status: 413 });
+        }
+
         // Convert the file to a buffer and then to base64
         const buffer = await file.arrayBuffer();
         const base64Image = Buffer.from(buffer).toString('base64');

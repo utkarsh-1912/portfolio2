@@ -10,6 +10,7 @@ import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { UserCircle, Plus, Trash2, Save, AlignLeft, Cpu, ChevronDown, ChevronUp, GripVertical, ArrowUpDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAdminAction } from './use-admin-action';
 import { IconPicker, LucideIcon } from './icon-picker';
 
 // ─── Skill Types ──────────────────────────────────────────────
@@ -24,6 +25,7 @@ function SkillCategoryCard({ cat, onDelete }: { cat: SkillCategory; onDelete: (i
     const [isOpen, setIsOpen] = useState(false);
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
+    const run = useAdminAction();
 
     const addItem = () => setItems([...items, { name: '', icon: 'Code' }]);
     const removeItem = (i: number) => setItems(items.filter((_, idx) => idx !== i));
@@ -35,28 +37,29 @@ function SkillCategoryCard({ cat, onDelete }: { cat: SkillCategory; onDelete: (i
 
     const handleSave = () => {
         startTransition(async () => {
-            await updateSkillCategoryAction(cat.id, { category, categoryIcon, items });
+            const { ok } = await run(updateSkillCategoryAction(cat.id, { category, categoryIcon, items }));
+            if (!ok) return;
             toast({ title: 'Saved!', description: `"${category}" updated.` });
         });
     };
 
     return (
-        <div className="border border-primary/20 rounded-none bg-card/50 font-mono">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
             {/* Header */}
             <div
-                className="flex items-center justify-between py-3 px-4 cursor-pointer bg-primary/5 hover:bg-primary/10 transition-colors"
+                className="flex items-center justify-between py-3 px-4 cursor-pointer bg-muted/40 hover:bg-muted transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <div className="flex items-center gap-3">
                     <LucideIcon name={categoryIcon} className="h-4 w-4 text-primary shrink-0" />
                     <span className="font-bold uppercase tracking-wider text-sm text-foreground">{category}</span>
-                    <span className="text-xs text-muted-foreground bg-primary/10 border border-primary/20 px-2 py-0.5">{items.length} skills</span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">{items.length} skills</span>
                 </div>
                 {isOpen ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
             </div>
 
             {isOpen && (
-                <div className="border-t border-primary/10">
+                <div className="border-t border-border">
                     <div className="p-4 space-y-4">
                         {/* Category meta */}
                         <div className="grid grid-cols-2 gap-3">
@@ -65,7 +68,7 @@ function SkillCategoryCard({ cat, onDelete }: { cat: SkillCategory; onDelete: (i
                                 <Input
                                     value={category}
                                     onChange={e => setCategory(e.target.value)}
-                                    className="rounded-none bg-background/50 border-primary/20 focus-visible:border-primary focus-visible:ring-0 h-8 text-sm"
+                                    className="bg-background border-border focus-visible:border-foreground/40 focus-visible:ring-0 h-8 text-sm"
                                 />
                             </div>
                             <div className="space-y-1">
@@ -78,13 +81,13 @@ function SkillCategoryCard({ cat, onDelete }: { cat: SkillCategory; onDelete: (i
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
                                 <Label className="text-xs uppercase tracking-widest text-primary">Skills</Label>
-                                <Button type="button" variant="outline" size="sm" onClick={addItem} className="rounded-none text-xs border-primary/30 hover:bg-primary/10 hover:text-primary gap-1 h-7">
+                                <Button type="button" variant="outline" size="sm" onClick={addItem} className="text-xs border-border hover:bg-muted hover:text-primary gap-1 h-7">
                                     <Plus className="h-3 w-3" /> Add Skill
                                 </Button>
                             </div>
                             <div className="space-y-1.5">
                                 {items.map((item, i) => (
-                                    <div key={i} className="flex flex-col sm:flex-row gap-1.5 sm:gap-2 sm:items-center group border border-primary/10 sm:border-0 p-2 sm:p-0 rounded-none">
+                                    <div key={i} className="flex flex-col sm:flex-row gap-1.5 sm:gap-2 sm:items-center group border border-border sm:border-0 p-2 sm:p-0">
                                         {/* Row 1 (mobile) / inline (desktop): grip + icon preview + name */}
                                         <div className="flex items-center gap-2 flex-1 min-w-0">
                                             <GripVertical className="h-4 w-4 text-muted-foreground/30 shrink-0 hidden sm:block" />
@@ -93,7 +96,7 @@ function SkillCategoryCard({ cat, onDelete }: { cat: SkillCategory; onDelete: (i
                                                 value={item.name}
                                                 onChange={e => updateItem(i, 'name', e.target.value)}
                                                 placeholder="Skill name"
-                                                className="rounded-none bg-background/50 border-primary/20 focus-visible:border-primary focus-visible:ring-0 h-8 text-sm min-w-0"
+                                                className="bg-background border-border focus-visible:border-foreground/40 focus-visible:ring-0 h-8 text-sm min-w-0"
                                             />
                                         </div>
                                         {/* Row 2 (mobile) / inline (desktop): icon picker + delete */}
@@ -109,7 +112,7 @@ function SkillCategoryCard({ cat, onDelete }: { cat: SkillCategory; onDelete: (i
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => removeItem(i)}
-                                                className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-none shrink-0 h-8 w-8 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+                                                className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0 h-8 w-8 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                                             >
                                                 <Trash2 className="h-3.5 w-3.5" />
                                             </Button>
@@ -117,19 +120,19 @@ function SkillCategoryCard({ cat, onDelete }: { cat: SkillCategory; onDelete: (i
                                     </div>
                                 ))}
                                 {items.length === 0 && (
-                                    <p className="text-xs text-muted-foreground py-3 px-2 border border-dashed border-primary/20 text-center">No skills yet.</p>
+                                    <p className="text-xs text-muted-foreground py-3 px-2 border border-dashed border-border text-center">No skills yet.</p>
                                 )}
                             </div>
                         </div>
                     </div>
 
-                    <div className="py-2.5 px-4 border-t border-primary/10 bg-muted/10 flex justify-between gap-2">
+                    <div className="py-2.5 px-4 border-t border-border bg-muted/10 flex justify-between gap-2">
                         <Button
                             type="button"
                             variant="ghost"
                             size="sm"
                             onClick={() => onDelete(cat.id)}
-                            className="text-destructive hover:bg-destructive/10 rounded-none text-xs gap-1 h-7"
+                            className="text-destructive hover:bg-destructive/10 text-xs gap-1 h-7"
                         >
                             <Trash2 className="h-3 w-3" /> Delete Category
                         </Button>
@@ -138,7 +141,7 @@ function SkillCategoryCard({ cat, onDelete }: { cat: SkillCategory; onDelete: (i
                             size="sm"
                             onClick={handleSave}
                             disabled={isPending}
-                            className="rounded-none gap-1 font-mono text-xs bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground border border-primary/30 transition-colors h-7"
+                            className="gap-1 text-xs bg-muted text-foreground hover:bg-foreground hover:text-background transition-colors h-7"
                         >
                             <Save className="h-3 w-3" /> {isPending ? 'Saving...' : 'Save'}
                         </Button>
@@ -158,6 +161,7 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
     const [dragOverId, setDragOverId] = useState<number | null>(null);
     const dragIdRef = useRef<number | null>(null);
     const { toast } = useToast();
+    const run = useAdminAction();
 
     const handleParagraphChange = (index: number, value: string) => {
         const newParagraphs = [...paragraphs];
@@ -173,14 +177,13 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         startTransition(async () => {
-            await updateAboutAction(initialData.id, paragraphs);
-            toast({ title: 'Saved!', description: 'About section updated.' });
+            await run(updateAboutAction(initialData.id, paragraphs), 'About section updated.');
         });
     };
 
     const handleAddCategory = () => {
         startAddTransition(async () => {
-            const newCat = await addSkillCategoryAction({ category: 'New Category', categoryIcon: 'Code', items: [] });
+            const { data: newCat } = await run(addSkillCategoryAction({ category: 'New Category', categoryIcon: 'Code', items: [] }));
             if (newCat) {
                 setCategories(prev => [...prev, newCat as SkillCategory]);
                 toast({ title: 'Category Added', description: 'Expand it below to edit.' });
@@ -190,9 +193,8 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
 
     const handleDeleteCategory = (id: number) => {
         startTransition(async () => {
-            await deleteSkillCategoryAction(id);
-            setCategories(prev => prev.filter(c => c.id !== id));
-            toast({ title: 'Deleted', description: 'Skill category removed.' });
+            const { ok } = await run(deleteSkillCategoryAction(id), 'Skill category removed.');
+            if (ok) setCategories(prev => prev.filter(c => c.id !== id));
         });
     };
 
@@ -213,16 +215,14 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
         const draggedId = dragIdRef.current;
         if (!draggedId || draggedId === dropId) return;
 
-        setCategories(prev => {
-            const updated = [...prev];
-            const fromIdx = updated.findIndex(c => c.id === draggedId);
-            const toIdx = updated.findIndex(c => c.id === dropId);
-            const [moved] = updated.splice(fromIdx, 1);
-            updated.splice(toIdx, 0, moved);
-            // persist order in background
-            reorderSkillsAction(updated.map(c => c.id));
-            return updated;
-        });
+        const updated = [...categories];
+        const fromIdx = updated.findIndex(c => c.id === draggedId);
+        const toIdx = updated.findIndex(c => c.id === dropId);
+        const [moved] = updated.splice(fromIdx, 1);
+        updated.splice(toIdx, 0, moved);
+        setCategories(updated);
+        // persist order in background (kept out of the state updater, which may run twice)
+        run(reorderSkillsAction(updated.map(c => c.id)));
 
         dragIdRef.current = null;
     };
@@ -235,9 +235,9 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
     return (
         <div className="space-y-8">
             {/* ── Bio Paragraphs ── */}
-            <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
-                <CardHeader className="pb-4 border-b border-border/30 mb-4">
-                    <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
+            <Card className="rounded-3xl border-border bg-card shadow-none">
+                <CardHeader className="border-b border-border pb-6 mb-4">
+                    <CardTitle className="flex items-center gap-2 font-headline text-2xl font-semibold tracking-tight">
                         <UserCircle className="h-5 w-5 text-primary" />
                         About Identity
                     </CardTitle>
@@ -247,7 +247,7 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
                     <CardContent className="space-y-6">
                         <div className="flex items-center justify-between">
                             <Label className="flex items-center gap-2 font-medium"><AlignLeft className="h-4 w-4" /> Paragraphs</Label>
-                            <Button type="button" variant="outline" size="sm" onClick={addParagraph} className="h-8 gap-1 rounded-none border-primary/30 hover:bg-primary/10 hover:text-primary">
+                            <Button type="button" variant="outline" size="sm" onClick={addParagraph} className="h-8 gap-1 border-border hover:bg-muted hover:text-primary">
                                 <Plus className="h-3.5 w-3.5" /> Add Paragraph
                             </Button>
                         </div>
@@ -258,7 +258,7 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
                                         {index + 1}
                                     </span>
                                     <Textarea
-                                        className="bg-background/80 resize-none flex-1 min-h-[100px] rounded-none border-primary/20 focus-visible:border-primary focus-visible:ring-0"
+                                        className="bg-background resize-none flex-1 min-h-[100px] border-border focus-visible:border-foreground/40 focus-visible:ring-0"
                                         value={p}
                                         placeholder="Enter biographical information..."
                                         onChange={e => handleParagraphChange(index, e.target.value)}
@@ -269,7 +269,7 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
                                         variant="ghost"
                                         size="icon"
                                         onClick={() => removeParagraph(index)}
-                                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 mt-1 opacity-0 group-hover:opacity-100 transition-opacity rounded-none"
+                                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 mt-1 opacity-0 group-hover:opacity-100 transition-opacity"
                                         disabled={paragraphs.length === 1}
                                     >
                                         <Trash2 className="h-4 w-4" />
@@ -279,9 +279,9 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
                             ))}
                         </div>
                     </CardContent>
-                    <CardFooter className="bg-muted/30 py-4 px-6 border-t border-border/30 flex justify-between">
+                    <CardFooter className="bg-muted/30 py-4 px-6 border-t border-border flex justify-between">
                         <p className="text-sm text-muted-foreground">Changes reflect instantly on main site.</p>
-                        <Button type="submit" disabled={isPending} className="gap-2 rounded-none">
+                        <Button type="submit" disabled={isPending} className="gap-2">
                             <Save className="h-4 w-4" />
                             {isPending ? 'Saving...' : 'Save Bio'}
                         </Button>
@@ -290,11 +290,11 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
             </Card>
 
             {/* ── Skills Manager ── */}
-            <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
-                <CardHeader className="pb-4 border-b border-border/30">
+            <Card className="rounded-3xl border-border bg-card shadow-none">
+                <CardHeader className="pb-4 border-b border-border">
                     <div className="flex items-center justify-between">
                         <div>
-                            <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
+                            <CardTitle className="flex items-center gap-2 font-headline text-2xl font-semibold tracking-tight">
                                 <Cpu className="h-5 w-5 text-primary" />
                                 Skills
                             </CardTitle>
@@ -304,7 +304,7 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
                             type="button"
                             onClick={handleAddCategory}
                             disabled={isAddingCat}
-                            className="rounded-none gap-1.5 border border-primary bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors text-xs"
+                            className="gap-1.5 bg-foreground text-background hover:bg-foreground/90 transition-colors text-xs"
                             size="sm"
                         >
                             <Plus className="h-3.5 w-3.5" /> Add Category
@@ -328,7 +328,7 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
                         >
                             {/* Drag handle strip */}
                             <div
-                                className="absolute left-0 top-0 h-full w-6 flex items-center justify-center cursor-grab active:cursor-grabbing bg-primary/5 border-r border-primary/10 hover:bg-primary/10 transition-colors z-10 select-none"
+                                className="absolute left-0 top-0 h-full w-6 flex items-center justify-center cursor-grab active:cursor-grabbing bg-muted/40 border-r border-border hover:bg-muted transition-colors z-10 select-none"
                                 title="Drag to reorder"
                             >
                                 <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
@@ -339,7 +339,7 @@ export function AdminAboutForm({ initialData, skillsData }: { initialData: any; 
                         </div>
                     ))}
                     {categories.length === 0 && (
-                        <div className="border border-dashed border-primary/20 py-12 text-center text-muted-foreground text-sm">
+                        <div className="border border-dashed border-border py-12 text-center text-muted-foreground text-sm">
                             No skill categories. Click "Add Category" to get started.
                         </div>
                     )}

@@ -1,34 +1,47 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import {
     LayoutDashboard,
     Text,
     UserCircle,
     Code,
-    Code2,
-    Cpu,
     GraduationCap,
     FileText,
     LogOut,
     Menu,
-    ArrowLeft,
-    Mail
+    ArrowUpRight,
+    Mail,
+    Award,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import { LogoMark } from '../ui/logo-mark';
+import { ThemeToggle } from '../theme-toggle';
 import { useState, useEffect } from 'react';
 
-const navItems = [
-    { href: '/admin', id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/admin?tab=hero', id: 'hero', label: 'Hero Section', icon: Text },
-    { href: '/admin?tab=about', id: 'about', label: 'About & Skills', icon: UserCircle },
-    { href: '/admin?tab=projects', id: 'projects', label: 'Projects', icon: Code },
-    { href: '/admin?tab=education', id: 'education', label: 'Education', icon: GraduationCap },
-    { href: '/admin?tab=blogs', id: 'blogs', label: 'Blogs', icon: FileText },
-    { href: '/admin?tab=contacts', id: 'contacts', label: 'Contacts', icon: Mail },
+const navGroups = [
+    {
+        label: 'Overview',
+        items: [{ href: '/admin', id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard }],
+    },
+    {
+        label: 'Content',
+        items: [
+            { href: '/admin?tab=hero', id: 'hero', label: 'Hero', icon: Text },
+            { href: '/admin?tab=about', id: 'about', label: 'About & Skills', icon: UserCircle },
+            { href: '/admin?tab=education', id: 'education', label: 'Experience', icon: GraduationCap },
+            { href: '/admin?tab=certifications', id: 'certifications', label: 'Certifications', icon: Award },
+            { href: '/admin?tab=projects', id: 'projects', label: 'Projects', icon: Code },
+            { href: '/admin?tab=blogs', id: 'blogs', label: 'Writing', icon: FileText },
+        ],
+    },
+    {
+        label: 'Inbox',
+        items: [{ href: '/admin?tab=contacts', id: 'contacts', label: 'Messages', icon: Mail }],
+    },
 ];
 
 function SidebarContent({ currentTab, onNavigate }: { currentTab: string; onNavigate?: () => void }) {
@@ -38,53 +51,67 @@ function SidebarContent({ currentTab, onNavigate }: { currentTab: string; onNavi
     };
 
     return (
-        <div className="flex h-full flex-col bg-card">
-            <div className="flex-1 overflow-auto py-6">
-                <nav className="grid gap-2 px-4">
-                    <div className="mb-4 px-2 text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-2">
-                        <span className="text-primary/50">&gt;</span> ./admin_panel
-                    </div>
-                    {navItems.map((item) => {
-                        const isActive = currentTab === item.id;
-                        return (
-                            <Link
-                                key={item.id}
-                                href={item.href}
-                                onClick={onNavigate}
-                                className={cn(
-                                    'flex items-center gap-3 rounded-none border border-transparent px-3 py-2 text-sm font-mono font-medium transition-all hover:text-primary',
-                                    isActive
-                                        ? 'bg-primary/10 text-primary border-primary/30'
-                                        : 'text-muted-foreground hover:bg-primary/5 hover:border-primary/20'
-                                )}
-                            >
-                                <item.icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-muted-foreground")} />
-                                {item.label}
-                            </Link>
-                        );
-                    })}
-                </nav>
+        <div className="flex h-full flex-col">
+            <div className="flex h-16 items-center justify-between px-5">
+                <Link href="/admin" onClick={onNavigate} className="flex items-center gap-2">
+                    <LogoMark />
+                    <span className="font-headline text-lg font-semibold tracking-tight">Utkristi</span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Admin</span>
+                </Link>
             </div>
 
-            <div className="border-t border-primary/20 p-4 mt-auto space-y-2 bg-muted/10 font-mono text-sm">
-                <Button
-                    variant="outline"
-                    asChild
-                    className="w-full justify-start text-muted-foreground hover:text-accent-foreground rounded-none tech-border transition-colors"
+            <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Admin">
+                {navGroups.map((group) => (
+                    <div key={group.label} className="mb-6">
+                        <p className="eyebrow px-3 pb-2">{group.label}</p>
+                        <ul className="space-y-0.5">
+                            {group.items.map((item) => {
+                                const isActive = currentTab === item.id;
+                                return (
+                                    <li key={item.id}>
+                                        <Link
+                                            href={item.href}
+                                            onClick={onNavigate}
+                                            aria-current={isActive ? 'page' : undefined}
+                                            className={cn(
+                                                'flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors',
+                                                isActive
+                                                    ? 'bg-foreground text-background'
+                                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                                            )}
+                                        >
+                                            <item.icon className="h-4 w-4" />
+                                            {item.label}
+                                        </Link>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                ))}
+            </nav>
+
+            <div className="space-y-1 border-t border-border p-3">
+                <Link
+                    href="/"
+                    target="_blank"
+                    className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 >
-                    <Link href="/">
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        cd ./exit
-                    </Link>
-                </Button>
-                <Button
-                    variant="outline"
-                    className="w-full justify-start text-muted-foreground hover:text-destructive rounded-none tech-border hover:bg-destructive/10 hover:border-destructive/30 transition-colors"
+                    <ArrowUpRight className="h-4 w-4" />
+                    View site
+                </Link>
+                <button
+                    type="button"
                     onClick={handleLogout}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                 >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    sudo logout
-                </Button>
+                    <LogOut className="h-4 w-4" />
+                    Log out
+                </button>
+                <div className="flex items-center justify-between px-3 pt-2">
+                    <span className="text-xs text-muted-foreground">Theme</span>
+                    <ThemeToggle />
+                </div>
             </div>
         </div>
     );
@@ -102,32 +129,32 @@ export function AdminSidebar() {
 
     return (
         <>
-            {/* Mobile Topbar & Sheet */}
-            <div className="md:hidden flex items-center justify-between bg-card border-b border-border p-4 w-full shadow-sm z-20">
-                <Link href="/" className="flex items-center space-x-2">
-                    <Code2 className="h-6 w-6 text-primary" />
-                    <span className="font-bold font-headline text-lg">Utkristi</span>
+            {/* Mobile top bar */}
+            <div className="z-20 flex w-full items-center justify-between border-b border-border bg-background/80 px-4 py-3 backdrop-blur md:hidden">
+                <Link href="/admin" className="flex items-center gap-2">
+                    <LogoMark />
+                    <span className="font-headline text-lg font-semibold tracking-tight">Admin</span>
                 </Link>
                 <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
                     <SheetTrigger asChild>
-                        <Button variant="ghost" size="icon" className="shrink-0">
-                            <Menu className="h-6 w-6" />
-                            <span className="sr-only">Toggle Admin Menu</span>
+                        <Button variant="ghost" size="icon">
+                            <Menu className="h-5 w-5" />
+                            <span className="sr-only">Open admin menu</span>
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-64 p-0">
+                    <SheetContent side="left" className="w-72 p-0">
                         <SheetHeader className="sr-only">
-                            <SheetTitle>Admin Navigation</SheetTitle>
+                            <SheetTitle>Admin navigation</SheetTitle>
                         </SheetHeader>
                         <SidebarContent currentTab={currentTab} onNavigate={() => setIsMobileOpen(false)} />
                     </SheetContent>
                 </Sheet>
             </div>
 
-            {/* Desktop Permanent Sidebar */}
-            <div className="hidden md:flex h-full w-64 flex-col border-r border-primary/20 shadow-sm z-10 bg-background/90 backdrop-blur">
+            {/* Desktop sidebar */}
+            <aside className="z-10 hidden h-full w-64 shrink-0 flex-col border-r border-border bg-card md:flex">
                 <SidebarContent currentTab={currentTab} />
-            </div>
+            </aside>
         </>
     );
 }

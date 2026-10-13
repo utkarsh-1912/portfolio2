@@ -6,6 +6,8 @@ import { buildContactNotificationHtml, buildReplyEmailHtml } from './email-templ
 
 import { db } from '../db';
 import { contacts } from '../db/schema';
+import { eq } from 'drizzle-orm';
+import { isAdmin } from './auth-server';
 
 async function sendBrevoEmail(payload: object, apiKey: string) {
   const res = await fetch('https://api.brevo.com/v3/smtp/email', {
@@ -32,7 +34,14 @@ function handleBrevoError(errorText: string) {
   }
 }
 
-export async function handleFormSubmission(data: z.infer<typeof formSchema>) {
+export async function handleFormSubmission(input: z.infer<typeof formSchema>) {
+  // Client-side validation can be bypassed, so validate again on the server
+  const parsed = formSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, message: 'Please check the form fields and try again.' };
+  }
+  const data = parsed.data;
+
   try {
     // 1. Save to Database
     await db.insert(contacts).values({
@@ -75,9 +84,12 @@ export async function handleFormSubmission(data: z.infer<typeof formSchema>) {
   }
 }
 
+const CONTACT_STATUSES = ['read', 'unread', 'resolved'] as const;
+
 export async function updateContactStatus(id: number, status: 'read' | 'unread' | 'resolved') {
+  if (!(await isAdmin())) return { success: false };
+  if (!Number.isInteger(id) || !CONTACT_STATUSES.includes(status)) return { success: false };
   try {
-    const { eq } = await import('drizzle-orm');
     await db.update(contacts).set({ status }).where(eq(contacts.id, id));
     return { success: true };
   } catch (error) {
@@ -87,8 +99,9 @@ export async function updateContactStatus(id: number, status: 'read' | 'unread' 
 }
 
 export async function deleteContact(id: number) {
+  if (!(await isAdmin())) return { success: false };
+  if (!Number.isInteger(id)) return { success: false };
   try {
-    const { eq } = await import('drizzle-orm');
     await db.delete(contacts).where(eq(contacts.id, id));
     return { success: true };
   } catch (error) {
@@ -97,8 +110,19 @@ export async function deleteContact(id: number) {
   }
 }
 
-export async function sendReply(id: number, toEmail: string, originalName: string, message: string) {
+export async function sendReply(id: number, message: string) {
+  if (!(await isAdmin())) return { success: false, message: 'Your session expired. Please log in again.' };
+  if (!Number.isInteger(id) || !message.trim() || message.length > 10000) {
+    return { success: false, message: 'Reply must be between 1 and 10,000 characters.' };
+  }
+
   try {
+    // Recipient comes from the stored ticket, never from the client
+    const [ticket] = await db.select().from(contacts).where(eq(contacts.id, id)).limit(1);
+    if (!ticket) return { success: false, message: 'Ticket not found.' };
+    const toEmail = ticket.email;
+    const originalName = ticket.name;
+
     const brevoApiKey = process.env.BREVO_API_KEY;
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@utkristi.com';
 
@@ -125,7 +149,6 @@ export async function sendReply(id: number, toEmail: string, originalName: strin
     }
 
     // Save reply to database
-    const { eq } = await import('drizzle-orm');
     await db.update(contacts).set({ adminReply: message, status: 'resolved' }).where(eq(contacts.id, id));
 
     return { success: true, message: 'Reply sent successfully.' };

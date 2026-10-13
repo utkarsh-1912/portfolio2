@@ -1,6 +1,10 @@
 import { db } from './index';
-import { hero, about, projects, education, skills, blogs, contacts } from './schema';
-import { asc, desc, eq } from 'drizzle-orm';
+import { hero, about, projects, education, skills, blogs, contacts, certifications } from './schema';
+import { asc, desc, eq, sql } from 'drizzle-orm';
+import { sortTimeline } from '@/lib/timeline';
+
+// Public pages only see 'active' rows; the admin passes includeDrafts to see everything.
+type ListOptions = { includeDrafts?: boolean };
 
 export async function getHero() {
     try {
@@ -22,9 +26,11 @@ export async function getAbout() {
     }
 }
 
-export async function getProjects() {
+export async function getProjects({ includeDrafts = false }: ListOptions = {}) {
     try {
-        return await db.select().from(projects).orderBy(asc(projects.sequence), desc(projects.createdAt));
+        let query = db.select().from(projects).$dynamic();
+        if (!includeDrafts) query = query.where(eq(projects.status, 'active'));
+        return await query.orderBy(desc(projects.featured), asc(projects.sequence), desc(projects.createdAt));
     } catch (e) {
         console.error('getProjects error:', e);
         return [];
@@ -33,7 +39,8 @@ export async function getProjects() {
 
 export async function getEducation() {
     try {
-        return await db.select().from(education);
+        // Sorted in JS so rows without dates yet still order correctly from their duration text
+        return sortTimeline(await db.select().from(education));
     } catch (e) {
         console.error('getEducation error:', e);
         return [];
@@ -49,11 +56,25 @@ export async function getSkills() {
     }
 }
 
-export async function getBlogs() {
+export async function getBlogs({ includeDrafts = false }: ListOptions = {}) {
     try {
-        return await db.select().from(blogs).orderBy(asc(blogs.sequence));
+        let query = db.select().from(blogs).$dynamic();
+        if (!includeDrafts) query = query.where(eq(blogs.status, 'active'));
+        return await query.orderBy(asc(blogs.sequence), desc(blogs.id));
     } catch (e) {
         console.error('getBlogs error:', e);
+        return [];
+    }
+}
+
+export async function getCertifications({ includeDrafts = false }: ListOptions = {}) {
+    try {
+        let query = db.select().from(certifications).$dynamic();
+        if (!includeDrafts) query = query.where(eq(certifications.status, 'active'));
+        // Manual order first, then newest issue date
+        return await query.orderBy(asc(certifications.sequence), sql`${certifications.issueDate} desc nulls last`, desc(certifications.id));
+    } catch (e) {
+        console.error('getCertifications error:', e);
         return [];
     }
 }

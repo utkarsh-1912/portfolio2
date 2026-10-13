@@ -3,88 +3,78 @@
 @tailwind utilities;
 
 @layer base {
+  /* Warm paper / ink palette with a single purple accent, used sparingly */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 210 11% 15%;
-    --card: 0 0% 98%;
-    --card-foreground: 210 11% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 11% 15%;
-    --primary: 270 48% 48%; /* Purple */
+    --background: 40 23% 96%;
+    --foreground: 30 8% 9%;
+    --card: 40 25% 99%;
+    --card-foreground: 30 8% 9%;
+    --popover: 40 25% 99%;
+    --popover-foreground: 30 8% 9%;
+    --primary: 265 58% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 5% 96.1%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 270 48% 48%; /* Purple */
+    --secondary: 40 12% 90%;
+    --secondary-foreground: 30 8% 12%;
+    --muted: 40 12% 91%;
+    --muted-foreground: 30 5% 40%;
+    --accent: 265 58% 50%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 270 48% 48%; /* Purple */
-    --radius: 0.25rem; /* Sharper borders */
+    --border: 35 10% 85%;
+    --input: 35 10% 82%;
+    --ring: 265 58% 50%;
+    --radius: 0.75rem;
   }
 
   .dark {
-    /* Deep IDE Background (e.g. VS Code / GitHub Dark) */
-    --background: 222 47% 7%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 7%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 270 48% 58%; /* Purple */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 270 48% 58%; /* Purple */
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 40 6% 5%;
+    --foreground: 45 20% 90%;
+    --card: 40 5% 8%;
+    --card-foreground: 45 20% 90%;
+    --popover: 40 5% 7%;
+    --popover-foreground: 45 20% 90%;
+    --primary: 265 85% 72%;
+    --primary-foreground: 265 40% 10%;
+    --secondary: 40 4% 13%;
+    --secondary-foreground: 45 20% 90%;
+    --muted: 40 4% 12%;
+    --muted-foreground: 40 6% 58%;
+    --accent: 265 85% 72%;
+    --accent-foreground: 265 40% 10%;
+    --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 270 48% 58%; /* Purple */
+    --border: 40 4% 16%;
+    --input: 40 4% 20%;
+    --ring: 265 85% 72%;
   }
 }
 
 @layer utilities {
-  .tech-border {
-    @apply border border-primary/30 hover:border-primary/80 transition-colors shadow-[0_0_15px_hsl(var(--primary)/0.05)] hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)];;
-  }
-  .bg-grid {
-    background-size: 40px 40px;
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  }
-  .dark .bg-grid {
-    background-size: 40px 40px;
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  }
-  .bg-dot-matrix {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
+  /* Small monospace label used for section indexes and metadata */
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground;
   }
 }
 
-/* Custom Scrollbar for IDE Theme */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-track {
   background: hsl(var(--background));
-  border-left: 1px solid hsl(var(--border));
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary) / 0.5);
-  border: 1px solid hsl(var(--primary) / 0.3);
+  background: hsl(var(--foreground) / 0.2);
+  border-radius: 999px;
+  border: 2px solid hsl(var(--background));
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.8);
+  background: hsl(var(--foreground) / 0.35);
+}
+::selection {
+  background: hsl(var(--primary) / 0.25);
 }
 ::-webkit-scrollbar-corner {
   background: hsl(var(--background));
@@ -92,7 +82,7 @@
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: hsl(var(--primary) / 0.5) hsl(var(--background));
+  scrollbar-color: hsl(var(--foreground) / 0.2) transparent;
 }
 
 @layer base {
@@ -101,5 +91,293 @@ html {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion system (inspired by eddyrlora.com / reminous.com)            */
+/* Everything here is opt-in via data attributes / classes and is      */
+/* disabled under prefers-reduced-motion.                               */
+/* ------------------------------------------------------------------ */
+
+html {
+  scroll-padding-top: 4rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Film grain overlay */
+.grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: film 0.6s steps(6) infinite;
+}
+.dark .grain {
+  opacity: 0.08;
+}
+@keyframes film {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-5%, -10%); }
+  40% { transform: translate(3%, -15%); }
+  60% { transform: translate(12%, 9%); }
+  80% { transform: translate(9%, 4%); }
+  100% { transform: translate(-1%, 7%); }
+}
+
+/* Reveal on enter. Content is only hidden once JS has flagged <html class="js">,
+   so it stays visible if scripts fail. The RevealObserver sets data-in. */
+html.js [data-reveal] {
+  transition:
+    opacity 0.9s var(--ease-out),
+    transform 0.9s var(--ease-out),
+    clip-path 1.2s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+html.js [data-reveal='up']:not([data-in]) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+html.js [data-reveal='seam'] {
+  clip-path: inset(0 0 0 0);
+}
+html.js [data-reveal='seam']:not([data-in]) {
+  clip-path: inset(0 50% 0 50%);
+}
+/* Image reveal: a slightly inset, softly rounded window that eases open while fading in.
+   Same shape function and a small radius at both ends, so the corners morph smoothly
+   (animating from a 999px pill radius is what made it look jumpy). */
+html.js [data-reveal='unclip'] {
+  clip-path: inset(0% 0% 0% 0% round 1rem);
+  transition:
+    opacity 1.2s var(--ease-out),
+    clip-path 1.6s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+html.js [data-reveal='unclip']:not([data-in]) {
+  opacity: 0;
+  clip-path: inset(6% 6% 6% 6% round 1.5rem);
+}
+/* The image inside settles from a slight zoom as the window opens */
+html.js [data-reveal='unclip'] > img {
+  transition: transform 1.8s var(--ease-out), filter 0.7s ease;
+}
+html.js [data-reveal='unclip']:not([data-in]) > img {
+  transform: scale(1.12);
+}
+
+/* Per-character rise (used by <SplitText>) */
+.split-line {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+}
+.split-char {
+  display: inline-block;
+  will-change: transform;
+}
+html.js [data-reveal='chars'] .split-char {
+  transition: transform 1s var(--ease-out);
+  transition-delay: calc(var(--c, 0) * 35ms + var(--i, 0) * 90ms);
+}
+html.js [data-reveal='chars']:not([data-in]) .split-char {
+  transform: translateY(105%);
+}
+
+/* Infinite marquee: content is rendered twice, so -50% loops seamlessly */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+.marquee {
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+@keyframes loading-bar {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(300%); }
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Scroll-driven effects: progressive enhancement (Chromium/Safari). */
+@keyframes hero-out {
+  from { transform: translateY(0); opacity: 1; }
+  75% { opacity: 0; }
+  to { transform: translateY(-60px); opacity: 0; }
+}
+@keyframes plate-zoom {
+  from { scale: 1.15; }
+  to { scale: 1; }
+}
+@keyframes grow-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-hero-out {
+      animation: hero-out linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 90svh;
+    }
+    .scroll-zoom {
+      animation: plate-zoom linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .scroll-grow-y {
+      transform-origin: top;
+      animation: grow-y linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 60%;
+    }
+  }
+}
+
+/* Magnetic elements: PointerEffects sets `translate`; this eases it back on release */
+[data-magnetic] {
+  transition: translate 0.5s var(--ease-out);
+}
+
+/* Word-by-word reveal (used by <SplitWords>) */
+.split-word {
+  display: inline-block;
+}
+html.js [data-reveal='words'] .split-word {
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.8s var(--ease-out),
+    filter 0.8s var(--ease-out);
+  transition-delay: calc(var(--w, 0) * 28ms);
+}
+html.js [data-reveal='words']:not([data-in]) .split-word {
+  opacity: 0;
+  transform: translateY(0.35em);
+  filter: blur(6px);
+}
+
+/* Section rule that draws across once its heading is revealed */
+html.js [data-reveal] .rule-draw {
+  transform-origin: left;
+  transition: transform 1.4s var(--ease-out) 0.15s;
+}
+html.js [data-reveal]:not([data-in]) .rule-draw {
+  transform: scaleX(0);
+}
+
+/* Contribution graph fills in week by week */
+html.js [data-reveal] .heat-col {
+  transition: opacity 0.6s ease calc(var(--wk, 0) * 14ms), transform 0.6s var(--ease-out) calc(var(--wk, 0) * 14ms);
+}
+html.js [data-reveal]:not([data-in]) .heat-col {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* Rolling button label (used by <RollText>): the copy slides in from below on hover */
+.roll-text {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  line-height: 1.25;
+}
+.roll-text > span,
+.roll-text::after {
+  transition: transform 0.55s var(--ease-out);
+}
+.roll-text::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+.group:hover .roll-text > span,
+.group:hover .roll-text::after,
+.group:focus-visible .roll-text > span,
+.group:focus-visible .roll-text::after {
+  transform: translateY(-100%);
+}
+
+/* Cursor spotlight: PointerEffects sets --mx/--my on the hovered [data-spotlight] element */
+[data-spotlight] {
+  position: relative;
+  isolation: isolate;
+}
+[data-spotlight]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), hsl(var(--primary) / 0.12), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+[data-spotlight]:hover::after {
+  opacity: 1;
+}
+
+/* Gentle lift for interactive cards */
+.lift {
+  transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out), border-color 0.3s ease;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px -24px hsl(var(--foreground) / 0.25);
+}
+
+/* Underline that draws in from the left on hover */
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.5s var(--ease-out);
+}
+.link-draw:hover,
+.link-draw[data-active='true'] {
+  background-size: 100% 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain,
+  .marquee-track {
+    animation: none;
+  }
+  .lift:hover {
+    transform: none;
+  }
+  html.js [data-reveal],
+  html.js [data-reveal] .split-char,
+  html.js [data-reveal] .split-word,
+  html.js [data-reveal] .rule-draw,
+  html.js [data-reveal] .heat-col,
+  .roll-text > span,
+  .roll-text::after {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    filter: none !important;
   }
 }

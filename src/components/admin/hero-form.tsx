@@ -9,6 +9,7 @@ import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Github, Linkedin, Save, Upload, Loader2, Youtube, User, ImageIcon , CheckCircle2, RotateCcw, Briefcase, FileText} from 'lucide-react';
 import { XLogo } from '@/components/ui/x-logo';
+import { useAdminAction } from './use-admin-action';
 
 const DEFAULT_PHOTO = '/profile.jpg';
 
@@ -17,6 +18,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
         title: '', roles: [], description: '', githubUrl: '', linkedinUrl: '', twitterUrl: '', photoUrl: ''
     });
     const [isPending, startTransition] = useTransition();
+    const run = useAdminAction();
 
     // Photo upload state
     const [preview, setPreview] = useState<string>(initialData?.photoUrl || DEFAULT_PHOTO);
@@ -51,8 +53,8 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
             } else {
                 setUploadError(res.error || 'Upload failed.');
                 setUploadStatus('error');
-                // keep base64 as preview even if upload failed
-                setData((prev: any) => ({ ...prev, photoUrl: base64 }));
+                // Don't save the base64 data URL: it would bloat the database row. Keep the previous photo.
+                setPreview(initialData?.photoUrl || DEFAULT_PHOTO);
             }
         };
         reader.readAsDataURL(file);
@@ -81,16 +83,16 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         startTransition(async () => {
-            await updateHeroAction(data.id, data);
+            await run(updateHeroAction(data.id, data), 'Hero section updated.');
         });
     };
 
     const isUsingDefault = !data.photoUrl;
 
     return (
-        <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
-            <CardHeader className="pb-4 border-b border-border/30 mb-6">
-                <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
+        <Card className="rounded-3xl border-border bg-card shadow-none">
+            <CardHeader className="border-b border-border pb-6 mb-6">
+                <CardTitle className="flex items-center gap-2 font-headline text-2xl font-semibold tracking-tight">
                     <User className="h-5 w-5 text-primary" />
                     Hero Section Settings
                 </CardTitle>
@@ -108,7 +110,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                             {/* Preview circle */}
                             <div className="flex-shrink-0 flex flex-col items-center gap-2">
                                 <div className="relative w-28 h-28">
-                                    <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-primary/30 bg-muted shadow-md">
+                                    <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-border bg-muted shadow-md">
                                         <img
                                             src={preview}
                                             alt="Profile preview"
@@ -129,7 +131,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                                     )}
                                     {isUsingDefault && (
                                         <div className="absolute -bottom-1 -right-1">
-                                            <span className="text-[9px] bg-muted text-muted-foreground border border-border/50 px-1 py-0.5 rounded font-bold uppercase tracking-wide whitespace-nowrap">Default</span>
+                                            <span className="text-[9px] bg-muted text-muted-foreground border border-border px-1 py-0.5 rounded font-bold uppercase tracking-wide whitespace-nowrap">Default</span>
                                         </div>
                                     )}
                                 </div>
@@ -146,14 +148,14 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
 
                             {/* Drop zone */}
                             <div
-                                className={`flex-1 w-full border-2 border-dashed rounded-none p-6 text-center cursor-pointer transition-all
+                                className={`flex-1 w-full border-2 border-dashed  p-6 text-center cursor-pointer transition-all
                                     ${isDragging
                                         ? 'border-primary bg-primary/10 scale-[1.01]'
                                         : uploadStatus === 'done'
                                             ? 'border-green-500/40 bg-green-500/5'
                                             : uploadStatus === 'error'
                                                 ? 'border-destructive/40 bg-destructive/5'
-                                                : 'border-border/50 hover:border-primary/40 hover:bg-primary/5'
+                                                : 'border-border hover:border-border hover:bg-muted'
                                     }`}
                                 onClick={() => fileInputRef.current?.click()}
                                 onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
@@ -198,11 +200,11 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                         )}
                     </div>
 
-                    <div className="border-t border-border/30 pt-4 space-y-6">
+                    <div className="border-t border-border pt-4 space-y-6">
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><User className="h-4 w-4" /> Name / Title</Label>
                             <Input
-                                className="bg-background/80"
+                                className="bg-background"
                                 value={data.title}
                                 onChange={e => setData({ ...data, title: e.target.value })}
                                 required
@@ -211,7 +213,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><Briefcase className="h-4 w-4" /> Roles (comma separated)</Label>
                             <Input
-                                className="bg-background/80"
+                                className="bg-background"
                                 value={data.roles?.join(', ')}
                                 onChange={handleRolesChange}
                                 required
@@ -221,7 +223,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><FileText className="h-4 w-4" /> Description</Label>
                             <Textarea
-                                className="bg-background/80 resize-none"
+                                className="bg-background resize-none"
                                 value={data.description}
                                 onChange={e => setData({ ...data, description: e.target.value })}
                                 rows={4}
@@ -230,11 +232,11 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border/30">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border">
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><Github className="h-4 w-4" /> GitHub URL</Label>
                             <Input
-                                className="bg-background/80"
+                                className="bg-background"
                                 type="url"
                                 value={data.githubUrl || ''}
                                 onChange={e => setData({ ...data, githubUrl: e.target.value })}
@@ -243,7 +245,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><Linkedin className="h-4 w-4" /> LinkedIn URL</Label>
                             <Input
-                                className="bg-background/80"
+                                className="bg-background"
                                 type="url"
                                 value={data.linkedinUrl || ''}
                                 onChange={e => setData({ ...data, linkedinUrl: e.target.value })}
@@ -252,7 +254,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><XLogo className="h-4 w-4" /> X (Twitter) URL</Label>
                             <Input
-                                className="bg-background/80"
+                                className="bg-background"
                                 type="url"
                                 value={data.twitterUrl || ''}
                                 onChange={e => setData({ ...data, twitterUrl: e.target.value })}
@@ -261,7 +263,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2"><Youtube className="h-4 w-4" /> YouTube URL</Label>
                             <Input
-                                className="bg-background/80"
+                                className="bg-background"
                                 type="url"
                                 value={data.youtubeUrl || ''}
                                 onChange={e => setData({ ...data, youtubeUrl: e.target.value })}
@@ -269,7 +271,7 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                         </div>
                     </div>
                 </CardContent>
-                <CardFooter className="bg-muted/30 py-4 px-6 border-t border-border/30 rounded-b-xl flex justify-between">
+                <CardFooter className="bg-muted/30 py-4 px-6 border-t border-border rounded-b-xl flex justify-between">
                     <p className="text-sm text-muted-foreground">Changes reflect instantly on main site.</p>
                     <Button type="submit" disabled={isPending || uploadStatus === 'uploading'} className="gap-2">
                         <Save className="h-4 w-4" />

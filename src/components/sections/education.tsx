@@ -1,57 +1,49 @@
 import { getEducation } from '@/db/queries';
-import { Briefcase, GraduationCap } from 'lucide-react';
-
-const iconsMapping: any = {
-  Briefcase,
-  GraduationCap
-};
+import { SectionHeading } from '@/components/ui/section-heading';
 
 export async function EducationSection() {
   const education = await getEducation();
+  if (education.length === 0) return null;
+
   return (
-    <section id="education" className="w-full min-h-screen py-10 md:py-16 lg:py-24 bg-muted/20 relative border-t border-border/50 snap-start flex flex-col justify-center overflow-y-auto">
-      <div className="container max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold tracking-tighter text-center sm:text-4xl mb-12 font-mono uppercase text-foreground">&gt; git log --oneline --graph</h2>
+    <section id="education" className="relative w-full border-t border-border py-24 md:py-36">
+      <div className="container">
+        <SectionHeading
+          index="02"
+          label="Experience"
+          title="Where I've been"
+          intro="Roles and studies, newest first."
+        />
+
         <div className="relative">
-          {/* Glowing center line */}
-          <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-[2px] h-full bg-gradient-to-b from-primary via-primary/50 to-transparent"></div>
-          {education.map((item, index) => {
-            const IconComp = iconsMapping[item.icon] || Briefcase;
+          {/* Progress rule that draws down as the list scrolls through */}
+          <span aria-hidden="true" className="absolute left-0 top-0 hidden h-full w-px bg-border md:block" />
+          <span aria-hidden="true" className="scroll-grow-y absolute left-0 top-0 hidden h-full w-px bg-primary md:block" />
+
+          <ol>
+          {education.map((item) => {
+            const isWork = item.icon === 'Briefcase';
             return (
-              <div key={item.id} className="relative flex items-start w-full mb-12">
-                {/* Left side (Desktop only, Evens) */}
-                <div className="hidden sm:block w-1/2 pr-8">
-                  {index % 2 === 0 && (
-                      <div className="bg-card/80 backdrop-blur border border-primary/20 p-6 rounded-none group hover:-translate-y-1 transition-all duration-300 font-mono relative overflow-hidden shadow-xl">
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-                        <div className="text-[10px] font-bold text-primary/70 mb-2 uppercase tracking-[0.2em]">Commit: {item.duration}</div>
-                        <h3 className="text-lg font-bold group-hover:text-primary transition-colors">{item.degree}</h3>
-                        <p className="font-semibold text-foreground/80 mt-1">{item.institution}</p>
-                        <p className="text-sm text-muted-foreground leading-relaxed mt-4 border-l-2 border-primary/30 pl-4 py-1">{item.description}</p>
-                      </div>
-                  )}
+              <li
+                key={item.id}
+                data-reveal="up"
+                className="group grid gap-3 border-b border-border py-8 transition-colors md:grid-cols-12 md:gap-8 md:pl-10 md:hover:bg-muted/40"
+              >
+                <div className="md:col-span-3">
+                  <p className="font-mono text-sm tabular-nums text-foreground">{item.duration}</p>
+                  <p className="eyebrow mt-1">{isWork ? 'Work' : 'Education'}</p>
                 </div>
-
-                {/* Center Node */}
-                <div className="absolute left-4 top-0 sm:left-1/2 -translate-x-1/2 z-10 flex items-center justify-center w-8 h-8 bg-background rounded-full border-2 border-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)]">
-                  <IconComp className="h-4 w-4 text-primary" />
+                <div className="md:col-span-4">
+                  <h3 className="font-headline text-2xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+                    {item.degree}
+                  </h3>
+                  <p className="mt-1 text-muted-foreground">{item.institution}</p>
                 </div>
-
-                {/* Right side (Desktop Odds, Mobile ALL) */}
-                <div className="w-full sm:w-1/2 pl-12 sm:pl-8">
-                  <div className={index % 2 === 0 ? "sm:hidden" : ""}>
-                      <div className="bg-card/80 backdrop-blur border border-primary/20 p-6 rounded-none group hover:-translate-y-1 transition-all duration-300 font-mono relative overflow-hidden shadow-xl">
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-                        <div className="text-[10px] font-bold text-primary/70 mb-2 uppercase tracking-[0.2em]">Commit: {item.duration}</div>
-                        <h3 className="text-lg font-bold group-hover:text-primary transition-colors">{item.degree}</h3>
-                        <p className="font-semibold text-foreground/80 mt-1">{item.institution}</p>
-                        <p className="text-sm text-muted-foreground leading-relaxed mt-4 border-l-2 border-primary/30 pl-4 py-1">{item.description}</p>
-                      </div>
-                  </div>
-                </div>
-              </div>
+                <p className="text-sm leading-relaxed text-muted-foreground md:col-span-5 md:text-base">{item.description}</p>
+              </li>
             );
           })}
+          </ol>
         </div>
       </div>
     </section>

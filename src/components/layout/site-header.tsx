@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { Code2, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
+import { LogoMark } from '@/components/ui/logo-mark';
+import { RollText } from '@/components/ui/roll-text';
 import { Button } from '../ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { useScrollSpy } from '@/hooks/use-scroll-spy';
@@ -11,99 +13,106 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { name: 'About', href: '/#about' },
+  { name: 'About', href: '/#about', page: '/about' },
   { name: 'Experience', href: '/#education' },
-  { name: 'Projects', href: '/#projects' },
-  { name: 'Blog', href: '/#blog' },
-  { name: 'Contact', href: '/#contact' },
+  { name: 'Work', href: '/#projects', page: '/projects' },
+  { name: 'Writing', href: '/#blog', page: '/blog' },
 ];
 
-const sectionIds = ['hero', 'about', 'education', 'projects', 'blog', 'contact'];
+const sectionIds = ['hero', 'about', 'education', 'certifications', 'projects', 'blog', 'contact'];
 
 export function SiteHeader() {
   const activeId = useScrollSpy(sectionIds, { rootMargin: '0% 0% -50% 0%' });
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
+    let lastY = window.scrollY;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      const y = window.scrollY;
+      setScrolled(y > 10);
+      // Tuck the header away while scrolling down, bring it back on any upward scroll
+      setHidden(y > 200 && y > lastY);
+      lastY = y;
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const isProjectsPage = pathname === '/projects';
 
   if (pathname.startsWith('/admin') || pathname.startsWith('/login')) {
     return null;
   }
 
+  const isActive = (item: (typeof navItems)[number]) =>
+    pathname === '/' ? item.href === `/#${activeId}` : !!item.page && pathname.startsWith(item.page);
+
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300 font-mono',
-        scrolled
-          ? 'bg-background/95 backdrop-blur border-b border-primary/30 shadow-[0_4px_20px_hsl(var(--primary)/0.15)]'
-          : 'bg-transparent'
+        'sticky top-0 z-50 w-full px-3 pt-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        hidden && !isSheetOpen && '-translate-y-[120%]'
       )}
     >
-      <div className="container flex h-14 max-w-screen-2xl items-center px-4 md:px-8">
-        <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Code2 className="h-6 w-6 text-primary" />
-          <span className="font-bold text-lg tracking-wider">Utkristi</span>
+      <div
+        className={cn(
+          'mx-auto flex h-14 max-w-screen-2xl items-center justify-between rounded-full px-4 pl-5 transition-[background-color,border-color,box-shadow] duration-500',
+          scrolled
+            ? 'border border-border bg-background/75 shadow-[0_8px_30px_-12px_hsl(var(--foreground)/0.15)] backdrop-blur-xl'
+            : 'border border-transparent'
+        )}
+      >
+        <Link href="/" className="group flex items-center gap-2" aria-label="Utkristi, home">
+          <LogoMark className="transition-transform duration-500 group-hover:rotate-[-8deg]" />
+          <span className="font-headline text-lg font-semibold tracking-tight">Utkristi</span>
         </Link>
-        <div className="flex flex-1 items-center justify-end space-x-2">
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            {navItems.map((item) => {
-              const isActive = item.href === `/#${activeId}` || (item.name === 'Projects' && isProjectsPage);
 
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    'transition-colors hover:text-primary hover:underline underline-offset-4 decoration-primary/50',
-                    isActive && activeId !== 'hero' ? 'text-primary' : 'text-foreground/70'
-                  )}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
-          </nav>
+        <nav className="hidden items-center gap-7 text-sm md:flex">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              data-active={isActive(item)}
+              className={cn(
+                'link-draw pb-0.5 transition-colors hover:text-foreground',
+                isActive(item) ? 'text-foreground' : 'text-muted-foreground'
+              )}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-1">
           <ThemeToggle />
+          <Button asChild size="sm" className="group ml-1 hidden rounded-full px-4 md:inline-flex">
+            <Link href="/#contact" data-magnetic><RollText>Get in touch</RollText></Link>
+          </Button>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle Menu</span>
+              <Button variant="ghost" size="icon" className="rounded-full md:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="flex flex-col">
               <SheetHeader>
-                <SheetTitle className="sr-only">Navigation</SheetTitle>
+                <SheetTitle className="eyebrow text-left">Menu</SheetTitle>
               </SheetHeader>
-              <div className="flex flex-col gap-6 pt-6">
-                {navItems.map((item) => {
-                  const isActive = item.href === `/#${activeId}` || (item.name === 'Projects' && isProjectsPage);
-
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setIsSheetOpen(false)}
-                      className={cn(
-                        'text-lg font-medium transition-colors hover:text-primary',
-                        isActive && activeId !== 'hero' ? 'text-primary' : 'text-foreground'
-                      )}
-                    >
-                      {item.name}
-                    </Link>
-                  );
-                })}
-              </div>
+              <nav className="mt-8 flex flex-col gap-2">
+                {[...navItems, { name: 'Contact', href: '/#contact' }].map((item, i) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setIsSheetOpen(false)}
+                    className="flex items-baseline gap-3 py-1 font-headline text-4xl font-semibold tracking-tight transition-colors hover:text-primary"
+                  >
+                    <span className="font-mono text-xs text-muted-foreground">0{i + 1}</span>
+                    {item.name}
+                  </Link>
+                ))}
+              </nav>
             </SheetContent>
           </Sheet>
         </div>

@@ -8,14 +8,19 @@ import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { TagInput } from '@/components/ui/tag-input';
-import { Code, Plus, Trash2, Edit, Save, X, ExternalLink, Github, UploadCloud, Tag, ListOrdered } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Code, Plus, Trash2, Edit, Save, X, ExternalLink, Github, UploadCloud, Tag, ListOrdered, Eye, Star } from 'lucide-react';
+import { useAdminAction } from './use-admin-action';
+import { StatusToggle } from './status-toggle';
 
 export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
-    const [projects, setProjects] = useState(initialData || []);
+    // Read straight from props: revalidation after each save re-renders with fresh rows
+    const projects = initialData || [];
     const [editingId, setEditingId] = useState<number | 'new' | null>(null);
     const [formData, setFormData] = useState<any>({});
     const [isPending, startTransition] = useTransition();
     const [isUploading, setIsUploading] = useState(false);
+    const run = useAdminAction();
 
     // Calculate tag frequencies from initialData and sort descending
     const sortedTags = React.useMemo(() => {
@@ -37,7 +42,7 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
 
     const handleAddNew = () => {
         setEditingId('new');
-        setFormData({ title: '', description: '', tags: [], imageUrl: '', liveUrl: '', githubUrl: '', sequence: 0 });
+        setFormData({ title: '', description: '', tags: [], imageUrl: '', liveUrl: '', githubUrl: '', sequence: 0, status: 'active', featured: false });
     };
 
     const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,27 +76,26 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         startTransition(async () => {
-            if (editingId === 'new') {
-                await addProjectAction(formData);
-            } else {
-                await updateProjectAction(formData.id, formData);
-            }
-            setEditingId(null);
+            const { ok } = await run(
+                editingId === 'new' ? addProjectAction(formData) : updateProjectAction(formData.id, formData),
+                'Project saved.'
+            );
+            if (ok) setEditingId(null);
         });
     };
 
     const handleDelete = (id: number) => {
-        if (!confirm('Area you sure you want to delete this project?')) return;
+        if (!confirm('Are you sure you want to delete this project?')) return;
         startTransition(async () => {
-            await deleteProjectAction(id);
+            await run(deleteProjectAction(id), 'Project deleted.');
         });
     };
 
     if (editingId) {
         return (
-            <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm animate-in zoom-in-95 duration-200 font-mono">
-                <CardHeader className="pb-4 border-b border-border/30 mb-6">
-                    <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
+            <Card className="rounded-3xl border-border bg-card shadow-none animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <CardHeader className="border-b border-border pb-6 mb-6">
+                    <CardTitle className="flex items-center gap-2 font-headline text-2xl font-semibold tracking-tight">
                         <Code className="h-5 w-5 text-primary" />
                         {editingId === 'new' ? 'Create New Project' : 'Edit Project Entry'}
                     </CardTitle>
@@ -101,11 +105,11 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                     <CardContent className="space-y-6">
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2">Project Title</Label>
-                            <Input className="bg-background/80 font-headline" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} required />
+                            <Input className="bg-background font-headline" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} required />
                         </div>
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2">Description</Label>
-                            <Textarea className="bg-background/80 resize-none min-h-[100px]" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} required />
+                            <Textarea className="bg-background resize-none min-h-[100px]" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} required />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="md:col-span-2 space-y-2">
@@ -119,12 +123,34 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                             </div>
                             <div className="space-y-2">
                                 <Label className="flex items-center gap-2"><ListOrdered className="h-4 w-4" /> Display Order</Label>
-                                <Input className="bg-background/80" type="number" min={0} value={formData.sequence ?? 0} onChange={e => setFormData({ ...formData, sequence: parseInt(e.target.value) || 0 })} />
+                                <Input className="bg-background" type="number" min={0} value={formData.sequence ?? 0} onChange={e => setFormData({ ...formData, sequence: parseInt(e.target.value) || 0 })} />
                                 <p className="text-xs text-muted-foreground">Lower = shown first (0 = top)</p>
                             </div>
                         </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="project-status" className="flex items-center gap-2"><Eye className="h-4 w-4" /> Visibility</Label>
+                                <select
+                                    id="project-status"
+                                    className="flex h-11 w-full rounded-xl border border-input bg-background px-3 text-sm"
+                                    value={formData.status || 'active'}
+                                    onChange={e => setFormData({ ...formData, status: e.target.value })}
+                                >
+                                    <option value="active">Published</option>
+                                    <option value="draft">Draft (hidden)</option>
+                                    <option value="archived">Archived (hidden)</option>
+                                </select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="flex items-center gap-2"><Star className="h-4 w-4" /> Featured</Label>
+                                <label className="flex h-10 items-center gap-2 text-sm text-muted-foreground cursor-pointer">
+                                    <Checkbox checked={!!formData.featured} onCheckedChange={v => setFormData({ ...formData, featured: v === true })} />
+                                    Show first in the home page showcase
+                                </label>
+                            </div>
+                        </div>
 
-                        <div className="border border-primary/20 bg-primary/5 p-4 rounded-none space-y-4">
+                        <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-5 space-y-4">
                             <Label className="flex items-center gap-2 font-semibold"><UploadCloud className="h-4 w-4 text-primary" /> Cover Image (ImgBB)</Label>
                             <div className="flex flex-col sm:flex-row items-center gap-4">
                                 <Input type="file" accept="image/*" onChange={handleImageUpload} disabled={isUploading} className="bg-background" />
@@ -140,18 +166,18 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                             )}
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border/30">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border">
                             <div className="space-y-2">
                                 <Label className="flex items-center gap-2"><ExternalLink className="h-4 w-4" /> Live Demo URL</Label>
-                                <Input className="bg-background/80" type="url" value={formData.liveUrl || ''} onChange={e => setFormData({ ...formData, liveUrl: e.target.value })} />
+                                <Input className="bg-background" type="url" value={formData.liveUrl || ''} onChange={e => setFormData({ ...formData, liveUrl: e.target.value })} />
                             </div>
                             <div className="space-y-2">
                                 <Label className="flex items-center gap-2"><Github className="h-4 w-4" /> Repository URL</Label>
-                                <Input className="bg-background/80" type="url" value={formData.githubUrl || ''} onChange={e => setFormData({ ...formData, githubUrl: e.target.value })} />
+                                <Input className="bg-background" type="url" value={formData.githubUrl || ''} onChange={e => setFormData({ ...formData, githubUrl: e.target.value })} />
                             </div>
                         </div>
                     </CardContent>
-                    <CardFooter className="bg-muted/30 py-4 px-6 border-t border-border/30 rounded-b-xl flex justify-end gap-3">
+                    <CardFooter className="border-t border-border px-6 py-5 flex justify-end gap-3">
                         <Button type="button" variant="outline" onClick={() => setEditingId(null)} className="gap-2">
                             <X className="h-4 w-4" /> Cancel
                         </Button>
@@ -165,10 +191,10 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
     }
 
     return (
-        <Card className="rounded-none tech-border bg-card/80 backdrop-blur-sm font-mono">
-            <CardHeader className="pb-4 border-b border-border/30 mb-6 flex flex-col sm:flex-row items-center justify-between">
+        <Card className="rounded-3xl border-border bg-card shadow-none">
+            <CardHeader className="border-b border-border pb-6 mb-6 flex flex-col sm:flex-row items-center justify-between">
                 <div>
-                    <CardTitle className="flex items-center gap-2 text-xl font-headline font-bold">
+                    <CardTitle className="flex items-center gap-2 font-headline text-2xl font-semibold tracking-tight">
                         <Code className="h-5 w-5 text-primary" />
                         Projects Portfolio
                     </CardTitle>
@@ -181,9 +207,15 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
             <CardContent>
                 <div className="grid gap-4">
                     {projects.map((proj) => (
-                        <div key={proj.id} className="border border-border/50 bg-card p-4 rounded-none flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-shadow">
+                        <div key={proj.id} className="rounded-2xl border border-border bg-background p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-colors hover:border-foreground/25">
                             <div className="flex-1 min-w-0">
-                                <h4 className="font-bold font-headline text-lg truncate mb-1">{proj.title}</h4>
+                                <h4 className="font-bold font-headline text-lg truncate mb-1">
+                                    {proj.featured && <Star className="inline h-4 w-4 mr-1.5 text-primary fill-primary align-[-2px]" />}
+                                    {proj.title}
+                                    {proj.status && proj.status !== 'active' && (
+                                        <span className="ml-2 align-middle px-1.5 py-0.5 text-[10px] uppercase tracking-widest border border-border text-muted-foreground">{proj.status}</span>
+                                    )}
+                                </h4>
                                 <p className="text-sm text-muted-foreground line-clamp-2">{proj.description}</p>
                                 <div className="flex flex-wrap gap-1.5 mt-3 min-w-0 max-w-full overflow-hidden">
                                     {proj.tags?.slice(0, 3).map((t: string) => (
@@ -192,11 +224,12 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                                     {(proj.tags?.length || 0) > 3 && <span className="px-2 py-0.5 bg-secondary/50 text-muted-foreground text-xs rounded-md">+{proj.tags.length - 3}</span>}
                                 </div>
                             </div>
-                            <div className="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                            <div className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                                <StatusToggle item={proj} save={updateProjectAction} />
                                 <Button variant="outline" size="sm" onClick={() => handleEdit(proj)} className="flex-1 sm:flex-none gap-2">
                                     <Edit className="h-4 w-4 text-muted-foreground" /> Edit
                                 </Button>
-                                <Button variant="destructive" size="sm" disabled={isPending} onClick={() => handleDelete(proj.id)} className="flex-none">
+                                <Button variant="ghost" size="sm" disabled={isPending} onClick={() => handleDelete(proj.id)} className="flex-none text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
                                     <Trash2 className="h-4 w-4" />
                                     <span className="sr-only">Delete</span>
                                 </Button>
@@ -204,7 +237,7 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                         </div>
                     ))}
                     {projects.length === 0 && (
-                        <div className="text-center py-12 border-2 border-dashed rounded-none">
+                        <div className="text-center py-12 border border-dashed rounded-2xl border-border">
                             <Code className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
                             <p className="text-muted-foreground font-medium">No projects found. Add your first showcase!</p>
                         </div>

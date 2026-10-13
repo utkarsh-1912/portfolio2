@@ -1,22 +1,10 @@
-'use client';
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Code, Database, Server, Wind, Briefcase, GitGraph,
-  Cpu, Fingerprint, FileCode, GraduationCap, Network,
-  Book, Terminal, Cloud, BriefcaseBusiness, Trophy, Activity, Github, Users, Link as LinkIcon
-} from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import type { CodeforcesUser, LeetCodeStats, GitHubUserStats } from '@/lib/api-stats';
-import Link from 'next/link';
-import { XLogo } from '@/components/ui/x-logo'; // if needed
-
-const iconsMap: any = { Code, Database, Server, Wind, Briefcase, GitGraph, Cpu, Fingerprint, FileCode, GraduationCap, Network, Book, Terminal, Cloud, BriefcaseBusiness };
+import { SectionHeading } from '@/components/ui/section-heading';
+import { RevealObserver } from '@/components/ui/reveal-observer';
+import { CertificationCard } from './certifications';
+import { SplitWords } from '@/components/ui/split-words';
+import { CountUp } from '@/components/ui/count-up';
 
 type StatsProps = {
   cfStats: CodeforcesUser | null;
@@ -24,153 +12,134 @@ type StatsProps = {
   ghStats: GitHubUserStats | null;
 };
 
-export function AboutPageClient({ about, skills, stats }: { about: any, skills: any[], stats: StatsProps }) {
+type Stat = { label: string; value: string | number; detail: string; href: string };
+
+export function AboutPageClient({ about, skills, certifications = [], stats }: { about: any; skills: any[]; certifications?: any[]; stats: StatsProps }) {
+  const paragraphs: string[] = about?.paragraphs ?? [];
+  const [lead, ...rest] = paragraphs;
+
+  const liveStats: Stat[] = [];
+  if (stats.ghStats) {
+    liveStats.push({
+      label: 'GitHub',
+      value: stats.ghStats.public_repos,
+      detail: `public repos · ${stats.ghStats.followers} followers`,
+      href: stats.ghStats.html_url,
+    });
+  }
+  if (stats.lcStats && stats.lcStats.status === 'success') {
+    liveStats.push({
+      label: 'LeetCode',
+      value: stats.lcStats.totalSolved,
+      detail: `solved · ${stats.lcStats.easySolved} easy / ${stats.lcStats.mediumSolved} medium / ${stats.lcStats.hardSolved} hard`,
+      href: 'https://leetcode.com/u/user7883p',
+    });
+  }
+  if (stats.cfStats) {
+    liveStats.push({
+      label: 'Codeforces',
+      value: stats.cfStats.rating || '—',
+      detail: `rating · max ${stats.cfStats.maxRank} (${stats.cfStats.maxRating})`,
+      href: `https://codeforces.com/profile/${stats.cfStats.handle}`,
+    });
+  }
+
   return (
-    <section className="w-full py-10 md:py-16 lg:py-24 bg-background relative min-h-screen">
-      <div className="absolute inset-0 bg-dot-matrix opacity-20 pointer-events-none"></div>
+    <div className="container py-16 md:py-24">
+      <SectionHeading as="h1" label="About" title="Hello, I'm Utkarsh" />
 
-      <div className="container relative z-10">
-        <div className="mb-14 font-mono">
-            <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3 bg-primary/10 px-4 py-1 border border-primary/30 rounded-none">./about</span>
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl uppercase text-foreground">&gt; whoami --verbose</h1>
-            <p className="mt-4 text-muted-foreground">A deeper dive into my background, skills, and coding activity.</p>
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-12 items-start">
-          {/* Left Column: Bio & Stats */}
-          <div className="xl:col-span-2 space-y-12">
-            
-            {/* Bio */}
-            <div className="font-mono space-y-4 text-muted-foreground leading-relaxed text-lg">
-              {about?.paragraphs.map((p: string, i: number) => (
-                <p key={i}>{p}</p>
-              ))}
-            </div>
-
-            {/* Live Coding Stats Terminal */}
-            <Card className="tech-border rounded-none bg-card/80 backdrop-blur">
-                <CardHeader className="border-b border-primary/20 bg-muted/50 pb-4">
-                  <CardTitle className="font-mono text-xl uppercase tracking-wider text-primary flex items-center gap-2">
-                    <Activity className="h-5 w-5" />
-                    ./live_stats.sh
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-6 font-mono grid grid-cols-1 md:grid-cols-3 gap-6">
-                  
-                  {/* GitHub Stats */}
-                  <div className="p-4 border border-border bg-background/50 flex flex-col gap-2 relative group hover:border-primary/50 transition-colors">
-                    <div className="flex items-center gap-2 text-primary font-bold uppercase text-xs tracking-wider mb-2">
-                      <Github className="h-4 w-4" /> GitHub
-                    </div>
-                    {stats.ghStats ? (
-                        <>
-                            <div className="text-2xl font-bold text-foreground">{stats.ghStats.public_repos} <span className="text-sm font-normal text-muted-foreground">repos</span></div>
-                            <div className="flex items-center gap-4 text-xs text-muted-foreground mt-2">
-                                <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {stats.ghStats.followers} followers</span>
-                            </div>
-                            <Link href={stats.ghStats.html_url} target="_blank" className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <LinkIcon className="h-4 w-4 text-primary" />
-                            </Link>
-                        </>
-                    ) : (
-                        <div className="text-xs text-muted-foreground">Failed to fetch.</div>
-                    )}
-                  </div>
-
-                  {/* LeetCode Stats */}
-                  <div className="p-4 border border-border bg-background/50 flex flex-col gap-2 relative group hover:border-primary/50 transition-colors">
-                    <div className="flex items-center gap-2 text-primary font-bold uppercase text-xs tracking-wider mb-2">
-                      <Code className="h-4 w-4" /> LeetCode
-                    </div>
-                    {stats.lcStats && stats.lcStats.status === "success" ? (
-                        <>
-                            <div className="text-2xl font-bold text-foreground">{stats.lcStats.totalSolved} <span className="text-sm font-normal text-muted-foreground">solved</span></div>
-                            <div className="flex items-center gap-3 text-xs mt-2">
-                                <span className="text-green-500 font-bold">{stats.lcStats.easySolved} E</span>
-                                <span className="text-yellow-500 font-bold">{stats.lcStats.mediumSolved} M</span>
-                                <span className="text-red-500 font-bold">{stats.lcStats.hardSolved} H</span>
-                            </div>
-                            <Link href={`https://leetcode.com/u/user7883p`} target="_blank" className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <LinkIcon className="h-4 w-4 text-primary" />
-                            </Link>
-                        </>
-                    ) : (
-                        <div className="text-xs text-muted-foreground">Failed to fetch.</div>
-                    )}
-                  </div>
-
-                  {/* Codeforces Stats */}
-                  <div className="p-4 border border-border bg-background/50 flex flex-col gap-2 relative group hover:border-primary/50 transition-colors">
-                    <div className="flex items-center gap-2 text-primary font-bold uppercase text-xs tracking-wider mb-2">
-                      <Trophy className="h-4 w-4" /> Codeforces
-                    </div>
-                    {stats.cfStats ? (
-                        <>
-                            <div className="text-2xl font-bold text-foreground">{stats.cfStats.rating || 'N/A'} <span className="text-sm font-normal text-muted-foreground">rating</span></div>
-                            <div className="text-xs text-muted-foreground mt-2 capitalize">
-                                Max: <span className="font-bold text-primary">{stats.cfStats.maxRank} ({stats.cfStats.maxRating})</span>
-                            </div>
-                            <Link href={`https://codeforces.com/profile/${stats.cfStats.handle}`} target="_blank" className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <LinkIcon className="h-4 w-4 text-primary" />
-                            </Link>
-                        </>
-                    ) : (
-                        <div className="text-xs text-muted-foreground">Failed to fetch.</div>
-                    )}
-                  </div>
-
-                </CardContent>
-            </Card>
-
+      {/* Bio */}
+      <div className="grid gap-12 md:grid-cols-12">
+        <div className="md:col-span-8">
+          {lead && (
+            <SplitWords text={lead} className="font-headline text-2xl font-medium leading-snug tracking-tight md:text-4xl" />
+          )}
+          <div className="mt-10 max-w-2xl space-y-6 text-lg leading-relaxed text-muted-foreground">
+            {rest.map((p, i) => (
+              <p key={i} data-reveal="up" style={{ '--i': i + 1 } as React.CSSProperties}>{p}</p>
+            ))}
           </div>
-
-          {/* Right Column: Skills */}
-          <div className="xl:col-span-1">
-            <Card className="tech-border rounded-none bg-card/80 backdrop-blur sticky top-24">
-              <CardHeader className="border-b border-primary/20 bg-muted/50 pb-4">
-                <CardTitle className="font-mono text-xl uppercase tracking-wider text-primary flex items-center gap-2">
-                  <Terminal className="h-5 w-5" />
-                  ./skills.json
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6 font-mono">
-                <Accordion type="single" collapsible defaultValue="Programming" className="w-full">
-                  {skills.map((category) => {
-                    const CatIcon = iconsMap[category.categoryIcon] || Code;
-                    return (
-                      <AccordionItem key={category.category} value={category.category} className="border-primary/20">
-                        <AccordionTrigger className="font-bold hover:text-primary hover:no-underline uppercase tracking-wider text-sm">
-                          <div className="flex items-center gap-3">
-                            <CatIcon className="h-5 w-5 text-primary" />
-                            {category.category}
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="grid grid-cols-1 gap-2 pt-4 pb-2">
-                            {category.items.map((skill: any) => {
-                              const SkillIcon = iconsMap[skill.icon] || Code;
-                              return (
-                                <div
-                                  key={skill.name}
-                                  className="flex items-center gap-3 p-2 rounded-none border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors"
-                                >
-                                  <SkillIcon className="h-4 w-4 text-primary" />
-                                  <span className="font-bold text-xs uppercase text-foreground/80">{skill.name}</span>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    )
-                  })}
-                </Accordion>
-              </CardContent>
-            </Card>
-          </div>
-
         </div>
       </div>
-    </section>
+
+      {/* Live coding stats */}
+      {liveStats.length > 0 && (
+        <section className="mt-28">
+          <div data-reveal="up" className="eyebrow flex items-center gap-4">
+            <span>Live stats</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <div className="mt-8 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-3">
+            {liveStats.map((s, i) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noreferrer"
+                data-reveal="up"
+                style={{ '--i': i } as React.CSSProperties}
+                data-spotlight
+                className="group flex flex-col bg-card p-8 transition-colors hover:bg-muted/50"
+              >
+                <span className="eyebrow flex items-center justify-between">
+                  {s.label}
+                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </span>
+                <CountUp value={s.value} className="mt-8 font-headline text-6xl font-semibold tabular-nums tracking-tight" />
+                <span className="mt-2 text-sm text-muted-foreground">{s.detail}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Certifications */}
+      {certifications.length > 0 && (
+        <section className="mt-28">
+          <div data-reveal="up" className="eyebrow flex items-center gap-4">
+            <span>Certifications</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {certifications.map((cert, i) => (
+              <div key={cert.id} data-reveal="up" style={{ '--i': i % 3 } as React.CSSProperties}>
+                <CertificationCard cert={cert} index={i} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Skills */}
+      {skills.length > 0 && (
+        <section className="mt-28">
+          <div data-reveal="up" className="eyebrow flex items-center gap-4">
+            <span>Skills &amp; tools</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <div className="mt-4">
+            {skills.map((group, i) => (
+              <div
+                key={group.id ?? group.category}
+                data-reveal="up"
+                style={{ '--i': i % 3 } as React.CSSProperties}
+                className="grid gap-4 border-b border-border py-8 md:grid-cols-12"
+              >
+                <h2 className="font-headline text-2xl font-semibold tracking-tight md:col-span-4">{group.category}</h2>
+                <ul className="flex flex-wrap gap-2 md:col-span-8">
+                  {group.items.map((skill: { name: string }) => (
+                    <li key={skill.name} className="rounded-full border border-border px-4 py-1.5 text-sm text-foreground/80">
+                      {skill.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <RevealObserver />
+    </div>
   );
 }

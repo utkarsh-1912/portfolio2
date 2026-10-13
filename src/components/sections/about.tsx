@@ -1,42 +1,53 @@
-import { getAbout } from '@/db/queries';
-import { Terminal } from 'lucide-react';
+import { getAbout, getSkills } from '@/db/queries';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { SplitWords } from '@/components/ui/split-words';
 
 export async function AboutSection() {
-  const about = await getAbout();
+  const [about, skills] = await Promise.all([getAbout(), getSkills()]);
+  const [lead, ...rest] = about?.paragraphs ?? [];
 
   return (
-    <section id="about" className="w-full min-h-screen py-20 bg-background relative border-t border-border/50 snap-start flex flex-col justify-center">
-      {/* Subtle grid background overlay */}
-      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none"></div>
+    <section id="about" className="relative w-full py-24 md:py-36">
+      <div className="container">
+        <SectionHeading index="01" label="About" title="A bit about me" />
 
-      <div className="container relative z-10 flex flex-col items-center justify-center max-w-4xl mx-auto h-full">
-        <div className="text-center font-mono mb-8">
-          <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3 bg-primary/10 px-4 py-1 border border-primary/30 rounded-none">./about</span>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl uppercase text-foreground">&gt; whoami</h2>
-        </div>
-
-        <div className="w-full text-left bg-card/80 backdrop-blur border border-primary/20 p-6 md:p-10 font-mono mb-10 tech-border relative overflow-hidden group shadow-2xl">
-          <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
-          <div className="flex items-center gap-2 mb-6 border-b border-primary/20 pb-4">
-            <div className="w-2.5 h-2.5 bg-primary/40"></div>
-            <div className="w-2.5 h-2.5 bg-primary/60"></div>
-            <div className="w-2.5 h-2.5 bg-primary"></div>
+        <div className="grid gap-12 md:grid-cols-12">
+          <div className="md:col-span-8">
+            {lead && (
+              <SplitWords text={lead} className="font-headline text-2xl font-medium leading-snug tracking-tight text-foreground md:text-4xl" />
+            )}
+            {rest[0] && (
+              <p data-reveal="up" style={{ '--i': 1 } as React.CSSProperties} className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+                {rest[0]}
+              </p>
+            )}
+            <Link
+              href="/about"
+              data-reveal="up"
+              style={{ '--i': 2 } as React.CSSProperties}
+              className="group mt-10 inline-flex items-center gap-2 text-base font-medium"
+            >
+              <span className="link-draw">More about me</span>
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
           </div>
-          <p className="text-muted-foreground text-sm md:text-base leading-relaxed whitespace-pre-line">
-            <span className="text-primary font-bold mr-2">root@system:~$</span> <span className="text-foreground">cat summary.txt</span>
-            <br/><br/>
-            {about?.paragraphs[0]}
-            <span className="animate-blink text-primary inline-block ml-1">_</span>
-          </p>
+
+          {/* Skill groups as a quiet index */}
+          {skills.length > 0 && (
+            <dl className="md:col-span-4 md:border-l md:border-border md:pl-10">
+              {skills.slice(0, 4).map((group, i) => (
+                <div key={group.id} data-reveal="up" style={{ '--i': i } as React.CSSProperties} className="border-b border-border py-5 first:pt-0 last:border-0">
+                  <dt className="eyebrow">{group.category}</dt>
+                  <dd className="mt-2 text-sm leading-relaxed text-foreground/80">
+                    {group.items.map((item) => item.name).join(', ')}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )}
         </div>
-        
-        <Link href="/about">
-          <Button variant="outline" className="tech-border rounded-none bg-primary/5 hover:bg-primary hover:text-primary-foreground font-mono px-8 py-6 uppercase tracking-widest transition-colors duration-300">
-             <Terminal className="h-5 w-5 mr-3" /> cd ./about --verbose
-          </Button>
-        </Link>
       </div>
     </section>
   );

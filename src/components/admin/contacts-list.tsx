@@ -42,16 +42,15 @@ export function AdminContactsView({ initialData }: { initialData: Contact[] }) {
         });
     };
 
-    const handleSendReply = (id: number, email: string, name: string) => {
+    const handleSendReply = (id: number) => {
         if (!replyText.trim()) return;
 
         startTransition(async () => {
-            const res = await sendReply(id, email, name, replyText);
+            const res = await sendReply(id, replyText);
             if (res.success) {
                 toast({ title: 'Reply Sent', description: res.message });
                 setReplyingTo(null);
                 setReplyText('');
-                await updateContactStatus(id, 'resolved');
                 router.refresh();
             } else {
                 toast({ title: 'Failed to send', description: res.message, variant: 'destructive' });
@@ -74,19 +73,19 @@ export function AdminContactsView({ initialData }: { initialData: Contact[] }) {
             </div>
 
             <div className="flex gap-4 mb-6">
-                <Badge variant="destructive" className="px-3 py-1 text-sm bg-destructive/10 text-destructive border-transparent rounded-none">
+                <Badge variant="destructive" className="px-3 py-1 text-sm bg-destructive/10 text-destructive border-transparent">
                     {unread.length} Unread
                 </Badge>
-                <Badge variant="secondary" className="px-3 py-1 text-sm rounded-none">
+                <Badge variant="secondary" className="px-3 py-1 text-sm">
                     {read.length} Read
                 </Badge>
-                <Badge variant="outline" className="px-3 py-1 text-sm border-primary/20 text-primary bg-primary/10 rounded-none">
+                <Badge variant="outline" className="px-3 py-1 text-sm border-border text-primary bg-primary/10">
                     {resolved.length} Resolved
                 </Badge>
             </div>
 
             {displayContacts.length === 0 ? (
-                <div className="p-12 border-2 border-dashed rounded-none flex flex-col items-center justify-center text-muted-foreground">
+                <div className="p-12 border border-dashed rounded-2xl border-border flex flex-col items-center justify-center text-muted-foreground">
                     <Mail className="h-12 w-12 mb-4 text-muted" />
                     <p>No contact tickets found.</p>
                 </div>
@@ -111,35 +110,35 @@ export function AdminContactsView({ initialData }: { initialData: Contact[] }) {
                                 </div>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-3">
-                                <div className="bg-background/50 p-4 rounded-lg border border-border/50 text-sm whitespace-pre-wrap flex-1 relative">
+                                <div className="bg-background p-4 rounded-lg border border-border text-sm whitespace-pre-wrap flex-1 relative">
                                     <div className="absolute top-2 right-2 text-[10px] text-muted-foreground uppercase font-bold tracking-wider">User</div>
                                     {contact.message}
                                 </div>
                                 {contact.adminReply && (
-                                    <div className="bg-primary/5 p-4 rounded-lg border border-primary/20 text-sm whitespace-pre-wrap flex-1 relative mt-2">
+                                    <div className="bg-muted/40 p-4 rounded-lg border border-border text-sm whitespace-pre-wrap flex-1 relative mt-2">
                                         <div className="flex items-center gap-2 mb-2">
                                             <CornerDownRight className="w-4 h-4 text-primary" />
                                             <span className="text-[10px] text-primary uppercase font-bold tracking-wider">Your Reply</span>
                                         </div>
-                                        <div className="text-foreground/90 pl-6 border-l-2 border-primary/30 ml-2">
+                                        <div className="text-foreground/90 pl-6 border-l-2 border-border ml-2">
                                             {contact.adminReply}
                                         </div>
                                     </div>
                                 )}
                                 {replyingTo === contact.id && (
-                                    <div className="bg-primary/5 p-4 rounded-lg border border-primary/20 space-y-3 mt-2 animate-in slide-in-from-top-2">
+                                    <div className="bg-muted/40 p-4 rounded-lg border border-border space-y-3 mt-2 animate-in slide-in-from-top-2">
                                         <Textarea
                                             placeholder={`Write your reply to ${contact.name}...`}
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
-                                            className="min-h-[120px] bg-background border-primary/30 focus-visible:ring-primary/50"
+                                            className="min-h-[120px] bg-background border-border focus-visible:ring-foreground/10"
                                             autoFocus
                                         />
                                         <div className="flex justify-end gap-2">
                                             <Button size="sm" variant="ghost" onClick={() => setReplyingTo(null)} disabled={isPending}>
                                                 Cancel
                                             </Button>
-                                            <Button size="sm" onClick={() => handleSendReply(contact.id, contact.email, contact.name)} disabled={isPending || !replyText.trim()}>
+                                            <Button size="sm" onClick={() => handleSendReply(contact.id)} disabled={isPending || !replyText.trim()}>
                                                 <Send className="w-4 h-4 mr-2" /> Send Reply
                                             </Button>
                                         </div>
@@ -148,7 +147,7 @@ export function AdminContactsView({ initialData }: { initialData: Contact[] }) {
                             </CardContent>
                             <CardFooter className="pt-0 flex justify-end gap-2">
                                 {replyingTo !== contact.id && (
-                                    <Button size="sm" variant="outline" className="text-primary border-primary/20 hover:bg-primary/10" onClick={() => setReplyingTo(contact.id)} disabled={isPending}>
+                                    <Button size="sm" variant="outline" className="text-primary border-border hover:bg-muted" onClick={() => setReplyingTo(contact.id)} disabled={isPending}>
                                         <CornerDownRight className="w-4 h-4 mr-2" /> Reply
                                     </Button>
                                 )}

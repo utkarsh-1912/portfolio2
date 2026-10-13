@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { SESSION_COOKIE, SESSION_MAX_AGE_SECONDS, createSessionToken, safeEqual } from '@/lib/auth';
 
 export async function POST(request: Request) {
     try {
@@ -14,21 +15,23 @@ export async function POST(request: Request) {
             );
         }
 
-        if (password === adminPassword) {
+        if (typeof password === 'string' && (await safeEqual(password, adminPassword))) {
             const response = NextResponse.json({ success: true }, { status: 200 });
 
-            // Set HttpOnly cookie for auth flag
-            response.cookies.set('admin_session', 'authenticated', {
+            // HttpOnly cookie holding a signed, expiring session token
+            response.cookies.set(SESSION_COOKIE, await createSessionToken(), {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',
-                maxAge: 60 * 60 * 24 * 7, // 1 week
+                maxAge: SESSION_MAX_AGE_SECONDS,
                 path: '/',
             });
 
             return response;
         }
 
+        // Small fixed delay to slow down password guessing
+        await new Promise((resolve) => setTimeout(resolve, 500));
         return NextResponse.json(
             { success: false, message: 'Invalid password' },
             { status: 401 }

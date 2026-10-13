@@ -1,9 +1,22 @@
 'use client';
 
-import { Github, Linkedin } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '../ui/button';
+import { ArrowUp } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+
+const NAV = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about' },
+  { name: 'Projects', href: '/projects' },
+  { name: 'Writing', href: '/blog' },
+  { name: 'Contact', href: '/#contact' },
+];
+
+const SOCIAL = [
+  { name: 'GitHub', href: 'https://github.com/utkarsh-1912' },
+  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/utkarsh-gupta-3a374119a/' },
+  { name: 'X', href: 'https://x.com/Utkarsh191201' },
+];
 
 export function SiteFooter() {
   const pathname = usePathname();
@@ -13,47 +26,54 @@ export function SiteFooter() {
   }
 
   return (
-    <footer className="py-6 md:px-8 md:py-0 border-t border-border/50 bg-background font-mono relative z-10 snap-end">
-      <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-        <p className="text-balance text-center text-xs leading-loose text-muted-foreground md:text-left uppercase tracking-widest">
-          &gt; System compiled by{' '}
-          <a
-            href="https://github.com/utkarsh-1912"
-            target="_blank"
-            rel="noreferrer"
-            className="font-bold text-primary hover:underline underline-offset-4"
-          >
-            Utkarsh Gupta
-          </a>
-          _
-        </p>
-        <div className="flex items-center space-x-1">
-          <Button asChild variant="ghost" size="icon" className="rounded-none hover:bg-primary/10 hover:text-primary transition-colors">
-            <Link href="https://github.com/utkarsh-1912" target="_blank" rel="noreferrer">
-              <Github className="h-4 w-4" />
-              <span className="sr-only">GitHub</span>
+    <footer className="relative z-10 border-t border-border bg-background">
+      <div className="container grid gap-12 py-16 md:grid-cols-12">
+        <div className="md:col-span-6">
+          <p className="font-headline text-3xl font-semibold tracking-tight md:text-4xl">
+            Have an idea?{' '}
+            <Link href="/#contact" className="text-muted-foreground transition-colors hover:text-primary">
+              Let&apos;s talk.
             </Link>
-          </Button>
-          <Button asChild variant="ghost" size="icon" className="rounded-none hover:bg-primary/10 hover:text-primary transition-colors">
-            <Link href="https://www.linkedin.com/in/utkarsh-gupta-3a374119a/" target="_blank" rel="noreferrer">
-              <Linkedin className="h-4 w-4" />
-              <span className="sr-only">LinkedIn</span>
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" size="icon" className="rounded-none hover:bg-primary/10 hover:text-primary transition-colors">
-            <Link href="https://x.com/Utkarsh191201" target="_blank" rel="noreferrer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="h-4 w-4"
-              >
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-              <span className="sr-only">X</span>
-            </Link>
-          </Button>
+          </p>
         </div>
+
+        <nav className="md:col-span-3" aria-label="Footer">
+          <p className="eyebrow">Index</p>
+          <ul className="mt-4 space-y-2">
+            {NAV.map((item) => (
+              <li key={item.name}>
+                <Link href={item.href} className="link-draw text-foreground/80 transition-colors hover:text-foreground">
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="md:col-span-3">
+          <p className="eyebrow">Social</p>
+          <ul className="mt-4 space-y-2">
+            {SOCIAL.map((item) => (
+              <li key={item.name}>
+                <a href={item.href} target="_blank" rel="noreferrer" className="link-draw text-foreground/80 transition-colors hover:text-foreground">
+                  {item.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="container flex flex-col items-start justify-between gap-4 border-t border-border py-6 pr-20 font-mono text-[11px] uppercase tracking-widest text-muted-foreground sm:flex-row sm:items-center">
+        <span>© {new Date().getFullYear()} Utkarsh Gupta</span>
+        <span className="hidden md:inline">Built with Next.js · Press Ctrl + ` for the terminal</span>
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
+        >
+          Back to top <ArrowUp className="h-3 w-3" />
+        </button>
       </div>
     </footer>
   );

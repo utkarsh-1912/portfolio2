@@ -127,7 +127,7 @@ export function IconPicker({
         <Button
           type="button"
           variant="outline"
-          className="w-full rounded-none border-primary/20 bg-background/50 hover:bg-primary/5 hover:border-primary/40 justify-between font-mono text-sm h-8 px-3"
+          className="w-full border-border bg-background hover:bg-muted hover:border-border justify-between text-sm h-10 rounded-xl px-3"
         >
           <span className="flex items-center gap-2 text-foreground">
             <LucideIcon name={value} className="h-4 w-4 text-primary shrink-0" />
@@ -138,12 +138,12 @@ export function IconPicker({
       </PopoverTrigger>
 
       <PopoverContent
-        className="w-72 p-0 rounded-none border-primary/30 bg-card font-mono"
+        className="w-72 p-0 rounded-2xl border-border bg-card"
         align="start"
         sideOffset={4}
       >
         {/* Search */}
-        <div className="flex items-center gap-2 px-3 py-2 border-b border-primary/20">
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-border">
           <Search className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
           <Input
             placeholder="Search icons…"
@@ -168,10 +168,10 @@ export function IconPicker({
                   setOpen(false);
                   setSearch('');
                 }}
-                className={`flex flex-col items-center justify-center gap-1 p-2 rounded-none border transition-all ${
+                className={`flex flex-col items-center justify-center gap-1 p-2  border transition-all ${
                   isActive
                     ? 'bg-primary text-primary-foreground border-primary'
-                    : 'border-transparent hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary'
+                    : 'border-transparent hover:bg-muted hover:border-border text-muted-foreground hover:text-primary'
                 }`}
               >
                 <LucideIcon name={icon.name} className="h-4 w-4" />

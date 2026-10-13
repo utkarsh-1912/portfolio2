@@ -5,8 +5,15 @@ import { db } from '../../../db';
 import { hero, about, skills, projects, education, blogs } from '../../../db/schema';
 import { categorizedSkills, projects as staticProjects, education as staticEducation, blogPosts as staticBlogs } from '../../../lib/data';
 
-export async function GET() {
+// Admin-only (enforced by middleware). Refuses to run on a database that already has content,
+// since every call would otherwise insert a full duplicate set of rows.
+export async function POST() {
     try {
+        const existing = await db.select({ id: hero.id }).from(hero).limit(1);
+        if (existing.length > 0) {
+            return NextResponse.json({ success: false, error: 'Database already seeded' }, { status: 409 });
+        }
+
         // Hero
         await db.insert(hero).values({
             title: 'Utkarsh Gupta',

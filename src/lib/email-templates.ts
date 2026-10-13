@@ -12,6 +12,16 @@ const BG_WHITE = '#ffffff';
 const BG_LIGHT = '#f8fafc';
 const BORDER = '#e2e8f0';
 
+/** Escapes user-supplied text before it is placed into email HTML. */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function emailWrapper(content: string) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -117,9 +127,10 @@ export function buildReplyEmailHtml({
   websiteUrl?: string;
   replyToEmail?: string;
 }) {
+  recipientName = escapeHtml(recipientName);
   const messageHtml = message
     .split('\n')
-    .map(line => `<p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:${TEXT_PRIMARY};">${line || '&nbsp;'}</p>`)
+    .map(line => `<p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:${TEXT_PRIMARY};">${escapeHtml(line) || '&nbsp;'}</p>`)
     .join('');
 
   const header = `<p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;
@@ -195,9 +206,11 @@ export function buildContactNotificationHtml({
   message: string;
   websiteUrl?: string;
 }) {
+  senderName = escapeHtml(senderName);
+  senderEmail = escapeHtml(senderEmail);
   const messageHtml = message
     .split('\n')
-    .map(line => `<p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:${TEXT_PRIMARY};">${line || '&nbsp;'}</p>`)
+    .map(line => `<p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:${TEXT_PRIMARY};">${escapeHtml(line) || '&nbsp;'}</p>`)
     .join('');
 
   const header = `<p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;

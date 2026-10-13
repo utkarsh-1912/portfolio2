@@ -3,17 +3,24 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Button } from '@/components/ui/button';
+import { ArrowRight, ArrowUpRight, Check, Copy } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Mail, Phone, Terminal, Github, Linkedin, Youtube } from 'lucide-react';
-import { XLogo } from '@/components/ui/x-logo';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { RollText } from '@/components/ui/roll-text';
+import { getSocialLinks } from '@/components/ui/social-links';
 import { handleFormSubmission } from '@/lib/actions';
 import { formSchema } from '@/lib/schemas';
-import Link from 'next/link';
+
+const EMAIL = 'utkarshofficial1912@gmail.com';
+const PHONE_DISPLAY = '(+91) 639-494-8921';
+const PHONE_HREF = 'tel:+916394948921';
+
+// Underlined, borderless fields to match the editorial layout
+const fieldClass =
+  'h-12 rounded-none border-0 border-b border-input bg-transparent px-0 text-base shadow-none focus-visible:border-foreground focus-visible:ring-0 focus-visible:ring-offset-0';
 
 export function ContactSection({ heroData }: { heroData?: any }) {
   const { toast } = useToast();
@@ -33,196 +40,150 @@ export function ContactSection({ heroData }: { heroData?: any }) {
       const result = await handleFormSubmission(values);
       if (result.success) {
         toast({
-          title: 'Message Sent!',
+          title: 'Message sent',
           description: result.message,
         });
         form.reset();
       } else {
         toast({
-          title: 'Error',
-          description: 'Something went wrong. Please try again.',
+          title: 'Something went wrong',
+          description: result.message || 'Please try again.',
           variant: 'destructive',
         });
       }
     });
   }
 
+  const socials = getSocialLinks(heroData);
+  const [copied, setCopied] = React.useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast({ title: 'Copy failed', description: EMAIL });
+    }
+  };
+
   return (
-    <section id="contact" className="w-full min-h-screen py-10 md:py-16 lg:py-28 bg-muted/20 relative border-t border-border/50 snap-start flex flex-col justify-center overflow-y-auto">
-      <div className="container relative z-10">
-        <div className="text-center md:text-left mb-14 font-mono">
-          <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3 bg-primary/10 px-4 py-1 border border-primary/30 rounded-none">./contact</span>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-foreground">&gt; ping -c 4 user@contact</h2>
-          <p className="mt-4 max-w-xl text-muted-foreground font-sans">
-            Ready to start your next project? Let's connect and build something extraordinary.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Contact Methods */}
-          {/* Contact Methods */}
-          <div className="space-y-6 font-mono">
-            {/* Email Protocol */}
-            <a
-              href="mailto:utkarshofficial1912@gmail.com"
-              className="block relative p-6 rounded-none border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all duration-300 group overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 w-12 h-12 flex items-center justify-center bg-primary/10 border-l border-b border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground text-primary transition-colors">
-                <Mail className="h-5 w-5" />
-              </div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/70 mb-3">Protocol: SMTP</div>
-              <div className="text-lg lg:text-xl text-foreground font-bold group-hover:text-primary transition-colors truncate">
-                utkarshofficial1912@gmail.com
-              </div>
-              <div className="mt-4 flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest opacity-80">
-                <div className="h-1.5 w-1.5 bg-green-500 animate-pulse"></div>
-                Server Online — Awaiting connection
-              </div>
-            </a>
+    <section id="contact" className="relative w-full border-t border-border py-24 md:py-36">
+      <div className="container">
+        <SectionHeading index="06" label="Contact" title="Let's build something" />
 
-            {/* Phone Protocol */}
+        <div className="grid gap-16 lg:grid-cols-12">
+          {/* Direct contact */}
+          <div className="lg:col-span-6">
+            <p data-reveal="up" className="eyebrow">Email</p>
             <a
-              href="tel:+916394948921"
-              className="block relative p-6 rounded-none border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all duration-300 group overflow-hidden"
+              href={`mailto:${EMAIL}`}
+              data-reveal="up"
+              className="group mt-3 inline-flex max-w-full items-center gap-2 break-all font-headline text-2xl font-semibold tracking-tight transition-colors hover:text-primary sm:text-3xl xl:text-4xl"
             >
-              <div className="absolute top-0 right-0 w-12 h-12 flex items-center justify-center bg-primary/10 border-l border-b border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground text-primary transition-colors">
-                <Phone className="h-5 w-5" />
-              </div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/70 mb-3">Protocol: TEL</div>
-              <div className="text-lg lg:text-xl text-foreground font-bold group-hover:text-primary transition-colors">
-                (+91) 639-494-8921
-              </div>
-              <div className="mt-4 flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest opacity-80">
-                <div className="h-1.5 w-1.5 bg-green-500 animate-pulse"></div>
-                Secure Line — Active
-              </div>
+              <span className="link-draw">{EMAIL}</span>
+              <ArrowUpRight className="h-6 w-6 shrink-0 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
             </a>
-
-            {/* Social Links - Individual Animated Boxes */}
-            <div className="pt-2">
-              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/70 mb-4">Connected Nodes</div>
-              <div className="flex flex-wrap gap-3">
-              {heroData?.githubUrl && heroData.githubUrl !== '#' && (
-                <Link href={heroData.githubUrl} target="_blank" rel="noreferrer" className="inline-flex items-center p-1.5 rounded-none border border-border bg-card hover:border-primary/50 transition-all duration-300 group">
-                  <div className="flex shrink-0 h-10 w-10 items-center justify-center bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Github className="h-5 w-5" />
-                  </div>
-                  <div className="grid grid-cols-[0fr] group-hover:grid-cols-[1fr] transition-[grid-template-columns] duration-300 ease-in-out">
-                    <div className="overflow-hidden flex items-center">
-                      <span className="whitespace-nowrap text-xs font-bold text-foreground pl-3 pr-2">
-                        {heroData.githubUrl.split('/').filter(Boolean).pop()}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              )}
-              {heroData?.linkedinUrl && heroData.linkedinUrl !== '#' && (
-                <Link href={heroData.linkedinUrl} target="_blank" rel="noreferrer" className="inline-flex items-center p-1.5 rounded-none border border-border bg-card hover:border-primary/50 transition-all duration-300 group">
-                  <div className="flex shrink-0 h-10 w-10 items-center justify-center bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Linkedin className="h-5 w-5" />
-                  </div>
-                  <div className="grid grid-cols-[0fr] group-hover:grid-cols-[1fr] transition-[grid-template-columns] duration-300 ease-in-out">
-                    <div className="overflow-hidden flex items-center">
-                      <span className="whitespace-nowrap text-xs font-bold text-foreground pl-3 pr-2">
-                        {heroData.linkedinUrl.split('/').filter(Boolean).pop()}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              )}
-              {heroData?.twitterUrl && heroData.twitterUrl !== '#' && (
-                <Link href={heroData.twitterUrl} target="_blank" rel="noreferrer" className="inline-flex items-center p-1.5 rounded-none border border-border bg-card hover:border-primary/50 transition-all duration-300 group">
-                  <div className="flex shrink-0 h-10 w-10 items-center justify-center bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <XLogo className="h-5 w-5" />
-                  </div>
-                  <div className="grid grid-cols-[0fr] group-hover:grid-cols-[1fr] transition-[grid-template-columns] duration-300 ease-in-out">
-                    <div className="overflow-hidden flex items-center">
-                      <span className="whitespace-nowrap text-xs font-bold text-foreground pl-3 pr-2">
-                        {heroData.twitterUrl.split('/').filter(Boolean).pop()}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              )}
-              {heroData?.youtubeUrl && heroData.youtubeUrl !== '#' && (
-                <Link href={heroData.youtubeUrl} target="_blank" rel="noreferrer" className="inline-flex items-center p-1.5 rounded-none border border-border bg-card hover:border-primary/50 transition-all duration-300 group">
-                  <div className="flex shrink-0 h-10 w-10 items-center justify-center bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Youtube className="h-5 w-5" />
-                  </div>
-                  <div className="grid grid-cols-[0fr] group-hover:grid-cols-[1fr] transition-[grid-template-columns] duration-300 ease-in-out">
-                    <div className="overflow-hidden flex items-center">
-                      <span className="whitespace-nowrap text-xs font-bold text-foreground pl-3 pr-2">
-                        {heroData.youtubeUrl.split('/').filter(Boolean).pop()}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              )}
-              </div>
+            <div data-reveal="up" className="mt-4">
+              <button
+                type="button"
+                onClick={copyEmail}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-widest text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground"
+              >
+                {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? 'Copied' : 'Copy email'}
+              </button>
+              <span className="sr-only" aria-live="polite">{copied ? 'Email copied to clipboard' : ''}</span>
             </div>
-          </div>
-          <Card className="hover:shadow-2xl border-primary/30 rounded-none bg-background relative overflow-hidden group">
-            {/* Glowing top line */}
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
-            <CardHeader className="border-b border-primary/20 bg-primary/5 pb-4 px-6 flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="font-mono text-lg uppercase tracking-wider text-primary flex items-center gap-2">
-                <Terminal className="h-4 w-4" />
-                ~/messaging_sys
-              </CardTitle>
-              <div className="flex gap-1.5">
-                 <div className="w-2 h-2 bg-primary/30"></div>
-                 <div className="w-2 h-2 bg-primary/60"></div>
-                 <div className="w-2 h-2 bg-primary"></div>
+
+            <dl className="mt-12 grid gap-8 sm:grid-cols-2">
+              <div data-reveal="up" style={{ '--i': 1 } as React.CSSProperties}>
+                <dt className="eyebrow">Phone</dt>
+                <dd className="mt-2">
+                  <a href={PHONE_HREF} className="link-draw text-lg">{PHONE_DISPLAY}</a>
+                </dd>
               </div>
-            </CardHeader>
-            <CardContent className="pt-6 font-mono">
+              {socials.length > 0 && (
+                <div data-reveal="up" style={{ '--i': 2 } as React.CSSProperties}>
+                  <dt className="eyebrow">Elsewhere</dt>
+                  <dd className="mt-2 flex flex-col gap-1.5">
+                    {socials.map((s) => (
+                      <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-1 text-lg">
+                        <span className="link-draw">{s.label}</span>
+                        <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      </a>
+                    ))}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+
+          {/* Form */}
+          <div data-reveal="up" style={{ '--i': 1 } as React.CSSProperties} className="lg:col-span-6">
+            <div data-spotlight className="rounded-3xl border border-border bg-card p-6 sm:p-10">
+              <p className="eyebrow">Or send a message</p>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-xs font-bold uppercase text-primary">Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Your Name" className="bg-background/50 rounded-none border-primary/20 focus-visible:border-primary focus-visible:ring-0" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-xs font-bold uppercase text-primary">Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="your.email@example.com" className="bg-background/50 rounded-none border-primary/20 focus-visible:border-primary focus-visible:ring-0" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-8">
+                  <div className="grid gap-8 sm:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm text-muted-foreground">Name</FormLabel>
+                          <FormControl>
+                            <Input autoComplete="name" className={fieldClass} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm text-muted-foreground">Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" autoComplete="email" className={fieldClass} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <FormField
                     control={form.control}
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-bold uppercase text-primary">Message</FormLabel>
+                        <FormLabel className="text-sm text-muted-foreground">Message</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Your message..." className="min-h-[150px] bg-background/50 rounded-none border-primary/20 focus-visible:border-primary focus-visible:ring-0" {...field} />
+                          <Textarea
+                            rows={5}
+                            placeholder="Tell me a little about your project…"
+                            className={`${fieldClass} h-auto min-h-[140px] resize-none py-3`}
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full mt-4 rounded-none border border-primary bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-mono uppercase tracking-[0.2em] transition-all duration-300" size="lg" disabled={isPending}>
-                    {isPending ? 'Executing...' : 'Execute ./send'}
-                  </Button>
+                  <button
+                    type="submit"
+                    disabled={isPending}
+                    data-magnetic
+                    className="group inline-flex h-12 items-center gap-2 rounded-full bg-foreground px-7 text-base font-medium text-background transition-opacity disabled:opacity-50"
+                  >
+                    <RollText>{isPending ? 'Sending…' : 'Send message'}</RollText>
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
                 </form>
               </Form>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </section>

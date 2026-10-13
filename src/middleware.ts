@@ -1,41 +1,33 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
 
-    // Define protected routes
-    const isProtected = path.startsWith('/admin') || path.startsWith('/api/portfolio') || path.startsWith('/api/upload');
+    const isProtectedApi = path.startsWith('/api/upload') || path.startsWith('/api/seed');
+    const isProtected = path.startsWith('/admin') || isProtectedApi;
 
-    // Public assets to ignore
-    const isPublicAsset = path.startsWith('/_next') || path.startsWith('/favicon.ico');
-
-    if (!isProtected || isPublicAsset) {
+    if (!isProtected) {
         return NextResponse.next();
     }
 
-    // Check for session cookie
-    const session = request.cookies.get('admin_session')?.value;
-
-    if (!session && isProtected) {
-        // Redirect to login if accessing protected route without session
-        const url = new URL('/login', request.url);
-        url.searchParams.set('callbackUrl', encodeURI(request.url));
-        return NextResponse.redirect(url);
+    // The cookie must carry a valid signed token, not merely exist
+    const authed = await verifySessionToken(request.cookies.get(SESSION_COOKIE)?.value);
+    if (authed) {
+        return NextResponse.next();
     }
 
-    return NextResponse.next();
+    if (isProtectedApi) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Keep only the path so the login page can't be turned into an open redirect
+    const url = new URL('/login', request.url);
+    url.searchParams.set('callbackUrl', path + request.nextUrl.search);
+    return NextResponse.redirect(url);
 }
 
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - api/auth (auth endpoints)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         */
-        '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
-    ],
+    matcher: ['/admin/:path*', '/api/upload/:path*', '/api/seed/:path*'],
 };

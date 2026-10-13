@@ -1,8 +1,15 @@
+import type { Metadata } from 'next';
 import { getProjects } from '@/db/queries';
 import { ProjectsPageClient } from '@/components/sections/projects-page-client';
 import { getGitHubRepoStats } from '@/lib/api-stats';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Projects',
+  description: 'Projects by Utkarsh Gupta: developer tools, AI agents, trading utilities and full-stack apps.',
+  alternates: { canonical: '/projects' },
+};
 
 export default async function ProjectsPage() {
   const projects = await getProjects();
