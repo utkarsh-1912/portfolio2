@@ -42,10 +42,10 @@ export async function HeroSection() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
               </span>
-              <ScrambleText text="Software Engineer · Agentic AI" duration={900} />
+              <ScrambleText text="Sr.Software Engineer · Agentic AI" duration={900} />
             </p>
 
-            <h1 className="mt-8 font-headline text-5xl font-semibold leading-[0.95] tracking-tight sm:text-6xl xl:text-8xl">
+            <h1 className="mt-8 font-headline text-4xl font-semibold leading-[0.95] tracking-tight sm:text-5xl xl:text-6xl">
               <SplitText text="Hi, I'm" delay={1} className="block text-muted-foreground" />
               <span data-reveal="up" style={{ '--i': 3 } as React.CSSProperties} className="mt-1 block min-h-[2em] sm:min-h-[1em]">
                 <AnimatedText phrases={roles} className="text-foreground" />
