@@ -1,11 +1,21 @@
 import { getSkills } from '@/db/queries';
 
+const MAX_ITEMS = 20;
+
+/**
+ * One curated marquee row: skills are picked round-robin across the groups
+ * (first of each group, then second, …) so the row shows breadth, not one long list.
+ */
 export async function SkillsMarquee() {
   const skills = await getSkills();
-  const names = skills.flatMap((group) => group.items.map((item) => item.name));
+  const groups = skills.map((g) => g.items.map((i) => i.name));
+  const names: string[] = [];
+  for (let round = 0; names.length < MAX_ITEMS && groups.some((g) => g[round]); round++) {
+    for (const g of groups) if (g[round] && names.length < MAX_ITEMS) names.push(g[round]);
+  }
   if (names.length === 0) return null;
 
-  // Rendered twice so the -50% translate in the marquee keyframes loops seamlessly.
+  // Rendered twice so the -50% translate in the marquee keyframes loops seamlessly
   const row = (hidden: boolean) => (
     <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
       {names.map((name, i) => (

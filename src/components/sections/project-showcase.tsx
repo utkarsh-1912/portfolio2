@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { ArrowUpRight, Star, GitFork } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight, ArrowUpRight, Star, GitFork } from 'lucide-react';
 import { ProjectPlaceholder } from './project-placeholder';
 
 export type ShowcaseProject = {
@@ -13,6 +14,7 @@ export type ShowcaseProject = {
     imageUrl: string;
     liveUrl?: string | null;
     githubUrl?: string | null;
+    slug?: string | null;
     githubStats?: any | null;
 };
 
@@ -71,6 +73,11 @@ export function ProjectShowcase({ projects, onOpen }: { projects: ShowcaseProjec
                                 </div>
                             )}
                             <div className="mt-8 flex items-center gap-3">
+                                {active.slug && (
+                                    <Link href={`/projects/${active.slug}`} data-magnetic className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+                                        Case study <ArrowRight className="h-4 w-4" />
+                                    </Link>
+                                )}
                                 {hasLive && (
                                     <a href={active.liveUrl!} target="_blank" rel="noopener noreferrer" data-magnetic className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background">
                                         Visit site <ArrowUpRight className="h-4 w-4" />

@@ -3,6 +3,7 @@
 import { neon } from '@neondatabase/serverless';
 import * as dotenv from 'dotenv';
 import { parseDuration } from '../lib/timeline';
+import { slugify } from '../lib/slug';
 dotenv.config({ path: '.env.local' });
 
 const sql = neon(process.env.DATABASE_URL!);
@@ -59,6 +60,31 @@ async function main() {
         created_at timestamp DEFAULT now()
     )`;
     console.log('✓ certifications table ready');
+
+    // New: resume link, project case studies, on-site articles
+    await sql`ALTER TABLE hero ADD COLUMN IF NOT EXISTS resume_url text`;
+    for (const col of ['problem', 'approach', 'architecture', 'results']) {
+        await sql.query(`ALTER TABLE projects ADD COLUMN IF NOT EXISTS ${col} text`);
+    }
+    await sql`ALTER TABLE projects ADD COLUMN IF NOT EXISTS slug text`;
+    await sql`ALTER TABLE blogs ADD COLUMN IF NOT EXISTS slug text`;
+    await sql`ALTER TABLE blogs ADD COLUMN IF NOT EXISTS content text`;
+    await sql`CREATE UNIQUE INDEX IF NOT EXISTS projects_slug_unique ON projects (slug)`;
+    await sql`CREATE UNIQUE INDEX IF NOT EXISTS blogs_slug_unique ON blogs (slug)`;
+    console.log('✓ resume_url, project case-study fields, article slug/content added');
+
+    // Backfill slugs from titles, de-duplicating with the row id when two titles collide
+    for (const table of ['projects', 'blogs'] as const) {
+        const rows = (await sql.query(`SELECT id, title FROM ${table} WHERE slug IS NULL ORDER BY id`)) as { id: number; title: string }[];
+        const taken = new Set(((await sql.query(`SELECT slug FROM ${table} WHERE slug IS NOT NULL`)) as { slug: string }[]).map((r) => r.slug));
+        for (const row of rows) {
+            let slug = slugify(row.title) || `${table}-${row.id}`;
+            if (taken.has(slug)) slug = `${slug}-${row.id}`;
+            taken.add(slug);
+            await sql.query(`UPDATE ${table} SET slug = $1 WHERE id = $2`, [slug, row.id]);
+            console.log(`  ${table} #${row.id} -> ${slug}`);
+        }
+    }
 
     console.log('Done!');
 }

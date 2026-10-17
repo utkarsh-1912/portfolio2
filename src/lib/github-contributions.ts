@@ -8,6 +8,7 @@ export async function getGitHubContributions(username: string): Promise<Contribu
     try {
         const res = await fetch(`https://github.com/users/${encodeURIComponent(username)}/contributions`, {
             next: { revalidate: 3600 },
+            signal: AbortSignal.timeout(5000),
             headers: { 'User-Agent': 'utkristi-portfolio' },
         });
         if (!res.ok) return null;

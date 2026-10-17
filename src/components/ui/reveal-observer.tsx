@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { INTRO_DONE_EVENT } from './intro-loader';
 
 /**
  * Watches every element with a `data-reveal` attribute and sets `data-in`
@@ -25,8 +26,6 @@ export function RevealObserver() {
       root.querySelectorAll('[data-reveal]:not([data-in])').forEach((el) => io.observe(el));
     };
 
-    scan(document);
-
     const mo = new MutationObserver((mutations) => {
       for (const m of mutations) {
         m.addedNodes.forEach((node) => {
@@ -36,9 +35,18 @@ export function RevealObserver() {
         });
       }
     });
-    mo.observe(document.body, { childList: true, subtree: true });
+    const begin = () => {
+      scan(document);
+      mo.observe(document.body, { childList: true, subtree: true });
+    };
+
+    // While the intro loader covers the page, hold reveals so they play once it lifts
+    const waiting = document.documentElement.classList.contains('intro-active');
+    if (waiting) window.addEventListener(INTRO_DONE_EVENT, begin, { once: true });
+    else begin();
 
     return () => {
+      window.removeEventListener(INTRO_DONE_EVENT, begin);
       io.disconnect();
       mo.disconnect();
     };

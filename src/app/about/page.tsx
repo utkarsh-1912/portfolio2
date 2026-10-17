@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { getAbout, getSkills, getCertifications } from '@/db/queries';
-import { getCodeforcesStats, getLeetCodeStats, getGitHubUserStats } from '@/lib/api-stats';
 import { AboutPageClient } from '@/components/sections/about-page-client';
+import { LiveStats, LiveStatsSkeleton } from '@/components/sections/live-stats';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,14 +13,19 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const [about, skills, certifications, cfStats, lcStats, ghStats] = await Promise.all([
-    getAbout(),
-    getSkills(),
-    getCertifications(),
-    getCodeforcesStats('utkarsh191201'),
-    getLeetCodeStats('user7883p'),
-    getGitHubUserStats('utkarsh-1912')
-  ]);
+  // Only the fast database reads block the page; third-party stats stream in afterwards
+  const [about, skills, certifications] = await Promise.all([getAbout(), getSkills(), getCertifications()]);
 
-  return <AboutPageClient about={about} skills={skills} certifications={certifications} stats={{ cfStats, lcStats, ghStats }} />;
+  return (
+    <AboutPageClient
+      about={about}
+      skills={skills}
+      certifications={certifications}
+      liveStats={
+        <Suspense fallback={<LiveStatsSkeleton />}>
+          <LiveStats />
+        </Suspense>
+      }
+    />
+  );
 }

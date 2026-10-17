@@ -45,20 +45,20 @@ export async function HeroSection() {
               <ScrambleText text="Sr.Software Engineer · Agentic AI" duration={900} />
             </p>
 
-            <h1 className="mt-8 font-headline text-4xl font-semibold leading-[0.95] tracking-tight sm:text-5xl xl:text-6xl">
+            <h1 className="mt-6 font-headline text-4xl font-semibold leading-[0.95] tracking-tight sm:text-5xl xl:text-6xl">
               <SplitText text="Hi, I'm" delay={1} className="block text-muted-foreground" />
-              <span data-reveal="up" style={{ '--i': 3 } as React.CSSProperties} className="mt-1 block min-h-[2em] sm:min-h-[1em]">
+              <span data-reveal="up" style={{ '--i': 3 } as React.CSSProperties} className="mt-1 block">
                 <AnimatedText phrases={roles} className="text-foreground" />
               </span>
             </h1>
 
             {heroData?.description && (
-              <p data-reveal="up" style={{ '--i': 5 } as React.CSSProperties} className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+              <p data-reveal="up" style={{ '--i': 5 } as React.CSSProperties} className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground sm:mt-8 md:text-xl">
                 {heroData.description}
               </p>
             )}
 
-            <div data-reveal="up" style={{ '--i': 6 } as React.CSSProperties} className="mt-10 flex flex-wrap items-center gap-3">
+            <div data-reveal="up" style={{ '--i': 6 } as React.CSSProperties} className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10">
               <Button asChild size="lg" className="group h-12 rounded-full px-7 text-base">
                 <Link href="/#projects" data-magnetic>
                   <RollText>View my work</RollText>
@@ -71,7 +71,19 @@ export async function HeroSection() {
             </div>
 
             <div data-reveal="up" style={{ '--i': 7 } as React.CSSProperties}>
-              <SocialLinks data={heroData} className="mt-10" />
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 sm:mt-10">
+                {heroData?.resumeUrl && (
+                  <a
+                    href={heroData.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-1.5 font-mono text-xs uppercase tracking-widest transition-colors hover:border-foreground/40"
+                  >
+                    Resume <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                )}
+                <SocialLinks data={heroData} />
+              </div>
             </div>
           </div>
 

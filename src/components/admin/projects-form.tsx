@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useTransition, useMemo } from 'react';
-import { addProjectAction, updateProjectAction, deleteProjectAction } from '../../app/admin/actions';
+import { addProjectAction, updateProjectAction, deleteProjectAction, reorderProjectsAction, importFromGitHubAction } from '../../app/admin/actions';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
@@ -11,6 +11,8 @@ import { TagInput } from '@/components/ui/tag-input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Code, Plus, Trash2, Edit, Save, X, ExternalLink, Github, UploadCloud, Tag, ListOrdered, Eye, Star } from 'lucide-react';
 import { useAdminAction } from './use-admin-action';
+import { useDragReorder } from './use-drag-reorder';
+import { ChevronDown, ChevronUp, Download, FileText, GripVertical, Link2 } from 'lucide-react';
 import { StatusToggle } from './status-toggle';
 
 export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
@@ -21,6 +23,16 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
     const [isPending, startTransition] = useTransition();
     const [isUploading, setIsUploading] = useState(false);
     const run = useAdminAction();
+    const { ordered, rowProps, move } = useDragReorder(projects, (ids) => run(reorderProjectsAction(ids), 'Order saved.'));
+    const [repoUrl, setRepoUrl] = useState('');
+    const [isImporting, startImport] = useTransition();
+
+    const handleImport = () => {
+        startImport(async () => {
+            const { ok, data } = await run(importFromGitHubAction(repoUrl), 'Imported from GitHub. Review and save.');
+            if (ok && data) setFormData((prev: any) => ({ ...prev, ...data, tags: data.tags?.length ? data.tags : prev.tags }));
+        });
+    };
 
     // Calculate tag frequencies from initialData and sort descending
     const sortedTags = React.useMemo(() => {
@@ -103,6 +115,18 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                 </CardHeader>
                 <form onSubmit={onSubmit}>
                     <CardContent className="space-y-6">
+                        {editingId === 'new' && (
+                            <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-5">
+                                <Label htmlFor="import-repo" className="flex items-center gap-2 font-semibold"><Github className="h-4 w-4" /> Start from a GitHub repo</Label>
+                                <p className="mt-1 text-xs text-muted-foreground">Fills in the name, description, tags and links. You can edit everything before saving.</p>
+                                <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                                    <Input id="import-repo" className="bg-background" placeholder="https://github.com/utkarsh-1912/geocore" value={repoUrl} onChange={e => setRepoUrl(e.target.value)} />
+                                    <Button type="button" variant="outline" onClick={handleImport} disabled={!repoUrl.trim() || isImporting} className="gap-2 shrink-0">
+                                        <Download className="h-4 w-4" /> {isImporting ? 'Importing…' : 'Import'}
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                         <div className="space-y-2">
                             <Label className="flex items-center gap-2">Project Title</Label>
                             <Input className="bg-background font-headline" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} required />
@@ -176,6 +200,39 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                                 <Input className="bg-background" type="url" value={formData.githubUrl || ''} onChange={e => setFormData({ ...formData, githubUrl: e.target.value })} />
                             </div>
                         </div>
+
+                        {/* Case study page */}
+                        <div className="space-y-6 border-t border-border pt-6">
+                            <div className="flex flex-wrap items-end justify-between gap-3">
+                                <div>
+                                    <p className="flex items-center gap-2 font-semibold"><FileText className="h-4 w-4 text-primary" /> Case study page</p>
+                                    <p className="text-xs text-muted-foreground">Optional Markdown sections shown on the project&apos;s own page. Empty sections are hidden.</p>
+                                </div>
+                                {editingId !== 'new' && formData.slug && (
+                                    <a href={`/projects/${formData.slug}?preview=1`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+                                        Preview page <ExternalLink className="h-3.5 w-3.5" />
+                                    </a>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="project-slug" className="flex items-center gap-2"><Link2 className="h-4 w-4" /> URL name</Label>
+                                <div className="flex items-center gap-2">
+                                    <span className="shrink-0 text-sm text-muted-foreground">/projects/</span>
+                                    <Input id="project-slug" className="bg-background font-mono" placeholder="auto from title" value={formData.slug || ''} onChange={e => setFormData({ ...formData, slug: e.target.value.toLowerCase() })} />
+                                </div>
+                            </div>
+                            {[
+                                ['problem', 'The problem', 'What was broken, slow or missing? Who had the problem?'],
+                                ['approach', 'Approach', 'Key decisions and trade-offs.'],
+                                ['architecture', 'Architecture', 'Components, data flow, stack. Lists and code blocks work.'],
+                                ['results', 'Results', 'Outcomes, numbers, what you learned.'],
+                            ].map(([key, label, hint]) => (
+                                <div key={key} className="space-y-2">
+                                    <Label htmlFor={`project-${key}`}>{label}</Label>
+                                    <Textarea id={`project-${key}`} className="bg-background min-h-[110px] font-mono text-sm" placeholder={hint} value={formData[key] || ''} onChange={e => setFormData({ ...formData, [key]: e.target.value })} />
+                                </div>
+                            ))}
+                        </div>
                     </CardContent>
                     <CardFooter className="border-t border-border px-6 py-5 flex justify-end gap-3">
                         <Button type="button" variant="outline" onClick={() => setEditingId(null)} className="gap-2">
@@ -205,9 +262,15 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                 </Button>
             </CardHeader>
             <CardContent>
+                {projects.length > 1 && <p className="mb-3 text-xs text-muted-foreground">Drag rows (or use the arrows) to change the order on your site.</p>}
                 <div className="grid gap-4">
-                    {projects.map((proj) => (
-                        <div key={proj.id} className="rounded-2xl border border-border bg-background p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-colors hover:border-foreground/25">
+                    {ordered.map((proj) => (
+                        <div key={proj.id} {...rowProps(proj.id)} className="rounded-2xl border border-border bg-background p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-colors hover:border-foreground/25 data-[drag-over]:border-primary data-[drag-over]:bg-primary/5">
+                            <div className="hidden flex-col items-center sm:flex">
+                                <button type="button" aria-label="Move up" onClick={() => move(proj.id, -1)} className="rounded p-0.5 text-muted-foreground hover:text-foreground"><ChevronUp className="h-3.5 w-3.5" /></button>
+                                <GripVertical className="h-4 w-4 cursor-grab text-muted-foreground/60 active:cursor-grabbing" aria-hidden="true" />
+                                <button type="button" aria-label="Move down" onClick={() => move(proj.id, 1)} className="rounded p-0.5 text-muted-foreground hover:text-foreground"><ChevronDown className="h-3.5 w-3.5" /></button>
+                            </div>
                             <div className="flex-1 min-w-0">
                                 <h4 className="font-bold font-headline text-lg truncate mb-1">
                                     {proj.featured && <Star className="inline h-4 w-4 mr-1.5 text-primary fill-primary align-[-2px]" />}
@@ -226,6 +289,11 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                             </div>
                             <div className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
                                 <StatusToggle item={proj} save={updateProjectAction} />
+                                {proj.slug && (
+                                    <Button asChild variant="ghost" size="sm" className="text-muted-foreground">
+                                        <a href={`/projects/${proj.slug}?preview=1`} target="_blank" rel="noreferrer" aria-label={`Preview ${proj.title}`}><ExternalLink className="h-4 w-4" /></a>
+                                    </Button>
+                                )}
                                 <Button variant="outline" size="sm" onClick={() => handleEdit(proj)} className="flex-1 sm:flex-none gap-2">
                                     <Edit className="h-4 w-4 text-muted-foreground" /> Edit
                                 </Button>

@@ -4,9 +4,11 @@ import * as z from 'zod';
 import { db } from '../../db';
 import { hero, about, projects, education, blogs, skills, certifications } from '../../db/schema';
 import { eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { CONTENT_TAG } from '../../db/queries';
 import { requireAdmin } from '@/lib/auth-server';
 import { formatDuration } from '@/lib/timeline';
+import { slugify } from '@/lib/slug';
 import {
     type ActionResult,
     aboutInput,
@@ -28,12 +30,19 @@ async function adminAction<T>(fn: () => Promise<T>): Promise<ActionResult<T>> {
     try {
         await requireAdmin();
         const data = await fn();
+        // Clear cached content queries, then re-render every page that uses them
+        revalidateTag(CONTENT_TAG);
         revalidatePath('/', 'layout');
         return { ok: true, data };
     } catch (e) {
         if (e instanceof z.ZodError) return { ok: false, error: formatZodError(e) };
         if (e instanceof Error && e.message === 'Unauthorized') {
             return { ok: false, error: 'Your session expired. Please log in again.' };
+        }
+        // Postgres unique violation (Drizzle may wrap it in `cause`)
+        const code = (e as { code?: string; cause?: { code?: string } })?.code ?? (e as { cause?: { code?: string } })?.cause?.code;
+        if (code === '23505') {
+            return { ok: false, error: 'That URL name is already used by another item. Pick a different one.' };
         }
         console.error('Admin action failed:', e);
         return { ok: false, error: 'Something went wrong while saving.' };
@@ -97,15 +106,71 @@ export async function updateAboutAction(id: number, paragraphs: unknown) {
 }
 
 // -- Project Actions --
+/** Fills in the URL name from the title when it's left empty. */
+function withSlug<T extends { title: string; slug: string | null }>(row: T): T & { slug: string } {
+    return { ...row, slug: row.slug || slugify(row.title) };
+}
+
 export async function addProjectAction(data: unknown) {
     return adminAction(async () => {
-        await db.insert(projects).values(projectInput.parse(data));
+        await db.insert(projects).values(withSlug(projectInput.parse(data)));
     });
 }
 
 export async function updateProjectAction(id: number, data: unknown) {
     return adminAction(async () => {
-        await db.update(projects).set(projectInput.parse(data)).where(eq(projects.id, idInput.parse(id)));
+        await db.update(projects).set(withSlug(projectInput.parse(data))).where(eq(projects.id, idInput.parse(id)));
+    });
+}
+
+export async function reorderProjectsAction(orderedIds: number[]) {
+    return adminAction(async () => {
+        const ids = z.array(idInput).max(500).parse(orderedIds);
+        await Promise.all(ids.map((id, index) => db.update(projects).set({ sequence: index }).where(eq(projects.id, id))));
+    });
+}
+
+/**
+ * Prefills a new project from a public GitHub repo: name, description (repo "About" or the
+ * README's first paragraph), topics + main language as tags, homepage as the live URL.
+ */
+export async function importFromGitHubAction(repoUrl: string) {
+    return adminAction(async () => {
+        const match = z.string().parse(repoUrl).match(/github\.com\/([\w.-]+)\/([\w.-]+?)(?:\.git)?(?:[/?#]|$)/i);
+        if (!match) throw new z.ZodError([{ code: 'custom', path: ['githubUrl'], message: 'Paste a github.com/<owner>/<repo> link' }]);
+        const [, owner, repo] = match;
+        const headers: HeadersInit = {
+            Accept: 'application/vnd.github+json',
+            ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
+        };
+
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers, cache: 'no-store' });
+        if (!res.ok) {
+            throw new z.ZodError([{ code: 'custom', path: ['githubUrl'], message: res.status === 404 ? 'Repo not found (is it private?)' : `GitHub returned ${res.status}${res.status === 403 ? ' (rate limit; set GITHUB_TOKEN)' : ''}` }]);
+        }
+        const info = await res.json();
+
+        let description: string = info.description || '';
+        if (!description) {
+            const readme = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, { headers: { ...headers, Accept: 'application/vnd.github.raw+json' }, cache: 'no-store' });
+            if (readme.ok) {
+                // First real paragraph: skip headings, badges, HTML and blank lines
+                const para = (await readme.text())
+                    .split(/\n\s*\n/)
+                    .map((p) => p.replace(/<[^>]+>/g, '').trim())
+                    .find((p) => p && !p.startsWith('#') && !p.startsWith('![') && !p.startsWith('[!') && p.length > 40);
+                description = para?.replace(/\s+/g, ' ').slice(0, 600) ?? '';
+            }
+        }
+
+        const tags = [...(info.topics ?? []), info.language].filter(Boolean).slice(0, 8);
+        return {
+            title: String(info.name).replace(/[-_]+/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+            description,
+            tags,
+            githubUrl: info.html_url as string,
+            liveUrl: (info.homepage as string) || '',
+        };
     });
 }
 
@@ -143,13 +208,13 @@ export async function deleteEducationAction(id: number) {
 // -- Blog Actions --
 export async function addBlogAction(data: unknown) {
     return adminAction(async () => {
-        await db.insert(blogs).values(blogInput.parse(data));
+        await db.insert(blogs).values(withSlug(blogInput.parse(data)));
     });
 }
 
 export async function updateBlogAction(id: number, data: unknown) {
     return adminAction(async () => {
-        await db.update(blogs).set(blogInput.parse(data)).where(eq(blogs.id, idInput.parse(id)));
+        await db.update(blogs).set(withSlug(blogInput.parse(data))).where(eq(blogs.id, idInput.parse(id)));
     });
 }
 
@@ -175,6 +240,13 @@ export async function updateCertificationAction(id: number, data: unknown) {
 export async function deleteCertificationAction(id: number) {
     return adminAction(async () => {
         await db.delete(certifications).where(eq(certifications.id, idInput.parse(id)));
+    });
+}
+
+export async function reorderCertificationsAction(orderedIds: number[]) {
+    return adminAction(async () => {
+        const ids = z.array(idInput).max(500).parse(orderedIds);
+        await Promise.all(ids.map((id, index) => db.update(certifications).set({ sequence: index }).where(eq(certifications.id, id))));
     });
 }
 

@@ -1,9 +1,13 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Lets a production build run beside `npm run dev` without sharing its .next folder
+  distDir: process.env.NEXT_DIST_DIR || '.next',
+  // This project's own folder is the root (a package-lock.json higher up confused detection)
+  outputFileTracingRoot: process.cwd(),
   typescript: {
-    ignoreBuildErrors: true,
+    // The codebase typechecks cleanly, so fail the build on type errors
+    ignoreBuildErrors: false,
   },
   eslint: {
     ignoreDuringBuilds: true,

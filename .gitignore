@@ -10,6 +10,7 @@
 
 # next.js
 /.next/
+/.next-build/
 /out/
 /build
 
@@ -38,3 +39,12 @@ next-env.d.ts
 
 # studio
 .idx
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# Local tooling and one-off database backups
+/.claude/
+db-backup-*.json

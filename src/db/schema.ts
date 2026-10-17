@@ -14,6 +14,7 @@ export const hero = pgTable('hero', {
     twitterUrl: text('twitter_url'),
     youtubeUrl: text('youtube_url'),
     photoUrl: text('photo_url'),
+    resumeUrl: text('resume_url'),
 });
 
 export const about = pgTable('about', {
@@ -37,6 +38,12 @@ export const projects = pgTable('projects', {
     imageUrl: text('image_url'), // Instead of imageUrlId, we just store full image URL from imgbb
     liveUrl: text('live_url'),
     githubUrl: text('github_url'),
+    // Case-study page at /projects/<slug>; the sections below are optional Markdown
+    slug: text('slug').unique(),
+    problem: text('problem'),
+    approach: text('approach'),
+    architecture: text('architecture'),
+    results: text('results'),
     sequence: integer('sequence').default(0),
     status: text('status').$type<ContentStatus>().default('active'),
     featured: boolean('featured').default(false),
@@ -82,6 +89,9 @@ export const blogs = pgTable('blogs', {
     url: text('url').notNull(),
     imageUrl: text('image_url'),
     imageHint: text('image_hint'),
+    // On-site article at /blog/<slug> when `content` (Markdown) is set; otherwise `url` links out
+    slug: text('slug').unique(),
+    content: text('content'),
     tags: jsonb('tags').$type<string[]>().default([]),
     publishedAt: text('published_at'),
     sequence: integer('sequence').default(0),

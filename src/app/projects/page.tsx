@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getProjects } from '@/db/queries';
 import { ProjectsPageClient } from '@/components/sections/projects-page-client';
 import { getGitHubRepoStats } from '@/lib/api-stats';
+import { toProjectSummary } from '@/lib/projects';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +21,7 @@ export default async function ProjectsPage() {
       if (project.githubUrl && project.githubUrl !== '#') {
         stats = await getGitHubRepoStats(project.githubUrl);
       }
-      return { ...project, githubStats: stats };
+      return { ...toProjectSummary(project), githubStats: stats };
     })
   );
 

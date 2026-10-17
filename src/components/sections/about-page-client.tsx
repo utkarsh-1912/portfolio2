@@ -1,48 +1,11 @@
-import { ArrowUpRight } from 'lucide-react';
-import type { CodeforcesUser, LeetCodeStats, GitHubUserStats } from '@/lib/api-stats';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { RevealObserver } from '@/components/ui/reveal-observer';
 import { CertificationCard } from './certifications';
 import { SplitWords } from '@/components/ui/split-words';
-import { CountUp } from '@/components/ui/count-up';
 
-type StatsProps = {
-  cfStats: CodeforcesUser | null;
-  lcStats: LeetCodeStats | null;
-  ghStats: GitHubUserStats | null;
-};
-
-type Stat = { label: string; value: string | number; detail: string; href: string };
-
-export function AboutPageClient({ about, skills, certifications = [], stats }: { about: any; skills: any[]; certifications?: any[]; stats: StatsProps }) {
+export function AboutPageClient({ about, skills, certifications = [], liveStats }: { about: any; skills: any[]; certifications?: any[]; liveStats?: React.ReactNode }) {
   const paragraphs: string[] = about?.paragraphs ?? [];
   const [lead, ...rest] = paragraphs;
-
-  const liveStats: Stat[] = [];
-  if (stats.ghStats) {
-    liveStats.push({
-      label: 'GitHub',
-      value: stats.ghStats.public_repos,
-      detail: `public repos · ${stats.ghStats.followers} followers`,
-      href: stats.ghStats.html_url,
-    });
-  }
-  if (stats.lcStats && stats.lcStats.status === 'success') {
-    liveStats.push({
-      label: 'LeetCode',
-      value: stats.lcStats.totalSolved,
-      detail: `solved · ${stats.lcStats.easySolved} easy / ${stats.lcStats.mediumSolved} medium / ${stats.lcStats.hardSolved} hard`,
-      href: 'https://leetcode.com/u/user7883p',
-    });
-  }
-  if (stats.cfStats) {
-    liveStats.push({
-      label: 'Codeforces',
-      value: stats.cfStats.rating || '—',
-      detail: `rating · max ${stats.cfStats.maxRank} (${stats.cfStats.maxRating})`,
-      href: `https://codeforces.com/profile/${stats.cfStats.handle}`,
-    });
-  }
 
   return (
     <div className="container py-16 md:py-24">
@@ -62,36 +25,8 @@ export function AboutPageClient({ about, skills, certifications = [], stats }: {
         </div>
       </div>
 
-      {/* Live coding stats */}
-      {liveStats.length > 0 && (
-        <section className="mt-28">
-          <div data-reveal="up" className="eyebrow flex items-center gap-4">
-            <span>Live stats</span>
-            <span className="h-px flex-1 bg-border" />
-          </div>
-          <div className="mt-8 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-3">
-            {liveStats.map((s, i) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noreferrer"
-                data-reveal="up"
-                style={{ '--i': i } as React.CSSProperties}
-                data-spotlight
-                className="group flex flex-col bg-card p-8 transition-colors hover:bg-muted/50"
-              >
-                <span className="eyebrow flex items-center justify-between">
-                  {s.label}
-                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </span>
-                <CountUp value={s.value} className="mt-8 font-headline text-6xl font-semibold tabular-nums tracking-tight" />
-                <span className="mt-2 text-sm text-muted-foreground">{s.detail}</span>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
+      {/* Live coding stats (streamed in separately; see components/sections/live-stats.tsx) */}
+      {liveStats}
 
       {/* Certifications */}
       {certifications.length > 0 && (

@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { TagInput } from '@/components/ui/tag-input';
 import { FileText, Plus, Trash2, Edit, Save, X, ExternalLink, UploadCloud, MessageSquare, ListOrdered, Eye, Tag, Calendar } from 'lucide-react';
 import { useAdminAction } from './use-admin-action';
+import { BookOpen, Link2 } from 'lucide-react';
 import { StatusToggle } from './status-toggle';
 
 export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
@@ -28,7 +29,7 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
 
     const handleAddNew = () => {
         setEditingId('new');
-        setFormData({ title: '', description: '', url: '', imageUrl: '', imageHint: '', sequence: 0, status: 'active', tags: [], publishedAt: '' });
+        setFormData({ title: '', description: '', url: '', imageUrl: '', imageHint: '', sequence: 0, status: 'active', tags: [], publishedAt: '', slug: '', content: '' });
     };
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,6 +144,33 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
                                     </a>
                                 </div>
                             )}
+                        </div>
+
+                        {/* On-site article */}
+                        <div className="space-y-6 border-t border-border pt-6">
+                            <div className="flex flex-wrap items-end justify-between gap-3">
+                                <div>
+                                    <p className="flex items-center gap-2 font-semibold"><BookOpen className="h-4 w-4 text-primary" /> Publish on this site</p>
+                                    <p className="text-xs text-muted-foreground">Write the article in Markdown to host it here at /blog/&lt;url name&gt;. Leave empty to keep linking to the original URL.</p>
+                                </div>
+                                {editingId !== 'new' && formData.slug && formData.content && (
+                                    <a href={`/blog/${formData.slug}?preview=1`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+                                        Preview article <ExternalLink className="h-3.5 w-3.5" />
+                                    </a>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="blog-slug" className="flex items-center gap-2"><Link2 className="h-4 w-4" /> URL name</Label>
+                                <div className="flex items-center gap-2">
+                                    <span className="shrink-0 text-sm text-muted-foreground">/blog/</span>
+                                    <Input id="blog-slug" className="bg-background font-mono" placeholder="auto from title" value={formData.slug || ''} onChange={e => setFormData({ ...formData, slug: e.target.value.toLowerCase() })} />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="blog-content">Article (Markdown)</Label>
+                                <Textarea id="blog-content" className="bg-background min-h-[320px] font-mono text-sm" placeholder={'## Heading\n\nWrite your article here. **Bold**, lists, links, `code` and tables all work.'} value={formData.content || ''} onChange={e => setFormData({ ...formData, content: e.target.value })} />
+                                <p className="text-xs text-muted-foreground">{(formData.content || '').split(/\s+/).filter(Boolean).length} words</p>
+                            </div>
                         </div>
 
                         <div className="space-y-2">

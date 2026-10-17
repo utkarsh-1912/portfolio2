@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { X, ArrowUpRight, ArrowLeft, ArrowRight, Star, GitFork } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { resolveImage, hasLink } from '@/lib/images';
 import { ProjectPlaceholder } from '@/components/sections/project-placeholder';
 
@@ -14,6 +15,7 @@ export type ProjectModalData = {
     imageUrl?: string | null;
     liveUrl?: string | null;
     githubUrl?: string | null;
+    slug?: string | null;
     githubStats?: { stargazers_count: number; forks_count: number; language?: string | null } | null;
 };
 
@@ -153,8 +155,17 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                         )}
                     </div>
 
-                    {(hasLink(project.liveUrl) || hasLink(project.githubUrl)) && (
+                    {(project.slug || hasLink(project.liveUrl) || hasLink(project.githubUrl)) && (
                         <div className="flex flex-wrap gap-3 border-t border-border px-6 py-5 sm:px-8">
+                            {project.slug && (
+                                <Link
+                                    href={`/projects/${project.slug}`}
+                                    onClick={onClose}
+                                    className="inline-flex h-11 items-center gap-1.5 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground"
+                                >
+                                    Read case study <ArrowRight className="h-4 w-4" />
+                                </Link>
+                            )}
                             {hasLink(project.liveUrl) && (
                                 <a
                                     href={project.liveUrl}

@@ -3,9 +3,10 @@ import { ArrowRight } from 'lucide-react';
 import { getBlogs } from '@/db/queries';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { PostCard } from './post-card';
+import { toArticleSummary } from '@/lib/site';
 
 export async function BlogSection() {
-  const posts = (await getBlogs()).slice(0, 3);
+  const posts = (await getBlogs()).slice(0, 3).map(toArticleSummary);
   if (posts.length === 0) return null;
 
   const [first, ...rest] = posts;

@@ -214,6 +214,71 @@ html.js [data-reveal='chars']:not([data-in]) .split-char {
   from { transform: translateX(-100%); }
   to { transform: translateX(300%); }
 }
+/* First-visit intro loader (components/ui/intro-loader.tsx) */
+.intro-loader {
+  display: none;
+}
+html.intro-active .intro-loader,
+.intro-loader.intro-exit {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+/* Safety net: if scripts never run, don't keep the page covered */
+html.intro-active .intro-loader {
+  animation: intro-fallback 0.4s ease 6s forwards;
+}
+.intro-loader.intro-exit {
+  animation: none;
+  transform: translateY(-100%);
+  transition: transform 0.95s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.intro-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-draw 0.9s var(--ease-out) forwards;
+}
+@keyframes intro-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Looping version for the in-page loader (components/ui/page-loader.tsx) */
+.loader-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: loader-draw 1.6s var(--ease-in-out) infinite;
+}
+@keyframes loader-draw {
+  0% { stroke-dashoffset: 1; }
+  45%, 70% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loader-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes intro-fallback {
+  to { opacity: 0; visibility: hidden; }
+}
+
+/* Page enter transition (used by app/template.tsx) */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .page-enter {
+    animation: page-enter 0.7s var(--ease-out) both;
+  }
+}
+
 @keyframes marquee {
   to { transform: translateX(-50%); }
 }

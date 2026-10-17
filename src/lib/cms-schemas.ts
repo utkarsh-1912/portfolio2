@@ -29,6 +29,18 @@ const stringList = (maxItem: number, maxLen: number) =>
         .nullish()
         .transform((v) => (v ?? []).filter(Boolean));
 
+// Optional long-form Markdown
+const markdown = (max: number) => z.string().max(max).nullish().transform((v) => (v && v.trim() ? v : null));
+
+// URL name; empty means "derive from the title"
+const slugInput = z
+    .string()
+    .trim()
+    .max(80)
+    .refine((v) => v === '' || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v), 'Use lowercase letters, numbers and dashes only')
+    .nullish()
+    .transform((v) => v || null);
+
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Expected YYYY-MM-DD');
 
 export const heroInput = z.object({
@@ -41,6 +53,7 @@ export const heroInput = z.object({
     youtubeUrl: optionalUrl,
     // Only hosted images; never store base64 data URLs in the database
     photoUrl: optionalUrl,
+    resumeUrl: optionalUrl,
 });
 
 export const aboutInput = z.array(z.string().max(5000)).max(20);
@@ -55,6 +68,11 @@ export const projectInput = z.object({
     sequence: z.coerce.number().int().min(-1000).max(1000).catch(0),
     status: z.enum(CONTENT_STATUSES).nullish().transform((v) => v ?? 'active'),
     featured: z.boolean().nullish().transform((v) => !!v),
+    slug: slugInput,
+    problem: markdown(20000),
+    approach: markdown(20000),
+    architecture: markdown(20000),
+    results: markdown(20000),
 });
 
 export const educationInput = z
@@ -82,6 +100,8 @@ export const blogInput = z.object({
     publishedAt: isoDate.nullish().or(z.literal('')).transform((v) => v || null),
     sequence: z.coerce.number().int().min(-1000).max(1000).catch(0),
     status: z.enum(CONTENT_STATUSES).nullish().transform((v) => v ?? 'active'),
+    slug: slugInput,
+    content: markdown(200000),
 });
 
 export const certificationInput = z

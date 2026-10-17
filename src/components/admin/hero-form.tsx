@@ -269,9 +269,21 @@ export function AdminHeroForm({ initialData }: { initialData: any }) {
                                 onChange={e => setData({ ...data, youtubeUrl: e.target.value })}
                             />
                         </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="hero-resume" className="flex items-center gap-2"><FileText className="h-4 w-4" /> Resume URL</Label>
+                            <Input
+                                id="hero-resume"
+                                className="bg-background"
+                                type="url"
+                                placeholder="https://drive.google.com/… or a PDF link"
+                                value={data.resumeUrl || ''}
+                                onChange={e => setData({ ...data, resumeUrl: e.target.value })}
+                            />
+                            <p className="text-xs text-muted-foreground">Shows a Resume button in the hero and enables the terminal&apos;s <code>resume</code> command.</p>
+                        </div>
                     </div>
                 </CardContent>
-                <CardFooter className="bg-muted/30 py-4 px-6 border-t border-border rounded-b-xl flex justify-between">
+                <CardFooter className="border-t border-border px-6 py-5 flex justify-between">
                     <p className="text-sm text-muted-foreground">Changes reflect instantly on main site.</p>
                     <Button type="submit" disabled={isPending || uploadStatus === 'uploading'} className="gap-2">
                         <Save className="h-4 w-4" />

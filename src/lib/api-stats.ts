@@ -63,8 +63,10 @@ export type GitHubRepoStats = {
   language: string;
 };
 
-// Next.js fetch with revalidation (cache for 1 hour to avoid rate limits)
-const fetchOptions: RequestInit = { next: { revalidate: 3600 } };
+// Next.js fetch with revalidation (cache for 1 hour to avoid rate limits).
+// A getter so every call gets its own timeout: a slow third-party API must not hold up the page.
+const TIMEOUT_MS = 4000;
+const fetchOptions = (): RequestInit => ({ next: { revalidate: 3600 }, signal: AbortSignal.timeout(TIMEOUT_MS) });
 
 export async function getLeetCodeStats(username: string): Promise<LeetCodeStats | null> {
   try {
@@ -85,7 +87,7 @@ export async function getLeetCodeStats(username: string): Promise<LeetCodeStats 
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
       },
       body: JSON.stringify({ query, variables: { username } }),
-      next: { revalidate: 3600 }
+      ...fetchOptions()
     });
 
     if (!res.ok) return null;
@@ -126,7 +128,7 @@ export async function getLeetCodeStats(username: string): Promise<LeetCodeStats 
 
 export async function getCodeforcesStats(handle: string): Promise<CodeforcesUser | null> {
   try {
-    const res = await fetch(`https://codeforces.com/api/user.info?handles=${handle}`, fetchOptions);
+    const res = await fetch(`https://codeforces.com/api/user.info?handles=${handle}`, fetchOptions());
     if (!res.ok) return null;
     const data: CodeforcesStats = await res.json();
     if (data.status === 'OK' && data.result.length > 0) {
@@ -142,7 +144,7 @@ export async function getCodeforcesStats(handle: string): Promise<CodeforcesUser
 export async function getGitHubUserStats(username: string): Promise<GitHubUserStats | null> {
   try {
     const res = await fetch(`https://api.github.com/users/${username}`, {
-      ...fetchOptions,
+      ...fetchOptions(),
       headers: process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {},
     });
     if (!res.ok) return null;
@@ -164,7 +166,7 @@ export async function getGitHubRepoStats(repoUrl: string): Promise<GitHubRepoSta
     const repo = urlParts[urlParts.length - 1];
     
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-      ...fetchOptions,
+      ...fetchOptions(),
       headers: process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {},
     });
     if (!res.ok) return null;

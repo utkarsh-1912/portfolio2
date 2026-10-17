@@ -32,6 +32,7 @@ export function ContactSection({ heroData }: { heroData?: any }) {
       name: '',
       email: '',
       message: '',
+      website: '',
     },
   });
 
@@ -125,6 +126,13 @@ export function ContactSection({ heroData }: { heroData?: any }) {
               <p className="eyebrow">Or send a message</p>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-8">
+                  {/* Honeypot: off-screen and skipped by keyboard and screen readers; bots tend to fill it */}
+                  <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+                    <label>
+                      Website
+                      <input type="text" tabIndex={-1} autoComplete="off" {...form.register('website')} />
+                    </label>
+                  </div>
                   <div className="grid gap-8 sm:grid-cols-2">
                     <FormField
                       control={form.control}

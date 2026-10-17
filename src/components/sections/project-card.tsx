@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowUpRight, Star } from 'lucide-react';
 import { resolveImage, hasLink } from '@/lib/images';
 import { ProjectPlaceholder } from './project-placeholder';
@@ -13,6 +14,7 @@ export type ProjectCardData = {
     imageUrl?: string | null;
     liveUrl?: string | null;
     githubUrl?: string | null;
+    slug?: string | null;
     githubStats?: { stargazers_count: number; forks_count: number; language?: string | null } | null;
 };
 
@@ -61,6 +63,11 @@ export function ProjectCard({ project, index, onOpen }: { project: ProjectCardDa
                     {project.tags.slice(0, 4).join(' · ')}
                 </p>
                 <div className="mt-auto flex gap-5 pt-5 text-sm">
+                    {project.slug && (
+                        <Link href={`/projects/${project.slug}`} className="inline-flex items-center gap-1 font-medium text-foreground hover:text-primary transition-colors">
+                            <span className="link-draw">Case study</span>
+                        </Link>
+                    )}
                     {hasLink(project.liveUrl) && (
                         <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-foreground hover:text-primary transition-colors">
                             <span className="link-draw">Visit site</span> <ArrowUpRight className="h-3.5 w-3.5" />

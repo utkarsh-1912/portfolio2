@@ -8,10 +8,14 @@ import { Toaster } from '@/components/ui/toaster';
 import { TerminalUI } from '@/components/ui/terminal';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { PointerEffects } from '@/components/ui/pointer-effects';
+import { IntroLoader } from '@/components/ui/intro-loader';
+import { RouteProgress } from '@/components/ui/route-progress';
+import { Suspense } from 'react';
 
 import { getHero, getAbout, getProjects, getBlogs, getEducation, getSkills, getCertifications } from '@/db/queries';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://utkristi.com';
+import { SITE_URL, toArticleSummary } from '@/lib/site';
+import { toProjectSummary } from '@/lib/projects';
 const DESCRIPTION =
   'Utkarsh Gupta is a software engineer working on electronic trading systems, backend systems and agentic AI. Projects, writing and contact.';
 
@@ -53,13 +57,13 @@ export default async function RootLayout({
     getHero(), getAbout(), getProjects(), getBlogs(), getEducation(), getSkills(), getCertifications()
   ]);
 
-  const terminalData = { hero, about, projects, blogs, education, skills, certifications };
+  const terminalData = { hero, about, projects: projects.map(toProjectSummary), blogs: blogs.map(toArticleSummary), education, skills, certifications };
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Flags JS as available before paint so reveal animations can hide content up front */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        {/* Before paint: flag JS (reveal animations hide content up front) and decide whether the
+            first-visit intro loader shows (not seen this session, motion allowed, not the admin) */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var d=document.documentElement;d.classList.add('js');try{var p=location.pathname;if(!sessionStorage.getItem('utkristi-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&p.indexOf('/admin')!==0&&p.indexOf('/login')!==0){d.classList.add('intro-active')}}catch(e){}})()` }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -87,8 +91,14 @@ export default async function RootLayout({
           <Toaster />
           <div className="grain" aria-hidden="true" />
           <PointerEffects />
+          <IntroLoader />
+          {/* useSearchParams needs a Suspense boundary */}
+          <Suspense fallback={null}>
+            <RouteProgress />
+          </Suspense>
         </ThemeProvider>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || 'G-XXXXXXXXXX'} />
+        {/* Only load Analytics when an ID is configured */}
+        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
       </body>
     </html>
   );

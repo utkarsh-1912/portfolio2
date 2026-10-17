@@ -6,6 +6,7 @@ import { Terminal as TerminalIcon, ArrowUpRight, CornerDownLeft } from 'lucide-r
 import { useTheme } from '@/components/theme-provider';
 import { LogoMark } from '@/components/ui/logo-mark';
 import { cn } from '@/lib/utils';
+import { articleHref } from '@/lib/site';
 
 type TerminalData = {
     hero: any;
@@ -177,6 +178,11 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                             <p className="mt-2 font-headline text-xl font-semibold text-foreground">{p.title}</p>
                             <p className="mt-2 leading-relaxed text-foreground/80">{p.description}</p>
                             <div className="mt-4 flex gap-5">
+                                {p.slug && (
+                                    <button type="button" onClick={() => { setIsOpen(false); router.push(`/projects/${p.slug}`); }} className="text-foreground underline decoration-border underline-offset-4 hover:decoration-primary">
+                                        case study
+                                    </button>
+                                )}
                                 {p.liveUrl && p.liveUrl !== '#' && <ExtLink href={p.liveUrl}>live</ExtLink>}
                                 {p.githubUrl && p.githubUrl !== '#' && <ExtLink href={p.githubUrl}>source</ExtLink>}
                             </div>
@@ -193,7 +199,9 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                             {blogs.map((b, i) => (
                                 <div key={b.id} className="flex gap-3">
                                     <Muted>{String(i + 1).padStart(2, '0')}</Muted>
-                                    <ExtLink href={b.url}>{b.title}</ExtLink>
+                                    <button type="button" onClick={() => runRef.current(`read ${i + 1}`)} className="text-left text-foreground underline decoration-border underline-offset-4 hover:decoration-primary">
+                                        {b.title}
+                                    </button>
                                 </div>
                             ))}
                             <div className="pt-1 text-muted-foreground">Run <Accent>read &lt;number&gt;</Accent> to open one.</div>
@@ -208,7 +216,12 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                 run: (args) => {
                     const b = args[0] && findBlog(args.join(' '));
                     if (!b) return 'Usage: read <number|name>';
-                    window.open(b.url, '_blank', 'noopener,noreferrer');
+                    const href = articleHref(b);
+                    if (href.startsWith('/')) {
+                        setTimeout(() => { setIsOpen(false); router.push(href); }, 250);
+                        return <>Opening <Accent>{b.title}</Accent>…</>;
+                    }
+                    window.open(href, '_blank', 'noopener,noreferrer');
                     return <>Opening <Accent>{b.title}</Accent> in a new tab…</>;
                 },
             },
@@ -273,6 +286,17 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                         <Row k="form" v={<button type="button" onClick={() => runRef.current('goto contact')} className="underline decoration-border underline-offset-4 hover:decoration-primary">goto contact</button>} />
                     </div>
                 ),
+            },
+            {
+                name: 'resume',
+                aliases: ['cv'],
+                description: 'Open my resume',
+                run: () => {
+                    const url = data?.hero?.resumeUrl;
+                    if (!url) return 'Resume link not added yet — try "contact" instead.';
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                    return <>Opening resume in a new tab… <ExtLink href={url}>link</ExtLink></>;
+                },
             },
             {
                 name: 'socials',

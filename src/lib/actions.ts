@@ -6,7 +6,8 @@ import { buildContactNotificationHtml, buildReplyEmailHtml } from './email-templ
 
 import { db } from '../db';
 import { contacts } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { and, count, eq, gt } from 'drizzle-orm';
+import { clientIp, rateLimit } from './rate-limit';
 import { isAdmin } from './auth-server';
 
 async function sendBrevoEmail(payload: object, apiKey: string) {
@@ -42,7 +43,26 @@ export async function handleFormSubmission(input: z.infer<typeof formSchema>) {
   }
   const data = parsed.data;
 
+  // Bots fill the hidden honeypot field; pretend it worked so they don't adapt
+  if (data.website) {
+    return { success: true, message: 'Thanks for reaching out. I will get back to you shortly.' };
+  }
+
+  // At most 5 messages per IP per 10 minutes, and 3 per email address per hour
+  const ip = await clientIp();
+  if (!rateLimit(`contact:${ip}`, 5, 10 * 60 * 1000).ok) {
+    return { success: false, message: 'Too many messages in a short time. Please try again later.' };
+  }
+
   try {
+    const [{ recent }] = await db
+      .select({ recent: count() })
+      .from(contacts)
+      .where(and(eq(contacts.email, data.email), gt(contacts.createdAt, new Date(Date.now() - 60 * 60 * 1000))));
+    if (recent >= 3) {
+      return { success: false, message: 'You have already sent a few messages recently. I will reply soon.' };
+    }
+
     // 1. Save to Database
     await db.insert(contacts).values({
       name: data.name,

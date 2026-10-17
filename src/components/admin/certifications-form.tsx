@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { addCertificationAction, updateCertificationAction, deleteCertificationAction } from '../../app/admin/actions';
+import { addCertificationAction, updateCertificationAction, deleteCertificationAction, reorderCertificationsAction } from '../../app/admin/actions';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { TagInput } from '@/components/ui/tag-input';
 import { Award, Plus, Trash2, Edit, Save, X, ExternalLink, UploadCloud, ListOrdered, Eye, Tag, Calendar, KeyRound, Building2 } from 'lucide-react';
 import { useAdminAction } from './use-admin-action';
+import { useDragReorder } from './use-drag-reorder';
+import { ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
 import { StatusToggle } from './status-toggle';
 
 const EMPTY = {
@@ -32,6 +34,7 @@ export function AdminCertificationsForm({ initialData }: { initialData: any[] })
     const [isPending, startTransition] = useTransition();
     const [isUploading, setIsUploading] = useState(false);
     const run = useAdminAction();
+    const { ordered, rowProps, move } = useDragReorder(items, (ids) => run(reorderCertificationsAction(ids), 'Order saved.'));
 
     const handleEdit = (item: any) => {
         setEditingId(item.id);
@@ -194,8 +197,13 @@ export function AdminCertificationsForm({ initialData }: { initialData: any[] })
             </CardHeader>
             <CardContent>
                 <div className="grid gap-4">
-                    {items.map((item) => (
-                        <div key={item.id} className="rounded-2xl border border-border bg-background p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-colors hover:border-foreground/25">
+                    {ordered.map((item) => (
+                        <div key={item.id} {...rowProps(item.id)} className="rounded-2xl border border-border bg-background p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-colors hover:border-foreground/25 data-[drag-over]:border-primary data-[drag-over]:bg-primary/5">
+                            <div className="hidden flex-col items-center sm:flex">
+                                <button type="button" aria-label="Move up" onClick={() => move(item.id, -1)} className="rounded p-0.5 text-muted-foreground hover:text-foreground"><ChevronUp className="h-3.5 w-3.5" /></button>
+                                <GripVertical className="h-4 w-4 cursor-grab text-muted-foreground/60 active:cursor-grabbing" aria-hidden="true" />
+                                <button type="button" aria-label="Move down" onClick={() => move(item.id, 1)} className="rounded p-0.5 text-muted-foreground hover:text-foreground"><ChevronDown className="h-3.5 w-3.5" /></button>
+                            </div>
                             <div className="flex-1 min-w-0">
                                 <h4 className="font-bold font-headline text-lg truncate mb-1">
                                     {item.title}

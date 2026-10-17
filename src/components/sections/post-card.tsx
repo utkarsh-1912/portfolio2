@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { RollText } from '@/components/ui/roll-text';
 import { resolveImage } from '@/lib/images';
 import { cn } from '@/lib/utils';
+import { articleHref } from '@/lib/site';
 
 export type PostCardData = {
     id: number;
@@ -13,6 +14,8 @@ export type PostCardData = {
     imageHint?: string | null;
     tags?: string[] | null;
     publishedAt?: string | null;
+    slug?: string | null;
+    hasBody?: boolean;
 };
 
 function formatDate(value?: string | null) {
@@ -31,13 +34,15 @@ export function PostCard({ post, featured = false, compact = false, split = fals
     const img = resolveImage(post.imageUrl, post.imageHint);
     const date = formatDate(post.publishedAt);
     const meta = [date, ...(post.tags ?? []).slice(0, 2)].filter(Boolean).join(' · ');
+    const href = articleHref(post);
+    // On-site articles open in place; external ones in a new tab
+    const linkProps = href.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' };
 
     if (split) {
         return (
             <a
-                href={post.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={href}
+                {...linkProps}
                 data-cursor="Read"
                 className={cn('group grid items-center gap-8 lg:grid-cols-12 lg:gap-14', className)}
             >
@@ -75,9 +80,8 @@ export function PostCard({ post, featured = false, compact = false, split = fals
 
     return (
         <a
-            href={post.url}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={href}
+            {...linkProps}
             data-cursor="Read"
             className={cn('group flex flex-col', className)}
         >
