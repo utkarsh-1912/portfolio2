@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ArrowUpRight, ArrowLeft, ArrowRight, Star, GitFork } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -42,10 +43,19 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
     // Lock page scroll and move focus into the dialog while open
     useEffect(() => {
         if (!project) return;
-        document.body.style.overflow = 'hidden';
+        const root = document.documentElement;
+        const body = document.body;
+        const previousRootOverflow = root.style.overflow;
+        const previousBodyPaddingRight = body.style.paddingRight;
+        const scrollbarWidth = window.innerWidth - root.clientWidth;
+        root.style.overflow = 'hidden';
+        if (scrollbarWidth > 0) {
+            body.style.paddingRight = `calc(${window.getComputedStyle(body).paddingRight} + ${scrollbarWidth}px)`;
+        }
         closeRef.current?.focus();
         return () => {
-            document.body.style.overflow = '';
+            root.style.overflow = previousRootOverflow;
+            body.style.paddingRight = previousBodyPaddingRight;
         };
     }, [!!project]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -72,7 +82,7 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
     const stats = project.githubStats;
 
     return (
-        <div
+        createPortal(<div
             ref={overlayRef}
             className="fixed inset-0 z-[200] flex items-end justify-center bg-background/70 backdrop-blur-md animate-in fade-in duration-300 sm:items-center sm:p-6"
             onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
@@ -81,10 +91,10 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="project-modal-title"
-                className="relative grid max-h-[92svh] w-full max-w-5xl overflow-y-auto rounded-t-3xl md:h-[min(640px,88svh)] md:overflow-hidden border border-border bg-card shadow-2xl animate-in slide-in-from-bottom-6 duration-500 sm:rounded-3xl md:grid-cols-[1.15fr_1fr]"
+                className="relative flex h-[min(760px,92svh)] w-full max-w-5xl flex-col overflow-hidden rounded-t-3xl border border-border bg-card shadow-2xl animate-in slide-in-from-bottom-6 duration-500 sm:rounded-3xl md:grid md:h-[min(640px,88svh)] md:grid-cols-[1.15fr_1fr] md:grid-rows-1"
             >
                 {/* Visual */}
-                <div key={project.id} className="relative aspect-[16/10] w-full overflow-hidden bg-muted animate-in fade-in duration-500 md:aspect-auto md:h-full">
+                <div key={project.id} className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-muted animate-in fade-in duration-500 md:aspect-auto md:h-full md:min-h-0">
                     {img ? (
                         <Image src={img} alt="" fill sizes="(min-width: 768px) 55vw, 100vw" className="object-cover" unoptimized={img.startsWith('http')} />
                     ) : (
@@ -93,8 +103,8 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                 </div>
 
                 {/* Details */}
-                <div className="flex min-h-0 flex-col">
-                    <div className="flex items-center justify-between gap-4 border-b border-border px-6 py-4 sm:px-8">
+                <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                    <div className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-6 py-4 sm:px-8">
                         <span className="font-mono text-xs tabular-nums text-muted-foreground">
                             {canNavigate ? `${String(index + 1).padStart(2, '0')} / ${String(projects!.length).padStart(2, '0')}` : 'Project'}
                         </span>
@@ -120,7 +130,7 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                         </div>
                     </div>
 
-                    <div ref={bodyRef} key={project.id} className="flex-1 overflow-y-auto px-6 py-8 animate-in fade-in slide-in-from-bottom-2 duration-500 sm:px-8">
+                    <div ref={bodyRef} key={project.id} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-8 animate-in fade-in slide-in-from-bottom-2 duration-500 sm:px-8">
                         <h2 id="project-modal-title" className="font-headline text-3xl font-semibold tracking-tight sm:text-4xl">
                             {project.title}
                         </h2>
@@ -156,7 +166,7 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                     </div>
 
                     {(project.slug || hasLink(project.liveUrl) || hasLink(project.githubUrl)) && (
-                        <div className="flex flex-wrap gap-3 border-t border-border px-6 py-5 sm:px-8">
+                        <div className="flex shrink-0 flex-wrap gap-3 border-t border-border px-6 py-5 sm:px-8">
                             {project.slug && (
                                 <Link
                                     href={`/projects/${project.slug}`}
@@ -190,6 +200,6 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                     )}
                 </div>
             </div>
-        </div>
+        </div>, document.body)
     );
 }
