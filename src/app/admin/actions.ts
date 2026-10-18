@@ -2,7 +2,7 @@
 
 import * as z from 'zod';
 import { db } from '../../db';
-import { hero, about, projects, education, blogs, skills, certifications } from '../../db/schema';
+import { hero, about, projects, education, blogs, skills, certifications, testimonials, pages } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { CONTENT_TAG } from '../../db/queries';
@@ -14,6 +14,8 @@ import {
     aboutInput,
     blogInput,
     certificationInput,
+    pageInput,
+    testimonialInput,
     educationInput,
     formatZodError,
     heroInput,
@@ -247,6 +249,39 @@ export async function reorderCertificationsAction(orderedIds: number[]) {
     return adminAction(async () => {
         const ids = z.array(idInput).max(500).parse(orderedIds);
         await Promise.all(ids.map((id, index) => db.update(certifications).set({ sequence: index }).where(eq(certifications.id, id))));
+    });
+}
+
+// -- Testimonial Actions --
+export async function addTestimonialAction(data: unknown) {
+    return adminAction(async () => {
+        await db.insert(testimonials).values(testimonialInput.parse(data));
+    });
+}
+
+export async function updateTestimonialAction(id: number, data: unknown) {
+    return adminAction(async () => {
+        await db.update(testimonials).set(testimonialInput.parse(data)).where(eq(testimonials.id, idInput.parse(id)));
+    });
+}
+
+export async function deleteTestimonialAction(id: number) {
+    return adminAction(async () => {
+        await db.delete(testimonials).where(eq(testimonials.id, idInput.parse(id)));
+    });
+}
+
+export async function reorderTestimonialsAction(orderedIds: number[]) {
+    return adminAction(async () => {
+        const ids = z.array(idInput).max(500).parse(orderedIds);
+        await Promise.all(ids.map((id, index) => db.update(testimonials).set({ sequence: index }).where(eq(testimonials.id, id))));
+    });
+}
+
+// -- Page Actions (/now, /uses) --
+export async function updatePageAction(id: number, data: unknown) {
+    return adminAction(async () => {
+        await db.update(pages).set({ ...pageInput.parse(data), updatedAt: new Date() }).where(eq(pages.id, idInput.parse(id)));
     });
 }
 

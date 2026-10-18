@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { RollText } from '@/components/ui/roll-text';
+import { trackEvent } from '@/lib/analytics';
 import { getSocialLinks } from '@/components/ui/social-links';
 import { handleFormSubmission } from '@/lib/actions';
 import { formSchema } from '@/lib/schemas';
@@ -40,6 +41,7 @@ export function ContactSection({ heroData }: { heroData?: any }) {
     startTransition(async () => {
       const result = await handleFormSubmission(values);
       if (result.success) {
+        trackEvent('contact_submit');
         toast({
           title: 'Message sent',
           description: result.message,
@@ -61,6 +63,7 @@ export function ContactSection({ heroData }: { heroData?: any }) {
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(EMAIL);
+      trackEvent('copy_email', { source: 'contact' });
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {

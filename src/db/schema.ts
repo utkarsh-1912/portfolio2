@@ -82,6 +82,32 @@ export const certifications = pgTable('certifications', {
     createdAt: timestamp('created_at').defaultNow(),
 });
 
+export const testimonials = pgTable('testimonials', {
+    id: serial('id').primaryKey(),
+    quote: text('quote').notNull(),
+    name: text('name').notNull(),
+    // e.g. "Engineering Manager" and "Sosuv Consulting"
+    role: text('role'),
+    company: text('company'),
+    avatarUrl: text('avatar_url'),
+    // Where the recommendation can be verified, e.g. a LinkedIn recommendation
+    linkUrl: text('link_url'),
+    sequence: integer('sequence').default(0),
+    status: text('status').$type<ContentStatus>().default('active'),
+    createdAt: timestamp('created_at').defaultNow(),
+});
+
+// Free-form Markdown pages such as /now and /uses
+export const pages = pgTable('pages', {
+    id: serial('id').primaryKey(),
+    slug: text('slug').notNull().unique(),
+    title: text('title').notNull(),
+    intro: text('intro'),
+    content: text('content'),
+    status: text('status').$type<ContentStatus>().default('active'),
+    updatedAt: timestamp('updated_at').defaultNow(),
+});
+
 export const blogs = pgTable('blogs', {
     id: serial('id').primaryKey(),
     title: text('title').notNull(),

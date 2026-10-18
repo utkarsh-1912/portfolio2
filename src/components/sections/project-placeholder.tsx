@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
  */
 export function ProjectPlaceholder({ title, tags, className }: { title: string; tags: string[]; className?: string }) {
     return (
-        <div className={cn('absolute inset-0 flex flex-col justify-between overflow-hidden bg-muted p-6 sm:p-8', className)}>
+        <div aria-hidden="true" className={cn('absolute inset-0 flex flex-col justify-between overflow-hidden bg-muted p-6 sm:p-8', className)}>
             <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
             <span aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full bg-foreground/5 blur-2xl" />
             <p className="relative font-mono text-[10px] uppercase tracking-widest text-muted-foreground">

@@ -1,20 +1,24 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
+import rehypeHighlight from 'rehype-highlight';
 import { cn } from '@/lib/utils';
 
 /**
  * Renders admin-authored Markdown (GitHub-flavoured: tables, task lists, strikethrough)
- * with the site's typography. Raw HTML in the source is not rendered.
+ * with the site's typography. Raw HTML in the source is not rendered. Headings get ids
+ * (for the table of contents) and fenced code blocks get syntax highlighting.
  */
 export function Markdown({ children, className }: { children: string; className?: string }) {
     return (
         <div className={cn('max-w-none text-base leading-relaxed text-foreground/85 md:text-lg', className)}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeSlug, rehypeHighlight]}
                 components={{
                     h1: ({ children }) => <h2 className="mt-14 font-headline text-3xl font-semibold tracking-tight text-foreground first:mt-0 md:text-4xl">{children}</h2>,
-                    h2: ({ children }) => <h2 className="mt-14 font-headline text-3xl font-semibold tracking-tight text-foreground first:mt-0 md:text-4xl">{children}</h2>,
-                    h3: ({ children }) => <h3 className="mt-10 font-headline text-2xl font-semibold tracking-tight text-foreground first:mt-0">{children}</h3>,
+                    h2: ({ children, id }) => <h2 id={id} className="mt-14 scroll-mt-28 font-headline text-3xl font-semibold tracking-tight text-foreground first:mt-0 md:text-4xl">{children}</h2>,
+                    h3: ({ children, id }) => <h3 id={id} className="mt-10 scroll-mt-28 font-headline text-2xl font-semibold tracking-tight text-foreground first:mt-0">{children}</h3>,
                     h4: ({ children }) => <h4 className="mt-8 font-semibold text-foreground first:mt-0">{children}</h4>,
                     p: ({ children }) => <p className="mt-5 first:mt-0">{children}</p>,
                     a: ({ href, children }) => {

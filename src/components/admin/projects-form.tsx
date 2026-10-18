@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Code, Plus, Trash2, Edit, Save, X, ExternalLink, Github, UploadCloud, Tag, ListOrdered, Eye, Star } from 'lucide-react';
 import { useAdminAction } from './use-admin-action';
 import { useDragReorder } from './use-drag-reorder';
+import { MarkdownEditor, clearDraft } from './markdown-editor';
 import { ChevronDown, ChevronUp, Download, FileText, GripVertical, Link2 } from 'lucide-react';
 import { StatusToggle } from './status-toggle';
 
@@ -92,7 +93,10 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                 editingId === 'new' ? addProjectAction(formData) : updateProjectAction(formData.id, formData),
                 'Project saved.'
             );
-            if (ok) setEditingId(null);
+            if (ok) {
+                ['problem', 'approach', 'architecture', 'results'].forEach((k) => clearDraft(`project-${editingId}-${k}`));
+                setEditingId(null);
+            }
         });
     };
 
@@ -229,7 +233,14 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                             ].map(([key, label, hint]) => (
                                 <div key={key} className="space-y-2">
                                     <Label htmlFor={`project-${key}`}>{label}</Label>
-                                    <Textarea id={`project-${key}`} className="bg-background min-h-[110px] font-mono text-sm" placeholder={hint} value={formData[key] || ''} onChange={e => setFormData({ ...formData, [key]: e.target.value })} />
+                                    <MarkdownEditor
+                                        id={`project-${key}`}
+                                        draftKey={`project-${editingId}-${key}`}
+                                        placeholder={hint}
+                                        minHeight={140}
+                                        value={formData[key] || ''}
+                                        onChange={(v) => setFormData((prev: any) => ({ ...prev, [key]: v }))}
+                                    />
                                 </div>
                             ))}
                         </div>

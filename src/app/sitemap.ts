@@ -1,12 +1,12 @@
 import type { MetadataRoute } from 'next';
-import { getBlogs, getProjects } from '@/db/queries';
+import { getAllPages, getBlogs, getProjects } from '@/db/queries';
 import { SITE_URL } from '@/lib/site';
 import { hasCaseStudy } from '@/lib/projects';
 
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const [projects, blogs] = await Promise.all([getProjects(), getBlogs()]);
+    const [projects, blogs, sitePages] = await Promise.all([getProjects(), getBlogs(), getAllPages()]);
     const now = new Date();
 
     return [
@@ -14,6 +14,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
         { url: `${SITE_URL}/projects`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
         { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+        ...sitePages
+            .filter((p) => p.status === 'active')
+            .map((p) => ({ url: `${SITE_URL}/${p.slug}`, lastModified: p.updatedAt ? new Date(p.updatedAt) : now, changeFrequency: 'monthly' as const, priority: 0.5 })),
         ...projects
             .filter((p) => p.slug && hasCaseStudy(p))
             .map((p) => ({ url: `${SITE_URL}/projects/${p.slug}`, lastModified: p.createdAt ?? now, changeFrequency: 'monthly' as const, priority: 0.7 })),

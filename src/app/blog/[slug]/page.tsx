@@ -2,13 +2,16 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import { getBlogBySlug } from '@/db/queries';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { getBlogBySlug, getBlogs } from '@/db/queries';
+import { extractToc } from '@/lib/toc';
+import { ReadingProgress } from '@/components/ui/reading-progress';
 import { isAdmin } from '@/lib/auth-server';
-import { resolveImage } from '@/lib/images';
+import { resolveImage, skipOptimization } from '@/lib/images';
 import { Markdown } from '@/components/ui/markdown';
 import { RevealObserver } from '@/components/ui/reveal-observer';
 import { SplitText } from '@/components/ui/split-text';
+import { JsonLd, articleSchema } from '@/components/seo/json-ld';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,6 +48,12 @@ export default async function ArticlePage({ params, searchParams }: Props) {
     if (!post.content) redirect(post.url);
 
     const img = resolveImage(post.imageUrl, post.imageHint);
+    const toc = extractToc(post.content);
+    // Neighbours among articles hosted on this site, in the same order as the /blog page
+    const onSite = (await getBlogs()).filter((b) => b.content && b.slug);
+    const at = onSite.findIndex((b) => b.id === post.id);
+    const prev = at > 0 ? onSite[at - 1] : null;
+    const next = at >= 0 && at < onSite.length - 1 ? onSite[at + 1] : null;
     const date = post.publishedAt
         ? new Date(post.publishedAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
         : null;
@@ -52,6 +61,7 @@ export default async function ArticlePage({ params, searchParams }: Props) {
 
     return (
         <article className="pb-24">
+            <JsonLd data={articleSchema(post)} />
             {includeDrafts && post.status !== 'active' && (
                 <div className="sticky top-20 z-40 mx-auto mt-2 w-fit rounded-full bg-foreground px-4 py-1.5 text-xs text-background">
                     Preview · this article is a {post.status} and hidden from visitors
@@ -72,20 +82,59 @@ export default async function ArticlePage({ params, searchParams }: Props) {
             {img && (
                 <div className="container mt-14 max-w-5xl">
                     <div data-reveal="unclip" className="relative aspect-[16/9] overflow-hidden rounded-3xl border border-border bg-muted">
-                        <Image src={img} alt="" fill priority sizes="(min-width: 1024px) 1024px, 100vw" className="object-cover" unoptimized={img.startsWith('http')} />
+                        <Image src={img} alt="" fill priority sizes="(min-width: 1024px) 1024px, 100vw" className="object-cover" unoptimized={skipOptimization(img)} />
                     </div>
                 </div>
             )}
 
-            <div className="container mt-16 max-w-3xl">
-                <Markdown>{post.content}</Markdown>
-                <div className="mt-20 border-t border-border pt-8">
-                    <Link href="/blog" className="group inline-flex items-center gap-1.5 text-sm font-medium">
-                        <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-                        <span className="link-draw">Back to all writing</span>
-                    </Link>
+            <ReadingProgress targetId="article-body" />
+
+            <div className="container mt-16 grid max-w-6xl gap-12 lg:grid-cols-[1fr_220px]">
+                <div id="article-body" className="min-w-0 max-w-3xl">
+                    <Markdown>{post.content}</Markdown>
                 </div>
+
+                {/* Table of contents for longer articles */}
+                {toc.length >= 3 && (
+                    <nav aria-label="On this page" className="hidden lg:block">
+                        <div className="sticky top-28">
+                            <p className="eyebrow">On this page</p>
+                            <ol className="mt-4 space-y-2 border-l border-border text-sm">
+                                {toc.map((item) => (
+                                    <li key={item.id} className={item.level === 3 ? 'pl-7' : 'pl-4'}>
+                                        <a href={`#${item.id}`} className="-ml-px block border-l border-transparent pl-0 text-muted-foreground transition-colors hover:text-foreground">
+                                            {item.text}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ol>
+                        </div>
+                    </nav>
+                )}
             </div>
+
+            {/* Previous / next on-site article */}
+            <nav aria-label="More articles" className="container mt-24 max-w-6xl">
+                <div className="grid gap-6 border-t border-border pt-10 sm:grid-cols-2">
+                    {prev ? (
+                        <Link href={`/blog/${prev.slug}`} className="group block">
+                            <span className="eyebrow inline-flex items-center gap-1"><ArrowLeft className="h-3 w-3" /> Previous</span>
+                            <span className="mt-2 block font-headline text-2xl font-semibold tracking-tight transition-colors group-hover:text-primary">{prev.title}</span>
+                        </Link>
+                    ) : (
+                        <Link href="/blog" className="group block">
+                            <span className="eyebrow inline-flex items-center gap-1"><ArrowLeft className="h-3 w-3" /> Back</span>
+                            <span className="mt-2 block font-headline text-2xl font-semibold tracking-tight transition-colors group-hover:text-primary">All writing</span>
+                        </Link>
+                    )}
+                    {next && (
+                        <Link href={`/blog/${next.slug}`} className="group block sm:text-right">
+                            <span className="eyebrow inline-flex items-center gap-1">Next <ArrowRight className="h-3 w-3" /></span>
+                            <span className="mt-2 block font-headline text-2xl font-semibold tracking-tight transition-colors group-hover:text-primary">{next.title}</span>
+                        </Link>
+                    )}
+                </div>
+            </nav>
 
             <RevealObserver />
         </article>

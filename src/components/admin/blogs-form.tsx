@@ -11,6 +11,7 @@ import { TagInput } from '@/components/ui/tag-input';
 import { FileText, Plus, Trash2, Edit, Save, X, ExternalLink, UploadCloud, MessageSquare, ListOrdered, Eye, Tag, Calendar } from 'lucide-react';
 import { useAdminAction } from './use-admin-action';
 import { BookOpen, Link2 } from 'lucide-react';
+import { MarkdownEditor, clearDraft } from './markdown-editor';
 import { StatusToggle } from './status-toggle';
 
 export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
@@ -62,7 +63,10 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
                 editingId === 'new' ? addBlogAction(formData) : updateBlogAction(formData.id, formData),
                 'Post saved.'
             );
-            if (ok) setEditingId(null);
+            if (ok) {
+                clearDraft(`blog-${editingId}-content`);
+                setEditingId(null);
+            }
         });
     };
 
@@ -168,8 +172,14 @@ export function AdminBlogsForm({ initialData }: { initialData: any[] }) {
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="blog-content">Article (Markdown)</Label>
-                                <Textarea id="blog-content" className="bg-background min-h-[320px] font-mono text-sm" placeholder={'## Heading\n\nWrite your article here. **Bold**, lists, links, `code` and tables all work.'} value={formData.content || ''} onChange={e => setFormData({ ...formData, content: e.target.value })} />
-                                <p className="text-xs text-muted-foreground">{(formData.content || '').split(/\s+/).filter(Boolean).length} words</p>
+                                <MarkdownEditor
+                                    id="blog-content"
+                                    draftKey={`blog-${editingId}-content`}
+                                    minHeight={360}
+                                    placeholder={'## Heading\n\nWrite your article here. **Bold**, lists, links, `code` and tables all work.'}
+                                    value={formData.content || ''}
+                                    onChange={(v) => setFormData((prev: any) => ({ ...prev, content: v }))}
+                                />
                             </div>
                         </div>
 

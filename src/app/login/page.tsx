@@ -11,6 +11,9 @@ import Link from 'next/link';
 
 function LoginForm() {
     const [password, setPassword] = useState('');
+    // Shown when the server asks for a two-factor code (ADMIN_TOTP_SECRET is set)
+    const [code, setCode] = useState('');
+    const [needsCode, setNeedsCode] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const searchParams = useSearchParams();
@@ -27,7 +30,7 @@ function LoginForm() {
             const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password }),
+                body: JSON.stringify({ password, ...(needsCode ? { code } : {}) }),
             });
 
             const data = await res.json();
@@ -35,6 +38,11 @@ function LoginForm() {
             if (res.ok && data.success) {
                 // Force a hard navigation to apply the middleware cookie properly
                 window.location.href = callbackUrl;
+            } else if (data.needsCode) {
+                // Password was right; ask for the authenticator code (no error on the first prompt)
+                if (needsCode) setError(data.message);
+                setNeedsCode(true);
+                setCode('');
             } else {
                 setError(data.message || 'Invalid password');
             }
@@ -62,6 +70,26 @@ function LoginForm() {
                     className="h-12 rounded-xl bg-background"
                 />
             </div>
+            {needsCode && (
+                <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-300">
+                    <Label htmlFor="code" className="text-sm text-muted-foreground">
+                        Authenticator code
+                    </Label>
+                    <Input
+                        id="code"
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        pattern="[0-9 ]{6,7}"
+                        maxLength={7}
+                        placeholder="123 456"
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        autoFocus
+                        required
+                        className="h-12 rounded-xl bg-background font-mono tracking-[0.3em]"
+                    />
+                </div>
+            )}
             {error && <p role="alert" className="rounded-xl bg-destructive/10 p-3 text-center text-sm text-destructive">{error}</p>}
             <Button type="submit" className="h-12 w-full rounded-full bg-foreground text-background hover:bg-foreground/90" disabled={isLoading}>
                 {isLoading ? 'Signing in…' : 'Sign in'}

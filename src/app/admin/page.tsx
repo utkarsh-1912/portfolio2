@@ -1,4 +1,4 @@
-import { getHero, getAbout, getProjects, getEducation, getBlogs, getContacts, getSkills, getCertifications } from '../../db/queries';
+import { getHero, getAbout, getProjects, getEducation, getBlogs, getContacts, getSkills, getCertifications, getTestimonials, getAllPages } from '../../db/queries';
 import { AdminHeroForm } from '../../components/admin/hero-form';
 import { AdminAboutForm } from '../../components/admin/about-form';
 import { AdminProjectsForm } from '../../components/admin/projects-form';
@@ -7,6 +7,8 @@ import { AdminBlogsForm } from '../../components/admin/blogs-form';
 import { AdminContactsView } from '../../components/admin/contacts-list';
 import { AdminCertificationsForm } from '../../components/admin/certifications-form';
 import { AdminPageHeader } from '../../components/admin/admin-ui';
+import { AdminTestimonialsForm } from '../../components/admin/testimonials-form';
+import { AdminPagesForm } from '../../components/admin/pages-form';
 import { ArrowRight, ArrowUpRight, Award, Code, FileText, GraduationCap, Mail, Plus } from 'lucide-react';
 import Link from 'next/link';
 
@@ -22,7 +24,7 @@ export default async function AdminPage({
     const rawParams = await searchParams;
     const tab = (rawParams?.tab as string) || 'dashboard';
 
-    const [hero, about, projects, education, skillsData, blogs, contacts, certifications] = await Promise.all([
+    const [hero, about, projects, education, skillsData, blogs, contacts, certifications, testimonials, sitePages] = await Promise.all([
         getHero(),
         getAbout(),
         getProjects({ includeDrafts: true }),
@@ -31,6 +33,8 @@ export default async function AdminPage({
         getBlogs({ includeDrafts: true }),
         getContacts(),
         getCertifications({ includeDrafts: true }),
+        getTestimonials({ includeDrafts: true }),
+        getAllPages(),
     ]);
 
     const unread = contacts.filter((c) => c.status === 'unread');
@@ -143,6 +147,8 @@ export default async function AdminPage({
             {tab === 'certifications' && <AdminCertificationsForm initialData={certifications} />}
             {tab === 'blogs' && <AdminBlogsForm initialData={blogs} />}
             {tab === 'contacts' && <AdminContactsView initialData={contacts} />}
+            {tab === 'testimonials' && <AdminTestimonialsForm initialData={testimonials} />}
+            {tab === 'pages' && <AdminPagesForm initialData={sitePages as any} />}
         </div>
     );
 }

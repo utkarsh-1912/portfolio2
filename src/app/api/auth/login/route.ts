@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { SESSION_COOKIE, SESSION_MAX_AGE_SECONDS, createSessionToken, safeEqual } from '@/lib/auth';
 import { clientIp, rateLimit, resetRateLimit } from '@/lib/rate-limit';
+import { verifyTotp } from '@/lib/totp';
 
 export async function POST(request: Request) {
     try {
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
             );
         }
 
-        const { password } = await request.json();
+        const { password, code } = await request.json();
 
         const adminPassword = process.env.ADMIN_PASSWORD;
 
@@ -28,6 +29,16 @@ export async function POST(request: Request) {
         }
 
         if (typeof password === 'string' && (await safeEqual(password, adminPassword))) {
+            // Optional second factor: a 6-digit code from an authenticator app
+            const totpSecret = process.env.ADMIN_TOTP_SECRET;
+            if (totpSecret) {
+                if (typeof code !== 'string' || !code) {
+                    return NextResponse.json({ success: false, needsCode: true, message: 'Enter the 6-digit code from your authenticator app.' }, { status: 401 });
+                }
+                if (!(await verifyTotp(totpSecret, code.replace(/\s/g, '')))) {
+                    return NextResponse.json({ success: false, needsCode: true, message: 'That code is incorrect or expired.' }, { status: 401 });
+                }
+            }
             resetRateLimit(limitKey);
             const response = NextResponse.json({ success: true }, { status: 200 });
 

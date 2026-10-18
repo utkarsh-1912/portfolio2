@@ -47,7 +47,8 @@ export function ScrambleText({ text, className, duration = 700 }: { text: string
     }, [text, duration]);
 
     return (
-        <span ref={ref} className={className} aria-label={text}>
+        <span ref={ref} className={className}>
+            <span className="sr-only">{text}</span>
             <span aria-hidden="true">{display}</span>
         </span>
     );

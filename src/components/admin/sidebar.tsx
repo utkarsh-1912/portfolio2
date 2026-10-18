@@ -15,6 +15,8 @@ import {
     ArrowUpRight,
     Mail,
     Award,
+    MessageSquareQuote,
+    Files,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
@@ -36,6 +38,8 @@ const navGroups = [
             { href: '/admin?tab=certifications', id: 'certifications', label: 'Certifications', icon: Award },
             { href: '/admin?tab=projects', id: 'projects', label: 'Projects', icon: Code },
             { href: '/admin?tab=blogs', id: 'blogs', label: 'Writing', icon: FileText },
+            { href: '/admin?tab=testimonials', id: 'testimonials', label: 'Testimonials', icon: MessageSquareQuote },
+            { href: '/admin?tab=pages', id: 'pages', label: 'Now & Uses', icon: Files },
         ],
     },
     {

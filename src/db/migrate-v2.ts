@@ -86,6 +86,35 @@ async function main() {
         }
     }
 
+    // New: testimonials and free-form pages (/now, /uses)
+    await sql`CREATE TABLE IF NOT EXISTS testimonials (
+        id serial PRIMARY KEY,
+        quote text NOT NULL,
+        name text NOT NULL,
+        role text,
+        company text,
+        avatar_url text,
+        link_url text,
+        sequence integer DEFAULT 0,
+        status text DEFAULT 'active',
+        created_at timestamp DEFAULT now()
+    )`;
+    await sql`CREATE TABLE IF NOT EXISTS pages (
+        id serial PRIMARY KEY,
+        slug text NOT NULL UNIQUE,
+        title text NOT NULL,
+        intro text,
+        content text,
+        status text DEFAULT 'active',
+        updated_at timestamp DEFAULT now()
+    )`;
+    // Start /now and /uses as drafts so nothing empty goes live
+    await sql`INSERT INTO pages (slug, title, intro, status) VALUES
+        ('now', 'Now', 'What I''m focused on at the moment.', 'draft'),
+        ('uses', 'Uses', 'The tools, hardware and software I use every day.', 'draft')
+        ON CONFLICT (slug) DO NOTHING`;
+    console.log('✓ testimonials and pages tables ready');
+
     console.log('Done!');
 }
 

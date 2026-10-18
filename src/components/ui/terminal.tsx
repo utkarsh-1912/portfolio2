@@ -7,6 +7,7 @@ import { useTheme } from '@/components/theme-provider';
 import { LogoMark } from '@/components/ui/logo-mark';
 import { cn } from '@/lib/utils';
 import { articleHref } from '@/lib/site';
+import { trackEvent } from '@/lib/analytics';
 
 type TerminalData = {
     hero: any;
@@ -420,6 +421,7 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
 
     // Boot sequence on first open
     useEffect(() => {
+        if (isOpen) trackEvent('terminal_open');
         if (!isOpen || booted) return;
         setBooted(true);
         const lines = ['Booting utkristi-sh 2.0…', `Loaded ${projects.length} projects, ${blogs.length} articles.`];

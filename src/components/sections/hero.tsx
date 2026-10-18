@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
+import { skipOptimization } from '@/lib/images';
 import { ArrowDown, ArrowRight, ArrowUpRight } from 'lucide-react';
 import profileImage from '@/app/profile.jpg';
 import { AnimatedText } from '../ui/animated-text';
@@ -36,7 +37,7 @@ export async function HeroSection() {
             <p data-reveal="up" className="eyebrow flex items-center gap-3">
               {/* Small portrait on phones, where the large one is hidden */}
               <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-muted lg:hidden">
-                <Image src={photoSrc} alt="" fill sizes="36px" className="object-cover" unoptimized={!!heroData?.photoUrl} />
+                <Image src={photoSrc} alt="" fill sizes="36px" className="object-cover" unoptimized={skipOptimization(heroData?.photoUrl)} />
               </span>
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
@@ -60,13 +61,13 @@ export async function HeroSection() {
 
             <div data-reveal="up" style={{ '--i': 6 } as React.CSSProperties} className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10">
               <Button asChild size="lg" className="group h-12 rounded-full px-7 text-base">
-                <Link href="/#projects" data-magnetic>
+                <Link href="/#projects" data-magnetic data-track="cta_view_work">
                   <RollText>View my work</RollText>
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="group h-12 rounded-full border-foreground/20 bg-transparent px-7 text-base hover:bg-foreground/5">
-                <Link href="/#contact" data-magnetic><RollText>Get in touch</RollText></Link>
+                <Link href="/#contact" data-magnetic data-track="cta_get_in_touch" data-track-label="hero"><RollText>Get in touch</RollText></Link>
               </Button>
             </div>
 
@@ -75,6 +76,8 @@ export async function HeroSection() {
                 {heroData?.resumeUrl && (
                   <a
                     href={heroData.resumeUrl}
+                    data-track="resume_open"
+                    data-track-label="hero"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-1.5 font-mono text-xs uppercase tracking-widest transition-colors hover:border-foreground/40"
@@ -100,7 +103,7 @@ export async function HeroSection() {
                 sizes="420px"
                 className="object-cover grayscale transition-[filter,transform] duration-1000 group-hover:scale-[1.02] group-hover:grayscale-0"
                 priority
-                unoptimized={!!heroData?.photoUrl}
+                unoptimized={skipOptimization(heroData?.photoUrl)}
               />
               <figcaption className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-full bg-background/75 px-4 py-2 font-mono text-[11px] uppercase tracking-widest backdrop-blur-md">
                 <span className="text-muted-foreground">{name}</span>

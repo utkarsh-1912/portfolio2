@@ -18,7 +18,7 @@ const SOCIAL = [
   { name: 'X', href: 'https://x.com/Utkarsh191201' },
 ];
 
-export function SiteFooter() {
+export function SiteFooter({ extraLinks = [] }: { extraLinks?: { name: string; href: string }[] }) {
   const pathname = usePathname();
 
   if (pathname.startsWith('/admin') || pathname.startsWith('/login')) {
@@ -40,7 +40,7 @@ export function SiteFooter() {
         <nav className="md:col-span-3" aria-label="Footer">
           <p className="eyebrow">Index</p>
           <ul className="mt-4 space-y-2">
-            {NAV.map((item) => (
+            {[...NAV, ...extraLinks].map((item) => (
               <li key={item.name}>
                 <Link href={item.href} className="link-draw text-foreground/80 transition-colors hover:text-foreground">
                   {item.name}

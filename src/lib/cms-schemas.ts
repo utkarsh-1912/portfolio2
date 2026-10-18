@@ -122,6 +122,24 @@ export const certificationInput = z
         path: ['expiryDate'],
     });
 
+export const testimonialInput = z.object({
+    quote: z.string().trim().min(1).max(2000),
+    name: z.string().trim().min(1).max(120),
+    role: z.string().trim().max(120).nullish().transform((v) => v || null),
+    company: z.string().trim().max(120).nullish().transform((v) => v || null),
+    avatarUrl: optionalUrl,
+    linkUrl: optionalUrl,
+    sequence: z.coerce.number().int().min(-1000).max(1000).catch(0),
+    status: z.enum(CONTENT_STATUSES).nullish().transform((v) => v ?? 'active'),
+});
+
+export const pageInput = z.object({
+    title: z.string().trim().min(1).max(120),
+    intro: z.string().trim().max(500).nullish().transform((v) => v || null),
+    content: markdown(100000),
+    status: z.enum(CONTENT_STATUSES).nullish().transform((v) => v ?? 'active'),
+});
+
 export const skillCategoryInput = z.object({
     category: z.string().trim().min(1).max(80),
     categoryIcon: z.string().trim().min(1).max(60),

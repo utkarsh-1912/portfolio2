@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { X, ArrowUpRight, ArrowLeft, ArrowRight, Star, GitFork } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { resolveImage, hasLink } from '@/lib/images';
+import { resolveImage, hasLink, skipOptimization } from '@/lib/images';
 import { ProjectPlaceholder } from '@/components/sections/project-placeholder';
 
 export type ProjectModalData = {
@@ -96,7 +96,7 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                 {/* Visual */}
                 <div key={project.id} className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-muted animate-in fade-in duration-500 md:aspect-auto md:h-full md:min-h-0">
                     {img ? (
-                        <Image src={img} alt="" fill sizes="(min-width: 768px) 55vw, 100vw" className="object-cover" unoptimized={img.startsWith('http')} />
+                        <Image src={img} alt="" fill sizes="(min-width: 768px) 55vw, 100vw" className="object-cover" unoptimized={skipOptimization(img)} />
                     ) : (
                         <ProjectPlaceholder title={project.title} tags={project.tags} className="p-8 sm:p-10" />
                     )}
@@ -169,7 +169,7 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                         <div className="flex shrink-0 flex-wrap gap-3 border-t border-border px-6 py-5 sm:px-8">
                             {project.slug && (
                                 <Link
-                                    href={`/projects/${project.slug}`}
+                                    href={`/projects/${project.slug}`} data-track="case_study_open"
                                     onClick={onClose}
                                     className="inline-flex h-11 items-center gap-1.5 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground"
                                 >

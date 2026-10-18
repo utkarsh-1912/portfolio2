@@ -10,7 +10,7 @@ interface SplitTextProps {
 
 /**
  * Splits text into words and characters that rise into place when revealed.
- * Screen readers get the plain text via aria-label; the split spans are hidden.
+ * Screen readers get the plain text from a visually hidden copy; the split spans are hidden.
  */
 export function SplitText({ text, className, delay = 0, as: Tag = 'span' }: SplitTextProps) {
   let charIndex = 0;
@@ -18,10 +18,10 @@ export function SplitText({ text, className, delay = 0, as: Tag = 'span' }: Spli
   return (
     <Tag
       className={cn(className)}
-      aria-label={text}
       data-reveal="chars"
       style={{ '--i': delay } as React.CSSProperties}
     >
+      <span className="sr-only">{text}</span>
       {text.split(' ').map((word, w, words) => (
         <span key={w} aria-hidden="true">
           <span className="split-line">

@@ -69,7 +69,7 @@ export async function GitHubActivitySection() {
             <div className="container">
                 <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <p data-reveal="up" className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/50">On GitHub</p>
+                        <p data-reveal="up" className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/70">On GitHub</p>
                         <h2 id="github-activity-title" data-reveal="up" className="mt-4 font-headline text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
                             {calendar.total.toLocaleString('en-US')} contributions this year.
                         </h2>
@@ -93,7 +93,7 @@ export async function GitHubActivitySection() {
                             const older = wi < weeks.length - MOBILE_WEEKS;
                             return (
                                 <div key={wi} style={{ '--wk': wi } as React.CSSProperties} className={cn('heat-col flex flex-1 flex-col gap-[3px]', older && 'hidden md:flex')}>
-                                    <span className="mb-1 h-3 font-mono text-[9px] uppercase leading-none text-white/40">{monthLabels[wi] ?? ''}</span>
+                                    <span className="mb-1 h-3 font-mono text-[9px] uppercase leading-none text-white/70">{monthLabels[wi] ?? ''}</span>
                                     {Array.from({ length: 7 }, (_, di) => {
                                         const day = week[di];
                                         return (
@@ -109,7 +109,7 @@ export async function GitHubActivitySection() {
                             );
                         })}
                     </div>
-                    <div className="mt-4 flex items-center justify-end gap-2 font-mono text-[10px] uppercase tracking-widest text-white/40">
+                    <div className="mt-4 flex items-center justify-end gap-2 font-mono text-[10px] uppercase tracking-widest text-white/70">
                         Less
                         {LEVEL_COLORS.map((c) => (
                             <span key={c} className="h-2.5 w-2.5 rounded-[2px]" style={{ backgroundColor: c }} />
@@ -121,7 +121,7 @@ export async function GitHubActivitySection() {
                 <dl className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 md:grid-cols-4">
                     {stats.map((s, i) => (
                         <div key={s.label} data-reveal="up" data-spotlight style={{ '--i': i } as React.CSSProperties} className="bg-[#0d0c0b] p-6 sm:p-8">
-                            <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/50">{s.label}</dt>
+                            <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/70">{s.label}</dt>
                             <dd className="mt-3 font-headline text-4xl font-semibold tabular-nums tracking-tight sm:text-5xl"><CountUp value={s.value} /></dd>
                         </div>
                     ))}

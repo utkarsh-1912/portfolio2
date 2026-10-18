@@ -7,7 +7,8 @@ import { cn } from '@/lib/utils';
 export function SplitWords({ text, className, as: Tag = 'p' }: { text: string; className?: string; as?: 'p' | 'span' }) {
     const words = text.split(/\s+/);
     return (
-        <Tag className={cn(className)} data-reveal="words" aria-label={text}>
+        <Tag className={cn(className)} data-reveal="words">
+            <span className="sr-only">{text}</span>
             {words.map((word, i) => (
                 <span key={i} aria-hidden="true">
                     <span className="split-word" style={{ '--w': i } as React.CSSProperties}>{word}</span>

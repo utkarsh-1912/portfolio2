@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { RollText } from '@/components/ui/roll-text';
-import { resolveImage } from '@/lib/images';
+import { resolveImage, skipOptimization } from '@/lib/images';
 import { cn } from '@/lib/utils';
 import { articleHref } from '@/lib/site';
 
@@ -53,7 +53,7 @@ export function PostCard({ post, featured = false, compact = false, split = fals
                             alt=""
                             fill
                             sizes="(min-width: 1024px) 58vw, 100vw"
-                            unoptimized={img.startsWith('http')}
+                            unoptimized={skipOptimization(img)}
                             className="object-cover grayscale transition-[filter,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03] group-hover:grayscale-0"
                         />
                     ) : (
@@ -92,7 +92,7 @@ export function PostCard({ post, featured = false, compact = false, split = fals
                         alt=""
                         fill
                         sizes={featured ? '(min-width: 1024px) 60vw, 100vw' : '(min-width: 1024px) 30vw, 100vw'}
-                        unoptimized={img.startsWith('http')}
+                        unoptimized={skipOptimization(img)}
                         className="object-cover grayscale transition-[filter,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03] group-hover:grayscale-0"
                     />
                 ) : (

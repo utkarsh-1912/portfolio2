@@ -1,7 +1,7 @@
 import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 import { db } from './index';
-import { hero, about, projects, education, skills, blogs, contacts, certifications } from './schema';
+import { hero, about, projects, education, skills, blogs, contacts, certifications, testimonials, pages } from './schema';
 import { and, asc, desc, eq, sql } from 'drizzle-orm';
 import { sortTimeline } from '@/lib/timeline';
 
@@ -106,6 +106,30 @@ const certificationsQuery = cachedQuery(
     []
 );
 export const getCertifications = ({ includeDrafts = false }: ListOptions = {}) => certificationsQuery(includeDrafts);
+
+const testimonialsQuery = cachedQuery(
+    'getTestimonials',
+    async (includeDrafts: boolean) => {
+        let query = db.select().from(testimonials).$dynamic();
+        if (!includeDrafts) query = query.where(eq(testimonials.status, 'active'));
+        return query.orderBy(asc(testimonials.sequence), desc(testimonials.id));
+    },
+    []
+);
+export const getTestimonials = ({ includeDrafts = false }: ListOptions = {}) => testimonialsQuery(includeDrafts);
+
+const pageQuery = cachedQuery(
+    'getPage',
+    async (slug: string, includeDrafts: boolean) => {
+        const where = includeDrafts ? eq(pages.slug, slug) : and(eq(pages.slug, slug), eq(pages.status, 'active'));
+        return (await db.select().from(pages).where(where).limit(1))[0] ?? null;
+    },
+    null
+);
+/** A free-form page (/now, /uses); drafts only for admin preview. */
+export const getPage = (slug: string, { includeDrafts = false }: ListOptions = {}) => pageQuery(slug, includeDrafts);
+
+export const getAllPages = cachedQuery('getAllPages', async () => db.select().from(pages).orderBy(asc(pages.slug)), []);
 
 /** The inbox is never cached: new messages must show up immediately. */
 export async function getContacts() {

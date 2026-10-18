@@ -89,6 +89,12 @@ html {
   * {
     @apply border-border;
   }
+  /* One visible focus ring for keyboard users everywhere (mouse clicks don't show it) */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
   body {
     @apply bg-background text-foreground;
   }
@@ -267,6 +273,18 @@ html.intro-active .intro-loader {
 @keyframes intro-fallback {
   to { opacity: 0; visibility: hidden; }
 }
+
+/* Code highlighting (rehype-highlight / highlight.js classes) in the site palette */
+.hljs-comment, .hljs-quote { color: hsl(var(--muted-foreground)); font-style: italic; }
+.hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-built_in, .hljs-meta .hljs-keyword { color: hsl(var(--primary)); }
+.hljs-string, .hljs-regexp, .hljs-addition, .hljs-attr .hljs-string { color: hsl(152 45% 38%); }
+.dark .hljs-string, .dark .hljs-regexp, .dark .hljs-addition { color: hsl(152 45% 62%); }
+.hljs-number, .hljs-symbol, .hljs-variable, .hljs-template-variable { color: hsl(28 80% 45%); }
+.dark .hljs-number, .dark .hljs-symbol, .dark .hljs-variable { color: hsl(28 85% 65%); }
+.hljs-title, .hljs-title.function_, .hljs-section, .hljs-name { color: hsl(var(--foreground)); font-weight: 600; }
+.hljs-attr, .hljs-attribute, .hljs-property, .hljs-type, .hljs-params { color: hsl(205 70% 42%); }
+.dark .hljs-attr, .dark .hljs-attribute, .dark .hljs-property, .dark .hljs-type { color: hsl(205 80% 68%); }
+.hljs-deletion { color: hsl(var(--destructive)); }
 
 /* Page enter transition (used by app/template.tsx) */
 /* Fade only, and nothing kept after it ends ('backwards'): a lingering transform on this

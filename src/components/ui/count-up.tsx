@@ -42,7 +42,8 @@ export function CountUp({ value, className, duration = 1400 }: { value: string |
 
     const shown = current === null || !Number.isFinite(target) ? text : `${current.toLocaleString('en-US')}${suffix}`;
     return (
-        <span ref={ref} className={className} aria-label={text}>
+        <span ref={ref} className={className}>
+            <span className="sr-only">{text}</span>
             <span aria-hidden="true">{shown}</span>
         </span>
     );

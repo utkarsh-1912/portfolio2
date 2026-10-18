@@ -11,6 +11,7 @@ import { RevealObserver } from '@/components/ui/reveal-observer';
 import { SkillsMarquee } from '@/components/sections/skills-marquee';
 import { CertificationsSection } from '@/components/sections/certifications';
 import { GitHubActivitySection } from '@/components/sections/github-activity';
+import { TestimonialsSection } from '@/components/sections/testimonials';
 
 /** Placeholder with the section's anchor id, so /#projects still scrolls there while it loads. */
 function SectionSkeleton({ id }: { id: string }) {
@@ -26,7 +27,8 @@ function SectionSkeleton({ id }: { id: string }) {
 }
 
 export const metadata: Metadata = {
-  alternates: { canonical: '/' },
+  // Page-level alternates replace the layout's, so the RSS link is repeated here
+  alternates: { canonical: '/', types: { 'application/rss+xml': [{ url: '/feed.xml', title: 'Utkarsh Gupta — Writing' }] } },
 };
 
 export default async function Home() {
@@ -46,6 +48,7 @@ export default async function Home() {
       <Suspense fallback={<div className="min-h-[70vh] bg-[#0d0c0b]" aria-hidden="true" />}>
         <GitHubActivitySection />
       </Suspense>
+      <TestimonialsSection />
       <Suspense fallback={<div className="min-h-[60vh] border-t border-border" aria-hidden="true" />}>
         <BlogSection />
       </Suspense>

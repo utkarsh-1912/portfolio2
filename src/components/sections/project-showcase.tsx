@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { skipOptimization } from '@/lib/images';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight, Star, GitFork } from 'lucide-react';
 import { ProjectPlaceholder } from './project-placeholder';
@@ -62,7 +63,7 @@ export function ProjectShowcase({ projects, onOpen }: { projects: ShowcaseProjec
                         <div key={active.id} className="mt-8 animate-in fade-in slide-in-from-bottom-3 duration-500">
                             <h3 className="font-headline text-4xl font-semibold tracking-tight text-foreground xl:text-5xl">{active.title}</h3>
                             <p className="mt-5 line-clamp-5 leading-relaxed text-muted-foreground">{active.description}</p>
-                            <p className="mt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground/80">
+                            <p className="mt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
                                 {active.tags.slice(0, 6).join(' · ')}
                             </p>
                             {active.githubStats && (
@@ -74,7 +75,7 @@ export function ProjectShowcase({ projects, onOpen }: { projects: ShowcaseProjec
                             )}
                             <div className="mt-8 flex items-center gap-3">
                                 {active.slug && (
-                                    <Link href={`/projects/${active.slug}`} data-magnetic className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+                                    <Link href={`/projects/${active.slug}`} data-track="case_study_open" data-magnetic className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
                                         Case study <ArrowRight className="h-4 w-4" />
                                     </Link>
                                 )}
@@ -155,7 +156,7 @@ export function ProjectShowcase({ projects, onOpen }: { projects: ShowcaseProjec
                                 fill
                                 sizes="(min-width: 1024px) 58vw, 100vw"
                                 className="object-cover scroll-zoom grayscale transition-[filter] duration-700 group-hover:grayscale-0"
-                                unoptimized={p.imageUrl.startsWith('http')}
+                                unoptimized={skipOptimization(p.imageUrl)}
                             />
                         ) : (
                             <ProjectPlaceholder title={p.title} tags={p.tags} className="p-10 [&>p:last-child]:text-6xl xl:[&>p:last-child]:text-7xl" />

@@ -6,12 +6,13 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, GitFork, Star } from 'lucide-react
 import { getProjectBySlug, getProjects } from '@/db/queries';
 import { getGitHubRepoStats } from '@/lib/api-stats';
 import { isAdmin } from '@/lib/auth-server';
-import { hasLink, resolveImage } from '@/lib/images';
+import { hasLink, resolveImage, skipOptimization } from '@/lib/images';
 import { Markdown } from '@/components/ui/markdown';
 import { RevealObserver } from '@/components/ui/reveal-observer';
 import { SplitText } from '@/components/ui/split-text';
 import { ProjectPlaceholder } from '@/components/sections/project-placeholder';
 import { hasCaseStudy } from '@/lib/projects';
+import { JsonLd, projectSchema } from '@/components/seo/json-ld';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,6 +69,7 @@ export default async function ProjectPage({ params, searchParams }: Props) {
 
     return (
         <article className="pb-24">
+            <JsonLd data={projectSchema(project)} />
             {includeDrafts && project.status !== 'active' && (
                 <div className="sticky top-20 z-40 mx-auto mt-2 w-fit rounded-full bg-foreground px-4 py-1.5 text-xs text-background">
                     Preview · this project is a {project.status} and hidden from visitors
@@ -123,7 +125,7 @@ export default async function ProjectPage({ params, searchParams }: Props) {
             <div className="container mt-16">
                 <div data-reveal="unclip" className="relative aspect-[16/9] overflow-hidden rounded-3xl border border-border bg-muted">
                     {img ? (
-                        <Image src={img} alt={`${project.title} screenshot`} fill priority sizes="(min-width: 1400px) 1400px, 100vw" className="object-cover scroll-zoom" unoptimized={img.startsWith('http')} />
+                        <Image src={img} alt={`${project.title} screenshot`} fill priority sizes="(min-width: 1400px) 1400px, 100vw" className="object-cover scroll-zoom" unoptimized={skipOptimization(img)} />
                     ) : (
                         <ProjectPlaceholder title={project.title} tags={project.tags} className="p-10 md:p-16 [&>p:last-child]:text-6xl md:[&>p:last-child]:text-8xl" />
                     )}

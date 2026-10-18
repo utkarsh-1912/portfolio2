@@ -42,7 +42,7 @@ export function CertificationCard({ cert, index }: { cert: Certification; index:
                 <h3 className="mt-2 font-headline text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">{cert.title}</h3>
                 {meta && <p className="mt-3 text-sm text-muted-foreground">{meta}</p>}
                 {cert.skills && cert.skills.length > 0 && (
-                    <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-muted-foreground/80">{cert.skills.slice(0, 4).join(' · ')}</p>
+                    <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{cert.skills.slice(0, 4).join(' · ')}</p>
                 )}
                 {verify && (
                     <span className="mt-6 inline-flex items-center gap-1 text-sm font-medium">

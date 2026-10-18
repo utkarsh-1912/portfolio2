@@ -13,7 +13,11 @@ export default function Error({
     const [showDetails, setShowDetails] = useState(false);
 
     useEffect(() => {
-        console.error(error)
+        console.error(error);
+        // Report to Sentry when it's configured; the SDK is only loaded in that case
+        if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+            import('@sentry/nextjs').then((Sentry) => Sentry.captureException(error));
+        }
     }, [error]);
 
     return (
