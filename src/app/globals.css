@@ -269,13 +269,15 @@ html.intro-active .intro-loader {
 }
 
 /* Page enter transition (used by app/template.tsx) */
+/* Fade only, and nothing kept after it ends ('backwards'): a lingering transform on this
+   wrapper would make fixed/sticky descendants (popups, the pinned showcase) position
+   against the wrapper instead of the viewport */
 @keyframes page-enter {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .page-enter {
-    animation: page-enter 0.7s var(--ease-out) both;
+    animation: page-enter 0.5s var(--ease-out) backwards;
   }
 }
 
