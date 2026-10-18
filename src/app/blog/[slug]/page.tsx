@@ -9,6 +9,7 @@ import { ReadingProgress } from '@/components/ui/reading-progress';
 import { isAdmin } from '@/lib/auth-server';
 import { resolveImage, skipOptimization } from '@/lib/images';
 import { Markdown } from '@/components/ui/markdown';
+import { TableOfContents } from '@/components/ui/table-of-contents';
 import { RevealObserver } from '@/components/ui/reveal-observer';
 import { SplitText } from '@/components/ui/split-text';
 import { JsonLd, articleSchema } from '@/components/seo/json-ld';
@@ -96,20 +97,7 @@ export default async function ArticlePage({ params, searchParams }: Props) {
 
                 {/* Table of contents for longer articles */}
                 {toc.length >= 3 && (
-                    <nav aria-label="On this page" className="hidden lg:block">
-                        <div className="sticky top-28">
-                            <p className="eyebrow">On this page</p>
-                            <ol className="mt-4 space-y-2 border-l border-border text-sm">
-                                {toc.map((item) => (
-                                    <li key={item.id} className={item.level === 3 ? 'pl-7' : 'pl-4'}>
-                                        <a href={`#${item.id}`} className="-ml-px block border-l border-transparent pl-0 text-muted-foreground transition-colors hover:text-foreground">
-                                            {item.text}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
-                    </nav>
+                    <TableOfContents items={toc} />
                 )}
             </div>
 

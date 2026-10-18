@@ -16,7 +16,7 @@ export function Markdown({ children, className }: { children: string; className?
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeSlug, rehypeHighlight]}
                 components={{
-                    h1: ({ children }) => <h2 className="mt-14 font-headline text-3xl font-semibold tracking-tight text-foreground first:mt-0 md:text-4xl">{children}</h2>,
+                    h1: ({ children, id }) => <h2 id={id} className="mt-14 scroll-mt-28 font-headline text-3xl font-semibold tracking-tight text-foreground first:mt-0 md:text-4xl">{children}</h2>,
                     h2: ({ children, id }) => <h2 id={id} className="mt-14 scroll-mt-28 font-headline text-3xl font-semibold tracking-tight text-foreground first:mt-0 md:text-4xl">{children}</h2>,
                     h3: ({ children, id }) => <h3 id={id} className="mt-10 scroll-mt-28 font-headline text-2xl font-semibold tracking-tight text-foreground first:mt-0">{children}</h3>,
                     h4: ({ children }) => <h4 className="mt-8 font-semibold text-foreground first:mt-0">{children}</h4>,

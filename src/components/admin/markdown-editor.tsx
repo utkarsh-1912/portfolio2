@@ -13,8 +13,8 @@ export function clearDraft(key: string) {
 }
 
 /**
- * Markdown textarea with a live preview (tabs on small screens, side by side on wide ones)
- * and local autosave: unsaved text survives a closed tab, and is offered back on return.
+ * Full-width Markdown editor/preview toggle with local autosave: unsaved text survives
+ * a closed tab, and is offered back on return.
  */
 export function MarkdownEditor({
     id,
@@ -67,16 +67,18 @@ export function MarkdownEditor({
                 </div>
             )}
 
-            <div className="flex items-center justify-between gap-2 lg:hidden" role="tablist">
+            <div className="flex items-center justify-between gap-2">
                 <div className="flex gap-1 rounded-full bg-muted p-1">
                     {(['write', 'preview'] as const).map((t) => (
                         <button
                             key={t}
                             type="button"
-                            role="tab"
-                            aria-selected={tab === t}
+                            aria-pressed={tab === t}
                             onClick={() => setTab(t)}
-                            className={cn('rounded-full px-3 py-1 text-xs capitalize', tab === t ? 'bg-background shadow-sm' : 'text-muted-foreground')}
+                            className={cn(
+                                'rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors',
+                                tab === t ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                            )}
                         >
                             {t}
                         </button>
@@ -84,19 +86,19 @@ export function MarkdownEditor({
                 </div>
             </div>
 
-            <div className="grid gap-3 lg:grid-cols-2">
+            <div className="w-full">
                 <Textarea
                     id={id}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
                     style={{ minHeight }}
-                    className={cn('bg-background font-mono text-sm', tab === 'preview' && 'hidden lg:flex')}
+                    className={cn('bg-background font-mono text-sm', tab === 'preview' && 'hidden')}
                 />
                 <div
                     aria-label="Preview"
                     style={{ minHeight }}
-                    className={cn('overflow-auto rounded-xl border border-dashed border-border bg-background/50 p-4', tab === 'write' && 'hidden lg:block')}
+                    className={cn('w-full overflow-auto rounded-xl border border-dashed border-border bg-background/50 p-4', tab === 'write' && 'hidden')}
                 >
                     {value.trim() ? <Markdown className="text-sm md:text-base">{value}</Markdown> : <p className="text-sm text-muted-foreground">Preview appears here.</p>}
                 </div>

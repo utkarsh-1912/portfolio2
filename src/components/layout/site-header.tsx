@@ -90,11 +90,10 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
-            className="hidden h-9 items-center gap-2 rounded-full border border-border px-3 text-xs text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground sm:inline-flex"
+            className="hidden h-9 items-center gap-2 px-3 text-xs text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
           >
             <Search className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="sr-only">Search</span>
-            <kbd className="font-mono text-[10px]">⌘K</kbd>
           </button>
           <ThemeToggle />
           <Button asChild size="sm" className="group ml-1 hidden rounded-full px-4 md:inline-flex">
