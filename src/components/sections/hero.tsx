@@ -34,7 +34,7 @@ export async function HeroSection() {
       <div className="container relative z-10 flex flex-1 flex-col justify-center scroll-hero-out">
         <div className="grid grid-cols-1 items-end gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <p data-reveal="up" className="eyebrow flex items-center gap-3">
+            <p data-reveal="up" className="eyebrow flex items-center gap-1.5 lg:gap-3">
               {/* Small portrait on phones, where the large one is hidden */}
               <span className="relative h-9 w-9 shrink-0 lg:hidden">
                 <span aria-hidden="true" className="avatar-ring absolute -inset-0.5 rounded-full border border-primary/70" />
@@ -70,7 +70,7 @@ export async function HeroSection() {
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
                 </Link>
               </Button>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 lg:gap-3">
                 <Button asChild variant="outline" size="lg" className="group h-12 rounded-full border-foreground/20 bg-transparent px-7 text-base hover:bg-foreground/5">
                   <Link href="/#contact" data-magnetic data-track="cta_get_in_touch" data-track-label="hero"><RollText>Get in touch</RollText></Link>
                 </Button>
