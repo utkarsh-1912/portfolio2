@@ -43,7 +43,7 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
                                 <a
                                     href={`#${item.id}`}
                                     aria-current={active ? 'location' : undefined}
-                                    className={`-ml-px block border-l pl-0 transition-colors ${
+                                    className={`-ml-px block pl-0 transition-colors ${
                                         active
                                             ? 'border-primary text-foreground'
                                             : 'border-transparent text-muted-foreground hover:text-foreground'
