@@ -50,7 +50,7 @@ export function Markdown({ children, className }: { children: string; className?
                         </div>
                     ),
                     th: ({ children }) => <th className="border-b border-border bg-muted/40 px-4 py-2 font-medium text-foreground">{children}</th>,
-                    td: ({ children }) => <td className="border-b border-border px-4 py-2 last:border-0">{children}</td>,
+                    td: ({ children }) => <td className="border-b border-border px-4 py-2">{children}</td>,
                 }}
             >
                 {children}
