@@ -36,10 +36,14 @@ export async function HeroSection() {
           <div className="lg:col-span-7">
             <p data-reveal="up" className="eyebrow flex items-center gap-3">
               {/* Small portrait on phones, where the large one is hidden */}
-              <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-muted lg:hidden">
-                <Image src={photoSrc} alt="" fill sizes="36px" className="object-cover" unoptimized={skipOptimization(heroData?.photoUrl)} />
+              <span className="relative h-9 w-9 shrink-0 lg:hidden">
+                <span aria-hidden="true" className="avatar-ring absolute -inset-0.5 rounded-full border border-primary/70" />
+                <span className="absolute inset-0 overflow-hidden rounded-full bg-muted">
+                  <Image src={photoSrc} alt="" fill sizes="36px" className="object-cover" unoptimized={skipOptimization(heroData?.photoUrl)} />
+                </span>
+                <span aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 rounded-full border border-primary" />
               </span>
-              <span className="relative flex h-2 w-2">
+              <span className="relative hidden h-2 w-2 lg:flex">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
               </span>
