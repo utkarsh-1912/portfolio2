@@ -70,9 +70,18 @@ export async function HeroSection() {
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="group h-12 rounded-full border-foreground/20 bg-transparent px-7 text-base hover:bg-foreground/5">
-                <Link href="/#contact" data-magnetic data-track="cta_get_in_touch" data-track-label="hero"><RollText>Get in touch</RollText></Link>
-              </Button>
+              <div className="flex items-center gap-3">
+                <Button asChild variant="outline" size="lg" className="group h-12 rounded-full border-foreground/20 bg-transparent px-7 text-base hover:bg-foreground/5">
+                  <Link href="/#contact" data-magnetic data-track="cta_get_in_touch" data-track-label="hero"><RollText>Get in touch</RollText></Link>
+                </Button>
+                {heroData?.resumeUrl && (
+                  <Button asChild variant="outline" size="lg" className="group h-12 rounded-full border-foreground/20 bg-transparent px-5 text-base hover:bg-foreground/5 lg:hidden">
+                    <a href={heroData.resumeUrl} data-track="resume_open" data-track-label="hero" target="_blank" rel="noopener noreferrer">
+                      Resume <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </a>
+                  </Button>
+                )}
+              </div>
             </div>
 
             <div data-reveal="up" style={{ '--i': 7 } as React.CSSProperties}>
@@ -84,7 +93,7 @@ export async function HeroSection() {
                     data-track-label="hero"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-1.5 font-mono text-xs uppercase tracking-widest transition-colors hover:border-foreground/40"
+                    className="group hidden items-center gap-1.5 rounded-full border border-border px-3.5 py-1.5 font-mono text-xs uppercase tracking-widest transition-colors hover:border-foreground/40 lg:inline-flex"
                   >
                     Resume <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </a>
