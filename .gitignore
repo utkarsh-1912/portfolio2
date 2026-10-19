@@ -48,3 +48,6 @@ next-env.d.ts
 # Local tooling and one-off database backups
 /.claude/
 db-backup-*.json
+
+# Sentry Config File
+.env.sentry-build-plugin
