@@ -16,9 +16,10 @@ function Heading() {
 /** Same footprint as the real tiles, so nothing jumps when the stats arrive. */
 export function LiveStatsSkeleton() {
     return (
-        <section className="mt-28" aria-busy="true" aria-label="Loading live stats">
+        <section className="live-stats-panel mt-28" aria-busy="true" aria-label="Loading live stats">
             <Heading />
-            <div className="mt-8 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-3">
+            <div className="exchange-only exchange-panel-title">Loading public profile statistics…</div>
+            <div className="standard-only mt-8 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-3">
                 {['GitHub', 'LeetCode', 'Codeforces'].map((label) => (
                     <div key={label} className="flex flex-col bg-card p-8">
                         <span className="eyebrow">{label}</span>
@@ -65,9 +66,17 @@ export async function LiveStats() {
     if (stats.length === 0) return null;
 
     return (
-        <section className="mt-28">
+        <section className="live-stats-panel mt-28">
             <Heading />
-            <div className="mt-8 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-3">
+            <div className="exchange-only stats-register">
+                <div className="exchange-panel-title"><span>ENGINEERING ACTIVITY</span><span>PUBLIC PROFILES</span></div>
+                <div className="stats-table-scroll"><table><caption className="sr-only">Public coding profile statistics</caption>
+                    <thead><tr><th>Source</th><th>Value</th><th>Detail</th><th>Profile</th></tr></thead>
+                    <tbody>{stats.map(stat => <tr key={stat.label}><th scope="row">{stat.label}</th><td>{typeof stat.value === 'number' ? stat.value.toLocaleString('en-US') : stat.value}</td><td>{stat.detail}</td><td><a href={stat.href} target="_blank" rel="noreferrer" aria-label={`Open ${stat.label} profile`}>View <ArrowUpRight className="inline-block h-3.5 w-3.5 shrink-0 align-[-0.15em]" aria-hidden="true" /></a></td></tr>)}</tbody>
+                </table></div>
+            </div>
+
+            <div className="standard-only mt-8 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-3">
                 {stats.map((s, i) => (
                     <a
                         key={s.label}

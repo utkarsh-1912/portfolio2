@@ -3,9 +3,9 @@
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, ArrowUpRight, ArrowLeft, ArrowRight, Star, GitFork } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { resolveImage, hasLink, skipOptimization } from '@/lib/images';
+import { hasLink, projectSlides } from '@/lib/images';
+import { ProjectCarousel } from '@/components/ui/project-carousel';
 import { ProjectPlaceholder } from '@/components/sections/project-placeholder';
 
 export type ProjectModalData = {
@@ -14,6 +14,7 @@ export type ProjectModalData = {
     description: string;
     tags: string[];
     imageUrl?: string | null;
+    gallery?: { url: string; caption?: string | null }[] | null;
     liveUrl?: string | null;
     githubUrl?: string | null;
     slug?: string | null;
@@ -78,7 +79,7 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
 
     if (!project) return null;
 
-    const img = resolveImage(project.imageUrl);
+    const slides = projectSlides(project);
     const stats = project.githubStats;
 
     return (
@@ -91,12 +92,12 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="project-modal-title"
-                className="relative flex h-[min(760px,92svh)] w-full max-w-5xl flex-col overflow-hidden rounded-t-3xl border border-border bg-card shadow-2xl animate-in slide-in-from-bottom-6 duration-500 sm:rounded-3xl md:grid md:h-[min(640px,88svh)] md:grid-cols-[1.15fr_1fr] md:grid-rows-1"
+                className="project-detail-window relative flex h-[min(760px,92svh)] w-full max-w-5xl flex-col overflow-hidden rounded-t-3xl border border-border bg-card shadow-2xl animate-in slide-in-from-bottom-6 duration-500 sm:rounded-3xl md:grid md:h-[min(640px,88svh)] md:grid-cols-[1.15fr_1fr] md:grid-rows-1"
             >
                 {/* Visual */}
                 <div key={project.id} className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-muted animate-in fade-in duration-500 md:aspect-auto md:h-full md:min-h-0">
-                    {img ? (
-                        <Image src={img} alt="" fill sizes="(min-width: 768px) 55vw, 100vw" className="object-cover" unoptimized={skipOptimization(img)} />
+                    {slides.length > 0 ? (
+                        <ProjectCarousel slides={slides} title={project.title} sizes="(min-width: 768px) 55vw, 100vw" className="h-full" />
                     ) : (
                         <ProjectPlaceholder title={project.title} tags={project.tags} className="p-8 sm:p-10" />
                     )}
@@ -131,13 +132,14 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                     </div>
 
                     <div ref={bodyRef} key={project.id} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-8 animate-in fade-in slide-in-from-bottom-2 duration-500 sm:px-8">
+                        <div className="exchange-only project-detail-label">PROJECT INSPECTOR / DETAILS</div>
                         <h2 id="project-modal-title" className="font-headline text-3xl font-semibold tracking-tight sm:text-4xl">
                             {project.title}
                         </h2>
                         <p className="mt-5 text-base leading-relaxed text-muted-foreground">{project.description}</p>
 
                         {stats && (
-                            <dl className="mt-8 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-border bg-border text-center">
+                            <dl className="project-detail-stats mt-8 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-border bg-border text-center">
                                 <div className="bg-card p-3">
                                     <dt className="eyebrow flex items-center justify-center gap-1"><Star className="h-3 w-3" /> Stars</dt>
                                     <dd className="mt-1 font-headline text-xl font-semibold tabular-nums">{stats.stargazers_count}</dd>
@@ -156,7 +158,7 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                         {project.tags.length > 0 && (
                             <div className="mt-8">
                                 <p className="eyebrow">Built with</p>
-                                <ul className="mt-3 flex flex-wrap gap-2">
+                                <ul className="project-detail-tags mt-3 flex flex-wrap gap-2">
                                     {project.tags.map((tag) => (
                                         <li key={tag} className="rounded-full border border-border px-3 py-1 text-sm text-foreground/80">{tag}</li>
                                     ))}
@@ -166,7 +168,7 @@ export function ProjectModal({ project, onClose, projects, onSelect }: ProjectMo
                     </div>
 
                     {(project.slug || hasLink(project.liveUrl) || hasLink(project.githubUrl)) && (
-                        <div className="flex shrink-0 flex-wrap gap-3 border-t border-border px-6 py-5 sm:px-8">
+                        <div className="project-detail-actions flex shrink-0 flex-wrap gap-3 border-t border-border px-6 py-5 sm:px-8">
                             {project.slug && (
                                 <Link
                                     href={`/projects/${project.slug}`} data-track="case_study_open"

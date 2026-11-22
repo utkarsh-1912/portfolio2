@@ -13,6 +13,7 @@ export type ShowcaseProject = {
     description: string;
     tags: string[];
     imageUrl: string;
+    gallery?: { url: string; caption?: string | null }[] | null;
     liveUrl?: string | null;
     githubUrl?: string | null;
     slug?: string | null;
@@ -165,6 +166,8 @@ export function ProjectShowcase({ projects, onOpen }: { projects: ShowcaseProjec
                         {p.imageUrl && (
                             <div className="absolute bottom-4 left-4 rounded-full bg-background/80 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-foreground backdrop-blur">
                                 {pad(i + 1)} — {p.title}
+                                {/* More screenshots inside the popup carousel */}
+                                {(p.gallery?.length ?? 0) > 0 && <span className="ml-2 text-muted-foreground">+{p.gallery!.length} images</span>}
                             </div>
                         )}
                     </div>

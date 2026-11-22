@@ -61,7 +61,7 @@ export default async function ArticlePage({ params, searchParams }: Props) {
     const meta = [date, `${readingTime(post.content)} min read`, ...(post.tags ?? []).slice(0, 3)].filter(Boolean).join(' · ');
 
     return (
-        <article className="pb-24">
+        <article className="research-article pb-24">
             <JsonLd data={articleSchema(post)} />
             {includeDrafts && post.status !== 'active' && (
                 <div className="sticky top-20 z-40 mx-auto mt-2 w-fit rounded-full bg-foreground px-4 py-1.5 text-xs text-background">

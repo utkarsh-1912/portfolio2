@@ -1,3 +1,4 @@
+import { ExchangeHome } from '@/components/exchange/exchange-home';
 import { HeroSection } from '@/components/sections/hero';
 import { AboutSection } from '@/components/sections/about';
 import { ProjectsSection } from '@/components/sections/projects';
@@ -36,6 +37,8 @@ export default async function Home() {
 
   return (
     <>
+      <ExchangeHome />
+      <div className="daylight-home">
       <HeroSection />
       <SkillsMarquee />
       <AboutSection />
@@ -52,6 +55,7 @@ export default async function Home() {
       <Suspense fallback={<div className="min-h-[60vh] border-t border-border" aria-hidden="true" />}>
         <BlogSection />
       </Suspense>
+      </div>
       <ContactSection heroData={heroData} />
       {/* Last child, so its effect runs after the sections above have hydrated */}
       <RevealObserver />

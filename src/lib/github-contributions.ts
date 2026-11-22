@@ -36,7 +36,8 @@ export async function getGitHubContributions(username: string): Promise<Contribu
         days.sort((a, b) => a.date.localeCompare(b.date));
         return { total: Number.isFinite(total) ? total : days.reduce((s, d) => s + d.count, 0), days };
     } catch (e) {
-        console.error('getGitHubContributions error:', e);
+        // Timeouts are expected on slow networks; log one line instead of a full stack
+        console.error('getGitHubContributions error:', e instanceof Error ? `${e.name}: ${e.message}` : e);
         return null;
     }
 }

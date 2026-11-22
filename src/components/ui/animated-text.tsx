@@ -49,9 +49,9 @@ export function AnimatedText({ phrases = [], className }: AnimatedTextProps) {
     <span className={cn('inline-grid', className)}>
       {/* Screen readers get the full list once instead of every keystroke */}
       <span className="sr-only">{validPhrases.join(', ')}</span>
-      {/* Height reservation: same text box as the longest phrase, never visible */}
-      <span aria-hidden="true" className="invisible col-start-1 row-start-1">
-        {longest}
+      {/* Height reservation: same text box as the longest phrase, never visible. Drawn with
+          CSS content so the phrase isn't repeated in the page text (copy-paste, crawlers). */}
+      <span aria-hidden="true" data-text={longest} className="invisible col-start-1 row-start-1 before:content-[attr(data-text)]">
         <Caret />
       </span>
       <span aria-hidden="true" className="col-start-1 row-start-1">

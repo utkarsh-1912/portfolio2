@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Terminal as TerminalIcon, ArrowUpRight, CornerDownLeft } from 'lucide-react';
+import { Terminal as TerminalIcon, SquareTerminal, ArrowUpRight, CornerDownLeft, X, Trash2, ChevronRight } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
+import { useExperience } from '@/components/exchange/experience-provider';
 import { LogoMark } from '@/components/ui/logo-mark';
 import { cn } from '@/lib/utils';
 import { articleHref } from '@/lib/site';
@@ -70,6 +71,8 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
     const router = useRouter();
     const pathname = usePathname();
     const { theme, setTheme } = useTheme();
+    const { experience, setExperience } = useExperience();
+    const exchange = experience === 'exchange';
     const [isOpen, setIsOpen] = useState(false);
     const [entries, setEntries] = useState<Entry[]>([]);
     const [input, setInput] = useState('');
@@ -79,6 +82,8 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
     const idRef = useRef(0);
     const bodyRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const launcherRef = useRef<HTMLButtonElement>(null);
 
     const projects = data?.projects ?? [];
     const blogs = data?.blogs ?? [];
@@ -320,6 +325,11 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                 run: (args) => {
                     const target = args[0]?.toLowerCase();
                     if (!target || !SECTIONS.includes(target as any)) return `Usage: goto <${SECTIONS.join('|')}>`;
+                    if (exchange) {
+                        const routes: Record<string, string> = { about: '/about', projects: '/projects', blog: '/blog', certifications: '/about#profile-credentials', experience: '/#exchange-experience', contact: '/#contact' };
+                        setIsOpen(false); router.push(routes[target]);
+                        return;
+                    }
                     const id = SECTION_IDS[target] ?? target;
                     setTimeout(() => {
                         setIsOpen(false);
@@ -331,10 +341,12 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
             },
             {
                 name: 'theme',
-                usage: 'theme [light|dark]',
+                usage: 'theme [light|dark|exchange]',
                 description: 'Switch colour theme',
-                complete: () => ['light', 'dark'],
+                complete: () => ['light', 'dark', 'exchange'],
                 run: (args) => {
+                    if (args[0] === 'exchange') { setExperience('exchange'); return 'Exchange experience enabled.'; }
+                    setExperience('daylight');
                     const next = args[0] === 'light' || args[0] === 'dark' ? args[0] : theme === 'light' ? 'dark' : 'light';
                     setTheme(next);
                     return <>Theme set to <Accent>{next}</Accent>.</>;
@@ -356,7 +368,7 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
         ];
         return list;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data, theme, past, pathname]);
+    }, [data, theme, past, pathname, exchange, setExperience, setTheme, router]);
 
     const lookup = useCallback(
         (name: string) => commands.find((c) => c.name === name || c.aliases?.includes(name)),
@@ -416,7 +428,12 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
             if (e.key === 'Escape') setIsOpen(false);
         };
         window.addEventListener('keydown', handler);
-        return () => window.removeEventListener('keydown', handler);
+        const open = () => setIsOpen(true);
+        window.addEventListener('utkristi:terminal', open);
+        return () => {
+            window.removeEventListener('keydown', handler);
+            window.removeEventListener('utkristi:terminal', open);
+        };
     }, []);
 
     // Boot sequence on first open
@@ -438,7 +455,7 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
             document.body.style.overflow = 'hidden';
             setTimeout(() => inputRef.current?.focus(), 50);
         }
-        return () => { document.body.style.overflow = ''; };
+        return () => { document.body.style.overflow = ''; if (isOpen) launcherRef.current?.focus(); };
     }, [isOpen]);
 
     useEffect(() => {
@@ -461,7 +478,7 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
     const ghost = candidates[0]?.startsWith(input) ? candidates[0].slice(input.length) : '';
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Tab') {
+        if (e.key === 'Tab' && !e.shiftKey) {
             e.preventDefault();
             if (candidates[0]) setInput(candidates[0] + (typingArg ? '' : ' '));
         } else if (e.key === 'ArrowRight' && ghost && e.currentTarget.selectionStart === input.length) {
@@ -497,32 +514,41 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
             {!isOpen && (
                 <button
                     type="button"
+                    ref={launcherRef}
+                    aria-label="Open terminal"
                     onClick={() => setIsOpen(true)}
                     title="Open terminal (Ctrl + `)"
                     data-magnetic
-                    className="group fixed bottom-6 right-6 z-[100] flex h-12 items-center gap-2 rounded-full border border-border bg-foreground pl-3.5 pr-3.5 text-background shadow-lg transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] animate-in fade-in zoom-in hover:pr-5"
+                    className="terminal-launcher fixed bottom-6 right-6 z-[100] flex h-12 w-12 items-center justify-center rounded-full border border-border bg-foreground text-background shadow-lg"
                 >
-                    <TerminalIcon className="h-5 w-5" />
-                    <span className="max-w-0 overflow-hidden whitespace-nowrap font-mono text-xs transition-[max-width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:max-w-[8rem]">
-                        Terminal <span className="opacity-60">⌃`</span>
-                    </span>
+                    <SquareTerminal className="terminal-launcher-icon h-[22px] w-[22px]" strokeWidth={1.7} aria-hidden="true" />
                     <span className="sr-only">Open terminal</span>
                 </button>
             )}
 
             {isOpen && (
                 <div
-                    className="fixed inset-0 z-[150] flex items-end justify-center bg-background/60 backdrop-blur-md animate-in fade-in duration-300 sm:items-center sm:p-6"
+                    className="terminal-overlay fixed inset-0 z-[150] flex items-end justify-center bg-background/60 backdrop-blur-md animate-in fade-in duration-300 sm:items-center sm:p-6"
                     onClick={(e) => { if (e.target === e.currentTarget) setIsOpen(false); }}
                 >
                     <div
+                        ref={dialogRef}
                         role="dialog"
                         aria-modal="true"
+                        onKeyDown={event => {
+                            if (event.key !== 'Tab' || event.target === inputRef.current && !event.shiftKey) return;
+                            const controls = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],input') ?? []).filter(el => el.getClientRects().length);
+                            const first = controls[0], last = controls[controls.length - 1];
+                            if (event.shiftKey && event.target === first) { event.preventDefault(); last?.focus(); }
+                            else if (!event.shiftKey && event.target === last) { event.preventDefault(); first?.focus(); }
+                        }}
                         aria-label="Terminal"
-                        className="flex h-[100svh] w-full flex-col overflow-hidden border border-border bg-card font-mono text-[13px] shadow-2xl animate-in slide-in-from-bottom-6 duration-500 sm:h-[min(640px,85svh)] sm:max-w-3xl sm:rounded-2xl"
+                        className="portfolio-terminal flex h-[100svh] w-full flex-col overflow-hidden border border-border bg-card font-mono text-[13px] shadow-2xl animate-in slide-in-from-bottom-6 duration-500 sm:h-[min(640px,85svh)] sm:max-w-3xl sm:rounded-2xl"
                     >
+                        {exchange && <div className="terminal-exchange-title"><span><TerminalIcon size={16} /> UTKRISTI / COMMAND DESK</span><div><button type="button" aria-label="Clear terminal" onClick={() => setEntries([])}><Trash2 size={15} /></button><button type="button" aria-label="Close terminal" onClick={() => setIsOpen(false)}><X size={17} /></button></div></div>}
+                        {exchange && <div className="terminal-session-bar"><span><i /> LOCAL SESSION</span><span>PORTFOLIO SHELL · NO SYSTEM ACCESS</span></div>}
                         {/* Title bar */}
-                        <div className="flex shrink-0 items-center gap-3 border-b border-border px-4 py-3">
+                        <div className={cn(exchange && "standard-only", "flex shrink-0 items-center gap-3 border-b border-border px-4 py-3")}>
                             <div className="flex gap-1.5">
                                 <button type="button" aria-label="Close terminal" onClick={() => setIsOpen(false)} className="h-3 w-3 rounded-full bg-[#ff5f57] transition-opacity hover:opacity-80" />
                                 <button type="button" aria-label="Clear terminal" onClick={() => setEntries([])} className="h-3 w-3 rounded-full bg-[#febc2e] transition-opacity hover:opacity-80" />
@@ -533,12 +559,12 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                         </div>
 
                         {/* Output */}
-                        <div ref={bodyRef} className="flex-1 overflow-y-auto px-4 py-5 sm:px-6" onClick={() => inputRef.current?.focus()}>
+                        <div ref={bodyRef} className="terminal-output flex-1 overflow-y-auto px-4 py-5 sm:px-6" onClick={() => inputRef.current?.focus()}>
                             {entries.map((entry) => (
                                 <div key={entry.id} className="mb-3 animate-in fade-in slide-in-from-bottom-1 duration-300">
                                     {entry.kind === 'input' ? (
                                         <div className="flex gap-2">
-                                            <span className="text-primary">❯</span>
+                                            <ChevronRight className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                                             <span className="break-all text-foreground">{entry.content}</span>
                                         </div>
                                     ) : (
@@ -549,7 +575,7 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                         </div>
 
                         {/* Suggestions + quick commands */}
-                        <div className="flex shrink-0 gap-2 overflow-x-auto border-t border-border px-4 py-2.5 [scrollbar-width:none] sm:px-6">
+                        <div className="terminal-quick flex shrink-0 gap-2 overflow-x-auto border-t border-border px-4 py-2.5 [scrollbar-width:none] sm:px-6">
                             {(candidates.length ? candidates : QUICK).map((c) => (
                                 <button
                                     key={c}
@@ -567,8 +593,8 @@ export function TerminalUI({ data }: { data?: TerminalData }) {
                         </div>
 
                         {/* Prompt */}
-                        <form onSubmit={submit} className="flex shrink-0 items-center gap-2 border-t border-border px-4 py-3.5 sm:px-6">
-                            <span className="text-primary">❯</span>
+                        <form onSubmit={submit} className="terminal-prompt flex shrink-0 items-center gap-2 border-t border-border px-4 py-3.5 sm:px-6">
+                            <ChevronRight className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                             <div className="relative flex-1">
                                 {/* Inline ghost completion */}
                                 <span aria-hidden="true" className="pointer-events-none absolute inset-0 whitespace-pre text-muted-foreground/50">

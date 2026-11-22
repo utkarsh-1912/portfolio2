@@ -38,3 +38,24 @@ export function skipOptimization(src: string | { src: string } | null | undefine
         return true;
     }
 }
+
+export type Slide = { src: string; caption?: string | null };
+
+/**
+ * All images for a project's carousel: the cover first, then the gallery, resolved to
+ * usable URLs with empties and duplicates removed.
+ */
+export function projectSlides(project: { imageUrl?: string | null; gallery?: { url: string; caption?: string | null }[] | null }): Slide[] {
+    const slides: Slide[] = [];
+    const seen = new Set<string>();
+    const add = (url: string | null | undefined, caption?: string | null) => {
+        const src = resolveImage(url);
+        if (src && !seen.has(src)) {
+            seen.add(src);
+            slides.push({ src, caption });
+        }
+    };
+    add(project.imageUrl);
+    for (const g of project.gallery ?? []) add(g.url, g.caption);
+    return slides;
+}

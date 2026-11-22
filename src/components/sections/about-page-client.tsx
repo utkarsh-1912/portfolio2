@@ -1,3 +1,4 @@
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { RevealObserver } from '@/components/ui/reveal-observer';
 import { CertificationCard } from './certifications';
@@ -8,7 +9,8 @@ export function AboutPageClient({ about, skills, certifications = [], liveStats 
   const [lead, ...rest] = paragraphs;
 
   return (
-    <div className="container py-16 md:py-24">
+    <div className="about-page container py-16 md:py-24">
+      <div className="standard-only">
       <SectionHeading as="h1" label="About" title="Hello, I'm Utkarsh" />
 
       {/* Bio */}
@@ -25,12 +27,20 @@ export function AboutPageClient({ about, skills, certifications = [], liveStats 
         </div>
       </div>
 
+      </div>
+      <div className="exchange-only">
+        <div className="desk-heading"><span>ENGINEER PROFILE / ಪರಿಚಯ</span><h1>The person behind the systems</h1><p>Background, working interests, and the tools I build with.</p></div>
+        <div className="profile-desk">
+          <section className="profile-summary"><div className="exchange-panel-title"><span>UTK / PROFILE</span><span>SOFTWARE ENGINEERING</span></div><div className="profile-copy">{paragraphs.map((paragraph, i) => <p key={i}>{paragraph}</p>)}{!paragraphs.length && <p>Profile information is temporarily unavailable.</p>}</div></section>
+          <aside className="profile-index"><div className="exchange-panel-title"><span>DESK INDEX</span></div>{skills.length > 0 && <a href="#profile-skills"><span>01</span> Skills & tools <ArrowDownRight className="inline-block h-3.5 w-3.5 shrink-0 align-[-0.15em]" aria-hidden="true" /></a>}{certifications.length > 0 && <a href="#profile-credentials"><span>02</span> Credentials <ArrowDownRight className="inline-block h-3.5 w-3.5 shrink-0 align-[-0.15em]" aria-hidden="true" /></a>}<a href="/projects"><span>03</span> Project directory <ArrowUpRight className="inline-block h-3.5 w-3.5 shrink-0 align-[-0.15em]" aria-hidden="true" /></a><a href="/#contact"><span>04</span> Contact desk <ArrowUpRight className="inline-block h-3.5 w-3.5 shrink-0 align-[-0.15em]" aria-hidden="true" /></a><p lang="kn">ನಮಸ್ಕಾರ.</p></aside>
+        </div>
+      </div>
       {/* Live coding stats (streamed in separately; see components/sections/live-stats.tsx) */}
       {liveStats}
 
       {/* Certifications */}
       {certifications.length > 0 && (
-        <section className="mt-28">
+        <section id="profile-credentials" className="profile-credentials mt-28">
           <div data-reveal="up" className="eyebrow flex items-center gap-4">
             <span>Certifications</span>
             <span className="h-px flex-1 bg-border" />
@@ -47,7 +57,7 @@ export function AboutPageClient({ about, skills, certifications = [], liveStats 
 
       {/* Skills */}
       {skills.length > 0 && (
-        <section className="mt-28">
+        <section id="profile-skills" className="profile-skills mt-28">
           <div data-reveal="up" className="eyebrow flex items-center gap-4">
             <span>Skills &amp; tools</span>
             <span className="h-px flex-1 bg-border" />

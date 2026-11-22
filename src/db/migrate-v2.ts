@@ -115,6 +115,11 @@ async function main() {
         ON CONFLICT (slug) DO NOTHING`;
     console.log('✓ testimonials and pages tables ready');
 
+    // New: multi-image project carousels
+    await sql`ALTER TABLE projects ADD COLUMN IF NOT EXISTS gallery jsonb DEFAULT '[]'::jsonb`;
+    await sql`UPDATE projects SET gallery = '[]'::jsonb WHERE gallery IS NULL`;
+    console.log('✓ projects.gallery added');
+
     console.log('Done!');
 }
 

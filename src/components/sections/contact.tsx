@@ -74,11 +74,13 @@ export function ContactSection({ heroData }: { heroData?: any }) {
   return (
     <section id="contact" className="relative w-full border-t border-border py-24 md:py-36">
       <div className="container">
-        <SectionHeading index="06" label="Contact" title="Let's build something" />
+        <div className="standard-only"><SectionHeading index="06" label="Contact" title="Let's build something" /></div>
+        <div className="exchange-only desk-heading"><span>COMMUNICATIONS / ಸಂಪರ್ಕ</span><h2>Contact desk</h2><p>Have a system to build or an idea to discuss? Start a conversation.</p></div>
 
-        <div className="grid gap-16 lg:grid-cols-12">
+        <div className="contact-desk-grid grid gap-16 lg:grid-cols-12">
           {/* Direct contact */}
-          <div className="lg:col-span-6">
+          <div className="contact-directory lg:col-span-6">
+            <div className="exchange-only exchange-panel-title"><span>DIRECT CHANNELS</span><span>UTK / CONTACT</span></div>
             <p data-reveal="up" className="eyebrow">Email</p>
             <a
               href={`mailto:${EMAIL}`}
@@ -125,8 +127,9 @@ export function ContactSection({ heroData }: { heroData?: any }) {
 
           {/* Form */}
           <div data-reveal="up" style={{ '--i': 1 } as React.CSSProperties} className="lg:col-span-6">
-            <div data-spotlight className="rounded-3xl border border-border bg-card p-6 sm:p-10">
-              <p className="eyebrow">Or send a message</p>
+            <div data-spotlight className="contact-message-panel rounded-3xl border border-border bg-card p-6 sm:p-10">
+              <p className="eyebrow">Send a message</p>
+              <p className="exchange-only contact-form-note">Tell me what you’re working on and how I can help. All three fields are required.</p>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-8">
                   {/* Honeypot: off-screen and skipped by keyboard and screen readers; bots tend to fill it */}

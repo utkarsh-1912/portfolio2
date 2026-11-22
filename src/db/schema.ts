@@ -4,6 +4,9 @@ import { pgTable, text, serial, integer, timestamp, jsonb, boolean, date } from 
 export const CONTENT_STATUSES = ['active', 'draft', 'archived'] as const;
 export type ContentStatus = (typeof CONTENT_STATUSES)[number];
 
+/** One extra screenshot in a project's carousel (the cover image is always the first slide). */
+export type GalleryImage = { url: string; caption?: string | null };
+
 export const hero = pgTable('hero', {
     id: serial('id').primaryKey(),
     title: text('title').notNull(),
@@ -36,6 +39,8 @@ export const projects = pgTable('projects', {
     description: text('description').notNull(),
     tags: jsonb('tags').$type<string[]>().notNull(),
     imageUrl: text('image_url'), // Instead of imageUrlId, we just store full image URL from imgbb
+    // Extra screenshots shown after the cover in the project carousel
+    gallery: jsonb('gallery').$type<GalleryImage[]>().default([]),
     liveUrl: text('live_url'),
     githubUrl: text('github_url'),
     // Case-study page at /projects/<slug>; the sections below are optional Markdown

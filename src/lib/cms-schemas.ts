@@ -68,6 +68,12 @@ export const projectInput = z.object({
     sequence: z.coerce.number().int().min(-1000).max(1000).catch(0),
     status: z.enum(CONTENT_STATUSES).nullish().transform((v) => v ?? 'active'),
     featured: z.boolean().nullish().transform((v) => !!v),
+    // Extra carousel images after the cover; blank rows from the editor are dropped
+    gallery: z
+        .array(z.object({ url: optionalImage, caption: z.string().trim().max(200).nullish().transform((v) => v || null) }))
+        .max(20)
+        .nullish()
+        .transform((items) => (items ?? []).filter((i): i is { url: string; caption: string | null } => !!i.url)),
     slug: slugInput,
     problem: markdown(20000),
     approach: markdown(20000),

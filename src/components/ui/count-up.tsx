@@ -42,9 +42,7 @@ export function CountUp({ value, className, duration = 1400 }: { value: string |
 
     const shown = current === null || !Number.isFinite(target) ? text : `${current.toLocaleString('en-US')}${suffix}`;
     return (
-        <span ref={ref} className={className}>
-            <span className="sr-only">{text}</span>
-            <span aria-hidden="true">{shown}</span>
-        </span>
+        // One copy of the number; the server render (and reduced motion) shows the final value
+        <span ref={ref} className={className}>{shown}</span>
     );
 }

@@ -47,9 +47,8 @@ export function ScrambleText({ text, className, duration = 700 }: { text: string
     }, [text, duration]);
 
     return (
-        <span ref={ref} className={className}>
-            <span className="sr-only">{text}</span>
-            <span aria-hidden="true">{display}</span>
-        </span>
+        // A single copy of the text, so copy-paste, reader mode and crawlers don't see it twice.
+        // The scramble only runs for a moment; the server render is already the final text.
+        <span ref={ref} className={className}>{display}</span>
     );
 }

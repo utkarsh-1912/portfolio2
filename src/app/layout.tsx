@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import './exchange.css';
+import { ExperienceProvider } from '@/components/exchange/experience-provider';
+import { ExchangeShell, ExchangeColophon } from '@/components/exchange/exchange-shell';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SiteHeader } from '@/components/layout/site-header';
@@ -72,11 +75,11 @@ export default async function RootLayout({
         {/* Before paint: flag JS (reveal animations hide content up front) and decide whether the
             first-visit intro loader shows (not seen this session, motion allowed, not the admin), and
             apply the theme (saved choice, else the OS setting) so there's no light/dark flash */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('utkristi-portfolio-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}d.classList.add(t)}catch(e){}try{var p=location.pathname;if(!sessionStorage.getItem('utkristi-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&p.indexOf('/admin')!==0&&p.indexOf('/login')!==0){d.classList.add('intro-active')}}catch(e){}})()` }} />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('utkristi-portfolio-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}d.classList.add(t)}catch(e){}try{if(localStorage.getItem('utkristi-experience')==='exchange'&&location.pathname.indexOf('/admin')!==0&&location.pathname.indexOf('/login')!==0){d.dataset.experience='exchange'}}catch(e){}try{var p=location.pathname;if(!sessionStorage.getItem('utkristi-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&p.indexOf('/admin')!==0&&p.indexOf('/login')!==0){d.classList.add('intro-active')}}catch(e){}})()` }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Kannada:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
@@ -85,6 +88,7 @@ export default async function RootLayout({
         suppressHydrationWarning={true}
       >
         <ThemeProvider storageKey="utkristi-portfolio-theme">
+        <ExperienceProvider>
           <a
             href="#main"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[300] focus:rounded-full focus:bg-foreground focus:px-4 focus:py-2 focus:text-sm focus:text-background"
@@ -92,8 +96,10 @@ export default async function RootLayout({
             Skip to content
           </a>
           <div className="relative flex min-h-dvh flex-col">
+            <ExchangeShell extraLinks={pageLinks} />
             <SiteHeader />
             <main id="main" className="flex-1">{children}</main>
+            <ExchangeColophon extraLinks={pageLinks} />
             <SiteFooter extraLinks={pageLinks} />
             <TerminalUI data={terminalData} />
           </div>
@@ -116,6 +122,7 @@ export default async function RootLayout({
           <Suspense fallback={null}>
             <RouteProgress />
           </Suspense>
+        </ExperienceProvider>
         </ThemeProvider>
         {/* Only load Analytics when an ID is configured */}
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}

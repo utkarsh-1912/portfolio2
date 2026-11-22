@@ -23,7 +23,7 @@ export function CertificationCard({ cert, index }: { cert: Certification; index:
         <Wrapper
             {...(verify ? { href: verify, target: '_blank', rel: 'noopener noreferrer', 'data-cursor': 'Verify' } : {})}
             data-spotlight
-            className="lift group relative flex h-full flex-col justify-between gap-10 overflow-hidden rounded-3xl border border-border bg-card p-7 hover:border-foreground/25 sm:p-8"
+            className="credential-card lift group relative flex h-full flex-col justify-between gap-10 overflow-hidden rounded-3xl border border-border bg-card p-7 hover:border-foreground/25 sm:p-8"
         >
             <span aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
             <div className="relative flex items-start justify-between gap-6">

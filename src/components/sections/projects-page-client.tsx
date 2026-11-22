@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { ArrowUpRight, Search } from 'lucide-react';
 import { ProjectModal, type ProjectModalData } from '@/components/ui/project-modal';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { RevealObserver } from '@/components/ui/reveal-observer';
@@ -42,22 +42,25 @@ export function ProjectsPageClient({ projects }: { projects: ProjectCardData[] }
         );
 
     return (
-        <div className="container py-16 md:py-24">
-            <SectionHeading
+        <div className="projects-page container py-16 md:py-24">
+            <div className="standard-only"><SectionHeading
                 as="h1"
                 label="Projects"
                 title="All work"
                 intro={`${projects.length} projects, from side experiments to production apps.`}
             />
 
+            </div>
+            <div className="exchange-only desk-heading"><span>PROJECT DIRECTORY / ಕೆಲಸ</span><h1>Engineering book</h1><p>Inspect the builds, explore the stack, and open a project for the full picture.</p></div>
+
             {/* Filters */}
-            <div className="mb-14 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div className="project-controls mb-14 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                 <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => setActiveTag(null)} className={chip(!activeTag)}>
+                    <button type="button" aria-pressed={!activeTag} onClick={() => setActiveTag(null)} className={chip(!activeTag)}>
                         All
                     </button>
                     {topTags.map((tag) => (
-                        <button key={tag} type="button" onClick={() => setActiveTag(activeTag === tag ? null : tag)} className={chip(activeTag === tag)}>
+                        <button key={tag} type="button" aria-pressed={activeTag === tag} onClick={() => setActiveTag(activeTag === tag ? null : tag)} className={chip(activeTag === tag)}>
                             {tag}
                         </button>
                     ))}
@@ -80,12 +83,26 @@ export function ProjectsPageClient({ projects }: { projects: ProjectCardData[] }
                 {activeTag ? ` · ${activeTag}` : ''}
             </p>
 
-            <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="standard-only grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
                 {filtered.map((project, idx) => (
                     <div key={project.id} data-reveal="up" style={{ '--i': idx % 3 } as React.CSSProperties}>
                         <ProjectCard project={project} index={projects.indexOf(project)} onOpen={() => setSelected(project)} />
                     </div>
                 ))}
+            </div>
+
+            <div className="exchange-only project-register">
+                <div className="exchange-panel-title"><span>PROJECT BLOTTER</span><span>{filtered.length} / {projects.length} RECORDS</span></div>
+                <div className="project-register-scroll"><table>
+                    <caption className="sr-only">Projects matching the current search and technology filter</caption>
+                    <thead><tr><th>Ref</th><th>Project / description</th><th>Technology</th><th>Inspect</th></tr></thead>
+                    <tbody>{filtered.map(project => <tr key={project.id}>
+                        <td>{String(projects.indexOf(project) + 1).padStart(2, '0')}</td>
+                        <td><button onClick={() => setSelected(project)}>{project.title}</button><p>{project.description}</p></td>
+                        <td><div className="register-tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div></td>
+                        <td><button aria-label={`Open details for ${project.title}`} onClick={() => setSelected(project)}>Details <ArrowUpRight className="inline-block h-3.5 w-3.5 shrink-0 align-[-0.15em]" aria-hidden="true" /></button></td>
+                    </tr>)}</tbody>
+                </table></div>
             </div>
 
             {filtered.length === 0 && (

@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight, Star } from 'lucide-react';
-import { resolveImage, hasLink, skipOptimization } from '@/lib/images';
+import { ArrowUpRight, Images, Star } from 'lucide-react';
+import { resolveImage, hasLink, skipOptimization, projectSlides } from '@/lib/images';
 import { ProjectPlaceholder } from './project-placeholder';
 
 export type ProjectCardData = {
@@ -12,6 +12,7 @@ export type ProjectCardData = {
     description: string;
     tags: string[];
     imageUrl?: string | null;
+    gallery?: { url: string; caption?: string | null }[] | null;
     liveUrl?: string | null;
     githubUrl?: string | null;
     slug?: string | null;
@@ -21,6 +22,7 @@ export type ProjectCardData = {
 /** Image-led project card used on the home page (mobile) and the /projects archive. */
 export function ProjectCard({ project, index, onOpen }: { project: ProjectCardData; index: number; onOpen: () => void }) {
     const img = resolveImage(project.imageUrl);
+    const extra = projectSlides(project).length - 1;
 
     return (
         <article className="group flex h-full flex-col">
@@ -38,6 +40,11 @@ export function ProjectCard({ project, index, onOpen }: { project: ProjectCardDa
                     />
                 ) : (
                     <ProjectPlaceholder title={project.title} tags={project.tags} className="pt-14" />
+                )}
+                {extra > 0 && (
+                    <span aria-hidden="true" className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-background/80 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-foreground backdrop-blur">
+                        <Images className="h-3 w-3" /> +{extra}
+                    </span>
                 )}
                 <span aria-hidden="true" className="absolute left-3 top-3 rounded-full bg-background/80 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-foreground backdrop-blur">
                     {String(index + 1).padStart(2, '0')}

@@ -1,17 +1,44 @@
 'use client';
 
-import { Moon, Sun } from 'lucide-react';
+import { ChartNoAxesCombined, Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
-import { Button } from '@/components/ui/button';
+import { useExperience } from '@/components/exchange/experience-provider';
 
-export function ThemeToggle() {
+const modes = [
+  { value: 'light', label: 'Light', Icon: Sun },
+  { value: 'dark', label: 'Dark', Icon: Moon },
+  { value: 'exchange', label: 'Exchange', Icon: ChartNoAxesCombined },
+] as const;
+
+/**
+ * One button that cycles Light → Dark → Exchange (the trading theme) → Light.
+ * The icon shows the current mode. `allowExchange={false}` (the admin) cycles light/dark only.
+ */
+export function ThemeToggle({ allowExchange = true }: { allowExchange?: boolean }) {
   const { theme, setTheme } = useTheme();
+  const { experience, setExperience } = useExperience();
+  const available = modes.filter(item => allowExchange || item.value !== 'exchange');
+  const mode = allowExchange && experience === 'exchange' ? 'exchange' : theme === 'dark' ? 'dark' : 'light';
+  const index = available.findIndex(item => item.value === mode);
+  const current = available[index];
+  const next = available[(index + 1) % available.length];
+  const Icon = current.Icon;
 
-  return (
-    <Button variant="ghost" size="icon" className="relative rounded-full" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-      <Sun className="h-[1.1rem] w-[1.1rem] rotate-0 scale-100 transition-all duration-500 dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-[1.1rem] w-[1.1rem] rotate-90 scale-0 transition-all duration-500 dark:rotate-0 dark:scale-100" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
-  );
+  return <button
+    type="button"
+    className="appearance-trigger appearance-cycle"
+    data-mode={mode}
+    aria-label={`Appearance: ${current.label}. Switch to ${next.label}`}
+    title={`${current.label} → ${next.label}`}
+    onClick={() => {
+      if (next.value === 'exchange') setExperience('exchange');
+      else {
+        setTheme(next.value);
+        if (allowExchange) setExperience('daylight');
+      }
+    }}
+  >
+    <span key={mode} className="appearance-cycle-icon"><Icon size={18} strokeWidth={1.7} aria-hidden="true" /></span>
+    <span className="sr-only" role="status">{current.label} appearance</span>
+  </button>;
 }

@@ -26,7 +26,7 @@ export function SiteFooter({ extraLinks = [] }: { extraLinks?: { name: string; h
   }
 
   return (
-    <footer className="relative z-10 border-t border-border bg-background">
+    <footer className="daylight-footer relative z-10 border-t border-border bg-background">
       <div className="container grid gap-12 py-16 md:grid-cols-12">
         <div className="md:col-span-6">
           <p className="font-headline text-3xl font-semibold tracking-tight md:text-4xl">

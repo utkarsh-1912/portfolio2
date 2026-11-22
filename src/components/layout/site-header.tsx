@@ -53,7 +53,7 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full px-3 pt-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+        'daylight-header sticky top-0 z-50 w-full px-3 pt-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
         hidden && !isSheetOpen && '-translate-y-[120%]'
       )}
     >

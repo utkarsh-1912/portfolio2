@@ -17,6 +17,10 @@ import { getHero, getProjects } from '@/db/queries';
 const CLOCK_TIME_ZONE = 'Asia/Kolkata';
 const CLOCK_LABEL = 'India';
 
+// Positioning copy. The name, focus areas (roles) and description come from the admin.
+const HERO_LABEL = 'Software Engineer · Backend & Product';
+const HEADLINE = ['Building products.', 'Solving hard engineering problems.'];
+
 export async function HeroSection() {
   const [heroData, projects] = await Promise.all([getHero(), getProjects()]);
   const latest = projects[0];
@@ -47,15 +51,19 @@ export async function HeroSection() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
               </span>
-              <ScrambleText text="Sr.Software Engineer · Agentic AI" duration={900} />
+              <ScrambleText text={HERO_LABEL} duration={900} />
             </p>
 
-            <h1 className="mt-6 font-headline text-4xl font-semibold leading-[0.95] tracking-tight sm:text-5xl xl:text-6xl">
-              <SplitText text="Hi, I'm" delay={1} className="block text-muted-foreground" />
-              <span data-reveal="up" style={{ '--i': 3 } as React.CSSProperties} className="mt-1 block">
-                <AnimatedText phrases={roles} className="text-foreground" />
-              </span>
+            {/* The heading's label is the full sentence; the split letters are only the visual */}
+            <h1 aria-label={HEADLINE.join(' ')} className="mt-6 font-headline text-4xl font-semibold leading-[0.95] tracking-tight sm:text-5xl xl:text-6xl">
+              <SplitText text={HEADLINE[0]} delay={1} decorative className="block" />{' '}
+              <SplitText text={HEADLINE[1]} delay={2} decorative className="mt-1 block text-muted-foreground" />
             </h1>
+
+            <p data-reveal="up" style={{ '--i': 4 } as React.CSSProperties} className="mt-6 font-mono text-sm uppercase tracking-widest sm:text-base">
+              <span className="text-muted-foreground">Focus / </span>
+              <AnimatedText phrases={roles} className="text-foreground" />
+            </p>
 
             {heroData?.description && (
               <p data-reveal="up" style={{ '--i': 5 } as React.CSSProperties} className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground sm:mt-8 md:text-xl">
@@ -138,7 +146,7 @@ export async function HeroSection() {
         </div>
         <div aria-hidden="true">
           <FitText className="select-none pb-4 pt-2 font-headline font-semibold uppercase leading-[0.85] tracking-tighter text-foreground">
-            <SplitText text={name} delay={2} />
+            <SplitText text={name} delay={2} decorative />
           </FitText>
         </div>
       </div>

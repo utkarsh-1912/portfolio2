@@ -14,7 +14,7 @@ test.describe('home page', () => {
         const errors = trackErrors(page);
         await page.goto('/');
         await expect(page).toHaveTitle(/Utkarsh Gupta/);
-        await expect(page.locator('#hero h1')).toContainText("Hi, I'm");
+        await expect(page.locator('#hero h1')).toContainText('Building products.');
         for (const id of ['about', 'education', 'projects', 'contact']) {
             await expect(page.locator(`#${id}`)).toBeAttached();
         }

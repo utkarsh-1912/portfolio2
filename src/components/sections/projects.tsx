@@ -4,8 +4,11 @@ import { getGitHubRepoStats } from '@/lib/api-stats';
 import { toProjectSummary } from '@/lib/projects';
 
 export async function ProjectsSection() {
-  // The home page shows six, so only fetch GitHub stats for those
-  const projects = (await getProjects()).slice(0, 6);
+  // The home page shows a curated set: the featured projects (in their admin order) once at least
+  // three are marked, otherwise the first six. Only those get GitHub stats.
+  const all = await getProjects();
+  const featured = all.filter((p) => p.featured);
+  const projects = (featured.length >= 3 ? featured : all).slice(0, 6);
   
   const projectsWithStats = await Promise.all(
     projects.map(async (project) => {

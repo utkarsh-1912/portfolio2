@@ -13,6 +13,7 @@ import { Code, Plus, Trash2, Edit, Save, X, ExternalLink, Github, UploadCloud, T
 import { useAdminAction } from './use-admin-action';
 import { useDragReorder } from './use-drag-reorder';
 import { MarkdownEditor, clearDraft } from './markdown-editor';
+import { GalleryEditor } from './gallery-editor';
 import { ChevronDown, ChevronUp, Download, FileText, GripVertical, Link2 } from 'lucide-react';
 import { StatusToggle } from './status-toggle';
 
@@ -55,7 +56,7 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
 
     const handleAddNew = () => {
         setEditingId('new');
-        setFormData({ title: '', description: '', tags: [], imageUrl: '', liveUrl: '', githubUrl: '', sequence: 0, status: 'active', featured: false });
+        setFormData({ title: '', description: '', tags: [], imageUrl: '', gallery: [], liveUrl: '', githubUrl: '', sequence: 0, status: 'active', featured: false });
     };
 
     const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,6 +193,24 @@ export function AdminProjectsForm({ initialData }: { initialData: any[] }) {
                                     </a>
                                 </div>
                             )}
+                        </div>
+
+                        {/* Extra screenshots for the carousel (popup and case-study page) */}
+                        <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-5 space-y-4">
+                            <Label className="flex items-center gap-2 font-semibold"><UploadCloud className="h-4 w-4 text-primary" /> More screenshots (carousel)</Label>
+                            <GalleryEditor
+                                value={formData.gallery || []}
+                                onChange={(gallery) => setFormData((prev: any) => ({ ...prev, gallery }))}
+                                onMakeCover={(i) =>
+                                    setFormData((prev: any) => {
+                                        const gallery = [...(prev.gallery || [])];
+                                        const [picked] = gallery.splice(i, 1);
+                                        // The old cover (if any) takes the picked image's place in the gallery
+                                        if (prev.imageUrl) gallery.splice(i, 0, { url: prev.imageUrl, caption: null });
+                                        return { ...prev, imageUrl: picked.url, gallery };
+                                    })
+                                }
+                            />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border">

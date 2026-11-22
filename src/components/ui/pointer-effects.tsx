@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useExperience } from '@/components/exchange/experience-provider';
 
 const INTERACTIVE = 'a, button, [role="button"], input, textarea, select, label, [data-cursor]';
 const MAGNET_STRENGTH = 0.3;
@@ -16,6 +17,8 @@ const MAGNET_STRENGTH = 0.3;
  */
 export function PointerEffects() {
     const pathname = usePathname();
+    const { experience } = useExperience();
+    const exchange = experience === 'exchange';
     const ring = useRef<HTMLDivElement>(null);
     const [enabled, setEnabled] = useState(false);
     const [label, setLabel] = useState('');
@@ -63,7 +66,7 @@ export function PointerEffects() {
                 spot.style.setProperty('--my', `${e.clientY - sr.top}px`);
             }
 
-            const nextMagnet = el?.closest<HTMLElement>('[data-magnetic]') ?? null;
+            const nextMagnet = exchange ? null : el?.closest<HTMLElement>('[data-magnetic]') ?? null;
             if (nextMagnet !== magnet) releaseMagnet();
             if (nextMagnet) {
                 magnet = nextMagnet;
@@ -96,7 +99,7 @@ export function PointerEffects() {
             window.removeEventListener('pointermove', onMove);
             document.documentElement.removeEventListener('pointerleave', onLeave);
         };
-    }, [enabled, isAdmin]);
+    }, [enabled, isAdmin, exchange]);
 
     if (!enabled || isAdmin) return null;
 
@@ -104,7 +107,8 @@ export function PointerEffects() {
         <div
             ref={ring}
             aria-hidden="true"
-            className="pointer-events-none fixed left-0 top-0 z-[101] hidden md:block"
+            className={`pointer-effects ${exchange ? 'exchange-pointer' : ''} pointer-events-none fixed left-0 top-0 z-[200] hidden md:block`}
+            data-active={active}
             style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.3s' }}
         >
             <div
@@ -115,7 +119,7 @@ export function PointerEffects() {
                     backgroundColor: label ? 'hsl(var(--primary))' : active ? 'hsl(var(--primary) / 0.12)' : 'transparent',
                 }}
             >
-                {label}
+                {exchange ? '' : label}
             </div>
         </div>
     );
